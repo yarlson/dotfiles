@@ -63,3 +63,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 . "$HOME/.cargo/env"
 . "$HOME/.acme.sh/acme.sh.env"
 
+source ~/.config/zsh/aliases.zsh
+
