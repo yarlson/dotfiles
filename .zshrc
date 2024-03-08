@@ -37,7 +37,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 export PATH="~/go/bin:$PATH"
-export EDITOR="nvim"
+export EDITOR="vim"
 
 # Function to find and add node_modules binary to PATH
 add_local_node_modules() {
