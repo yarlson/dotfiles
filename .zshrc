@@ -66,6 +66,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 source ~/.config/zsh/aliases.zsh
 
 alias s='ssh'
+alias mc='mc --nosubshell'
 
 export PATH="$PATH:/Users/yaroslavk/istio-1.20.3/bin"
 
