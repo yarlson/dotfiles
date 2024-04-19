@@ -8,7 +8,7 @@ set $down j
 set $up k
 set $right l
 # Terminal
-set $term kitty
+set $term alacritty
 # App launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -17,7 +17,7 @@ set $menu wofi | xargs swaymsg exec --
 set $explorer nautilus
 
 # Font
-font pango: RobotoMono:style=Regular 10
+font pango: JetBrainsMono Nerd Font:style=Regular 10
 
 # Window borders
 default_border pixel 2
@@ -45,7 +45,7 @@ for_window [app_id="kitty"] resize set 800 600
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
-output * bg ~/Pictures/cat.png fill
+ output * bg ~/Pictures/tetris.png fill
 #
 # Example configuration:
 #

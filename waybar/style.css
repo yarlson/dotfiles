@@ -1,6 +1,6 @@
 * {
   border-radius: 0;
-  font-family: "RobotoMono Nerd Font";
+  font-family: "JetBrainsMono Nerd Font";
   font-size: 1.05em;
   min-height: 0;
 }
@@ -19,10 +19,15 @@ window#waybar {
 }
 
 #workspaces button {
+  color: rgba(137,180,250, 1);
   padding-left: 10px;
   padding-right: 10px;
   min-width: 0;
   transition: color 0.4s ease;
+}
+
+#workspaces button.persistent {
+  color: rgba(137,180,250, 0.3);
 }
 
 #workspaces button.focused {
