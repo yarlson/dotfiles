@@ -1,9 +1,9 @@
 return {
-  { "felipeagc/fleet-theme-nvim" },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "fleet",
+      colorscheme = "catppuccin-mocha",
     },
   },
 }
