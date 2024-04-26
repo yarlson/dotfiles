@@ -1,6 +1,10 @@
 [shell]
 program = "/bin/zsh"
 
+[window]
+
+decorations = "None"
+
 [font]
 # Alacritty handles font size on macOS and X11/Wayland a bit differentely
 
