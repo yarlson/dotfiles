@@ -13,7 +13,7 @@ function M.config()
       ignore_focus = { "NvimTree" },
     },
     sections = {
-      lualine_a = {},
+      lualine_a = {"mode"},
       lualine_b = { "branch" },
       lualine_c = { "diagnostics" },
       lualine_x = { "copilot", "filetype" },

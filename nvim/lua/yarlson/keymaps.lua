@@ -1,11 +1,19 @@
 local keymap = vim.keymap.set
-local opts = { noremap = true, silent = true }
+local opts = { noremap = false, silent = true }
 
 keymap("n", "<Space>", "", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 keymap("n", "<C-i>", "<C-i>", opts)
+
+
+
+-- Save changes
+-- Save with Ctrl+S in Normal mode
+keymap('n', '<C-s>', ':w<CR>')
+-- Save with Ctrl+S in Insert mode
+keymap('i', '<C-s>', '<C-\\><C-n>:w<CR>a')
 
 -- Better window navigation
 keymap("n", "<m-h>", "<C-w>h", opts)
