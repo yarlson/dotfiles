@@ -6,7 +6,15 @@ local M = {
 
 function M.config()
   require("nvim-treesitter.configs").setup {
-    ensure_installed = { "lua", "markdown", "markdown_inline", "bash", "python", "go" },
+    ensure_installed = {
+      "lua",
+      "markdown",
+      "markdown_inline",
+      "bash",
+      "python",
+      "go",
+      "elixir"
+    },
     highlight = { enable = true },
     indent = { enable = true },
   }
