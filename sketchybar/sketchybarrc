@@ -4,8 +4,8 @@
 # https://github.com/FelixKratz/dotfiles
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
-
 ITEM_DIR="$CONFIG_DIR/items"
+FONT="JetBrainsMono Nerd Font"
 
 ##### Bar Appearance #####
 # Configuring the general appearance of the bar.

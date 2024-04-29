@@ -6,6 +6,7 @@ slack=(
     icon.drawing=off
     label.font="$FONT:Semibold:14.0"
     script="$PLUGIN_DIR/slack.sh"
+    click_script="open -a Slack"
 )
 
 sketchybar --add item slack right        \
