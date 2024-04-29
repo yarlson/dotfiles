@@ -28,5 +28,6 @@ spec "yarlson.project"
 spec "yarlson.indentline"
 spec "yarlson.toggleterm"
 spec "yarlson.extras.copilot"
+spec "yarlson.bufferline"
 require "yarlson.lazy"
 
