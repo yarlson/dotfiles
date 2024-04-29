@@ -3,21 +3,22 @@
 SLACK_INFO=$(lsappinfo info -only StatusLabel `lsappinfo find LSDisplayName=Slack`)
 COUNT=${SLACK_INFO:25:1}
 
-if [ $COUNT = "\"" ]; then
-  DRAWING=off
-else
-  DRAWING=on
-fi
-
 case "$COUNT" in
+"")
+    DRAWING=off
+    LABEL_COLOR=0xffffffff;
+    ;;
 "\"")
+    DRAWING=off
     LABEL_COLOR=0xffffffff;
     ;;
 "•")
-   LABEL_COLOR=0xffffffff;
+    DRAWING=on
+    LABEL_COLOR=0xffffffff;
     ;;
 *)
-    LABEL_COLOR=0xffed8796;
+    DRAWING=on
+    LABEL_COLOR=0xffa6da95;
     ;;
 esac
 
