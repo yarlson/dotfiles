@@ -9,5 +9,17 @@ else
   DRAWING=on
 fi
 
-sketchybar --set slack drawing=$DRAWING label="󰒱 ${COUNT}"
+case "$COUNT" in
+"\"")
+    LABEL_COLOR=0xffffffff;
+    ;;
+"•")
+   LABEL_COLOR=0xffffffff;
+    ;;
+*)
+    LABEL_COLOR=0xffed8796;
+    ;;
+esac
+
+sketchybar --set slack icon.color=$LABEL_COLOR label.color=$LABEL_COLOR drawing=$DRAWING label="${COUNT}"
 
