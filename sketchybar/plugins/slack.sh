@@ -9,5 +9,5 @@ else
   DRAWING=on
 fi
 
-sketchybar --set slack drawing=$DRAWING label="${COUNT}"
+sketchybar --set slack drawing=$DRAWING label="󰒱 ${COUNT}"
 
