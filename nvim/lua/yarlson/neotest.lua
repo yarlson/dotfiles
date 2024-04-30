@@ -11,7 +11,6 @@ local M = {
     "nvim-neotest/neotest-python",
     "nvim-neotest/neotest-plenary",
     "rouge8/neotest-rust",
-    "lawrence-laz/neotest-zig",
     "rcasia/neotest-bash",
   },
 }
@@ -33,7 +32,6 @@ function M.config()
         dap = { justMyCode = false },
       },
       require "neotest-vitest",
-      require "neotest-zig",
       require "neotest-vim-test" {
         ignore_file_types = { "python", "vim", "lua", "javascript", "typescript" },
       },
