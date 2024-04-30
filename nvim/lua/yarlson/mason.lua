@@ -16,6 +16,7 @@ function M.config()
     "bashls",
     "jsonls",
     "gopls",
+    "yamlls",
   }
 
   require("mason").setup {
