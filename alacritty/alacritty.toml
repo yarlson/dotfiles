@@ -3,7 +3,11 @@ program = "/bin/zsh"
 
 [window]
 
-decorations = "None"
+decorations = "buttonless"
+
+[window.padding]
+x = 8
+y = 8
 
 [font]
 # Alacritty handles font size on macOS and X11/Wayland a bit differentely
