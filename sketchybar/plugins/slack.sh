@@ -18,7 +18,7 @@ case "$COUNT" in
     ;;
 *)
     DRAWING=on
-    LABEL_COLOR=0ffa6e3a1;
+    LABEL_COLOR=0xffa6e3a1;
     ;;
 esac
 
