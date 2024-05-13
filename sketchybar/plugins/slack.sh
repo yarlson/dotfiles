@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SLACK_INFO=$(lsappinfo info -only StatusLabel `lsappinfo find LSDisplayName=Slack`)
-COUNT=${SLACK_INFO:25:1}
+COUNT=$(echo "$SLACK_INFO" | awk -F'"label"="' '{print $2}' | awk -F'"' '{print $1}')
 
 
 LABEL_COLOR=0xffffffff;
