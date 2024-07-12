@@ -90,7 +90,7 @@ require('lazy').setup {
   require 'yarlson/plugins/lspconfig',
   require 'yarlson/plugins/lualine',
   require 'yarlson/plugins/mini',
-  require 'yarlson/plugins/tokyonight',
+  require 'yarlson/plugins/kanagawa',
   require 'yarlson/plugins/oil',
   require 'yarlson/plugins/supermaven',
   require 'yarlson/plugins/telescope',
