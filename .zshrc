@@ -8,8 +8,8 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     nvm
-    zsh-autosuggestions
-    zsh-completions
+    # zsh-autosuggestions
+    # zsh-completions
     brew
     fzf
     thefuck
@@ -22,7 +22,7 @@ source "$ZSH/oh-my-zsh.sh"
 export EDITOR="vim"
 
 # PATH configuration
-export PATH="$HOME/go/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/go/bin:/usr/local/bin:/Users/yar/.local/bin:$PATH"
 
 # Load custom aliases
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
@@ -45,3 +45,13 @@ export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
+
+# pnpm
+export PNPM_HOME="/Users/yar/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm endA
+
+alias docker-compose="docker compose"
