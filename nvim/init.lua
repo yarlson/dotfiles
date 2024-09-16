@@ -1,9 +1,3 @@
---[[
-  init.lua
-  Neovim configuration using lazy.nvim for a full-stack development environment.
-  Technologies: Go, GORM, SQLite3/PostgreSQL, React/TypeScript, TailwindCSS, ShadcnUI
---]]
-
 -- -------------------------------
 -- 1. Leader Key Configuration
 -- -------------------------------
@@ -95,11 +89,11 @@ require("lazy").setup({
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      "L3MON4D3/LuaSnip",                    -- Snippet engine
-      "saadparwaiz1/cmp_luasnip",            -- Snippet completions
-      "hrsh7th/cmp-nvim-lsp",                -- LSP completions
-      "hrsh7th/cmp-buffer",                  -- Buffer completions
-      "hrsh7th/cmp-path",                    -- Path completions
+      "L3MON4D3/LuaSnip",         -- Snippet engine
+      "saadparwaiz1/cmp_luasnip", -- Snippet completions
+      "hrsh7th/cmp-nvim-lsp",     -- LSP completions
+      "hrsh7th/cmp-buffer",       -- Buffer completions
+      "hrsh7th/cmp-path",         -- Path completions
     },
     config = function()
       local cmp = require('cmp')
@@ -163,6 +157,11 @@ require("lazy").setup({
             ["iB"] = "@block.inner",
             ["aP"] = "@parameter.outer",
             ["iP"] = "@parameter.inner",
+          },
+          selection_modes = {
+            ['@parameter.outer'] = 'v',       -- charwise
+            ['@function.outer'] = 'V',        -- linewise
+            ['@class.outer'] = '<c-v>',       -- blockwise
           },
         },
         move = {
@@ -280,7 +279,7 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require('telescope').setup{
+      require('telescope').setup {
         defaults = {
           mappings = {
             i = {
@@ -300,7 +299,7 @@ require("lazy").setup({
     "folke/tokyonight.nvim",
     priority = 1000, -- Ensure this is loaded first
     config = function()
-      vim.cmd[[colorscheme tokyonight]]
+      vim.cmd [[colorscheme tokyonight]]
     end,
   },
   {
@@ -317,7 +316,7 @@ require("lazy").setup({
     version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require('bufferline').setup{
+      require('bufferline').setup {
         options = {
           numbers = "buffer_id",
           diagnostics = "nvim_lsp",
@@ -345,7 +344,7 @@ require("lazy").setup({
   {
     "akinsho/toggleterm.nvim",
     config = function()
-      require("toggleterm").setup{
+      require("toggleterm").setup {
         size = 20,
         open_mapping = [[<c-\>]],
       }
