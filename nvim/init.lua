@@ -71,7 +71,8 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require('lspconfig')
-      local capabilities = require('cmp').default_capabilities()
+      local cmp_nvim_lsp = require('cmp_nvim_lsp') -- Corrected
+      local capabilities = cmp_nvim_lsp.default_capabilities() -- Corrected
 
       local servers = { "gopls", "tsserver", "eslint", "tailwindcss", "sqlls", "jsonls" }
       for _, lsp in ipairs(servers) do
@@ -240,7 +241,7 @@ require("lazy").setup({
   },
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap" },
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, -- Corrected dependency
     config = function()
       local dap, dapui = require('dap'), require('dapui')
       dapui.setup()
@@ -260,8 +261,8 @@ require("lazy").setup({
     dependencies = { "mfussenegger/nvim-dap" },
     config = function()
       require("dap-go").setup()
-      -- Automatically set up dap for Go
-      require("dap-go").setup_dap_main()
+      -- Corrected setup function
+      -- Removed incorrect setup_dap_main()
     end,
   },
 
