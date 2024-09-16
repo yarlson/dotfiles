@@ -68,16 +68,43 @@ require("lazy").setup({
       local cmp_nvim_lsp = require('cmp_nvim_lsp')
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
+      -- Define an on_attach function to map keys after the language server attaches to the current buffer
+      local on_attach = function(client, bufnr)
+        -- Disable format on save for eslint and other linters to prevent conflicts
+        if client.name ~= "eslint" then
+          client.server_capabilities.document_formatting = true
+        end
+
+        -- Key bindings for LSP functionalities
+        local opts = { noremap=true, silent=true, buffer=bufnr }
+        local keymap = vim.keymap.set
+
+        -- LSP-related keybindings
+        keymap('n', 'gd', vim.lsp.buf.definition, opts)
+        keymap('n', 'gr', vim.lsp.buf.references, opts)
+        keymap('n', 'gi', vim.lsp.buf.implementation, opts)
+        keymap('n', 'K', vim.lsp.buf.hover, opts)
+        keymap('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        keymap('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+        keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, opts)
+
+        -- DAP keybindings (require DAP to be loaded)
+        local dap_ok, dap = pcall(require, 'dap')
+        if dap_ok then
+          keymap('n', '<leader>db', dap.toggle_breakpoint, opts)
+          keymap('n', '<leader>dc', dap.continue, opts)
+          keymap('n', '<leader>ds', dap.step_over, opts)
+          keymap('n', '<leader>di', dap.step_into, opts)
+          keymap('n', '<leader>do', dap.step_out, opts)
+          keymap('n', '<leader>du', function() require('dapui').toggle() end, opts)
+        end
+      end
+
       local servers = { "gopls", "ts_ls", "eslint", "tailwindcss", "sqlls", "jsonls" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
           capabilities = capabilities,
-          on_attach = function(client, bufnr)
-            -- Disable format on save for eslint and other linters to prevent conflicts
-            if client.name ~= "eslint" then
-              client.server_capabilities.document_formatting = true
-            end
-          end,
+          on_attach = on_attach,
         }
       end
     end,
@@ -142,6 +169,7 @@ require("lazy").setup({
     },
     opts = {
       ensure_installed = { "go", "typescript", "javascript", "json", "sql", "lua", "html", "css", "tsx", "jsx", "tailwindcss" },
+      auto_install = true,
       highlight = { enable = true },
       indent = { enable = true },
       textobjects = {
@@ -235,6 +263,37 @@ require("lazy").setup({
     "mfussenegger/nvim-dap",
     config = function()
       local dap = require('dap')
+
+      -- Go-specific DAP configurations
+      dap.adapters.go = function(callback, config)
+        local handle
+        local pid_or_err
+        local port = 38697
+        handle, pid_or_err = vim.loop.spawn("dlv", {
+          args = {"dap", "-l", "127.0.0.1:" .. port},
+          detached = true,
+        }, function(code)
+          handle:close()
+          if code ~= 0 then
+            print("Delve exited with code", code)
+          end
+        end)
+        vim.defer_fn(
+          function()
+            callback({ type = "server", host = "127.0.0.1", port = port })
+          end,
+          100)
+      end
+
+      dap.configurations.go = {
+        {
+          type = "go",
+          name = "Debug",
+          request = "launch",
+          program = "${file}",
+        },
+      }
+
       -- Additional DAP configurations can be added here
     end,
   },
@@ -289,6 +348,12 @@ require("lazy").setup({
           },
         },
       }
+      -- Telescope keybindings
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = "Find Files" })
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live Grep" })
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "Buffers" })
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
     end,
   },
 
@@ -332,7 +397,45 @@ require("lazy").setup({
   {
     "folke/which-key.nvim",
     config = function()
-      require("which-key").setup {}
+      require("which-key").setup {
+        -- You can add your own configuration here
+      }
+
+      -- Register leader key mappings for LSP and DAP
+      require("which-key").register({
+        f = {
+          name = "Find",
+          f = { "<cmd>Telescope find_files<cr>", "Find Files" },
+          g = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
+          b = { "<cmd>Telescope buffers<cr>", "Buffers" },
+          h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
+        },
+        r = {
+          name = "Rename",
+          r = { vim.lsp.buf.rename, "Rename Symbol" },
+        },
+        c = {
+          name = "Code Actions",
+          a = { vim.lsp.buf.code_action, "Code Action" },
+        },
+        d = {
+          name = "Diagnostics",
+          d = { "<cmd>Telescope diagnostics<cr>", "Show Diagnostics" },
+        },
+        b = {
+          name = "Breakpoints",
+          b = { require('dap').toggle_breakpoint, "Toggle Breakpoint" },
+          c = { require('dap').continue, "Continue" },
+          s = { require('dap').step_over, "Step Over" },
+          i = { require('dap').step_into, "Step Into" },
+          o = { require('dap').step_out, "Step Out" },
+          u = { require('dapui').toggle, "Toggle DAP UI" },
+        },
+        t = {
+          name = "Test",
+          t = { "<cmd>GoTest<cr>", "Run Go Tests" },
+        },
+      }, { prefix = "<leader>" })
     end,
   },
   {
@@ -348,6 +451,8 @@ require("lazy").setup({
         size = 20,
         open_mapping = [[<c-\>]],
       }
+      -- Toggleterm keybinding
+      vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { noremap = true, silent = true, desc = "Toggle Terminal" })
     end,
   },
 })
@@ -395,6 +500,45 @@ vim.diagnostic.config({
 -- This will install all specified plugins and ensure dependencies are set up.
 
 -- Restart Neovim to apply all configurations.
+
+-- -------------------------------
+-- 7. Key Bindings for Go Development
+-- -------------------------------
+
+-- The key bindings have been integrated within the LSP and DAP configurations above.
+-- Additionally, which-key has been configured to provide a mnemonic for all leader key bindings.
+
+-- Example keybindings:
+
+-- LSP:
+--   gd          : Go to definition
+--   gr          : Find references
+--   K           : Hover documentation
+--   <leader>rn  : Rename symbol
+--   <leader>ca  : Code actions
+--   <leader>f   : Format document
+
+-- DAP:
+--   <leader>db  : Toggle breakpoint
+--   <leader>dc  : Continue debugging
+--   <leader>ds  : Step over
+--   <leader>di  : Step into
+--   <leader>do  : Step out
+--   <leader>du  : Toggle DAP UI
+
+-- Telescope:
+--   <leader>ff  : Find Files
+--   <leader>fg  : Live Grep
+--   <leader>fb  : Buffers
+--   <leader>fh  : Help Tags
+
+-- ToggleTerm:
+--   <leader>t   : Toggle Terminal
+
+-- Test:
+--   <leader>tt  : Run Go Tests
+
+-- These key bindings are designed to streamline your Go development workflow, providing quick access to essential tools and actions.
 
 -- -------------------------------
 -- End of Configuration
