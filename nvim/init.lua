@@ -76,7 +76,7 @@ require("lazy").setup({
         end
 
         -- Key bindings for LSP functionalities
-        local opts = { noremap=true, silent=true, buffer=bufnr }
+        local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
         -- LSP-related keybindings
@@ -167,63 +167,66 @@ require("lazy").setup({
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
-    opts = {
-      ensure_installed = { "go", "typescript", "javascript", "json", "sql", "lua", "html", "css", "tsx", "jsx", "tailwindcss" },
-      auto_install = true,
-      highlight = { enable = true },
-      indent = { enable = true },
-      textobjects = {
-        select = {
-          enable = true,
-          lookahead = true,
-          keymaps = {
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-            ["aB"] = "@block.outer",
-            ["iB"] = "@block.inner",
-            ["aP"] = "@parameter.outer",
-            ["iP"] = "@parameter.inner",
+    config = function()
+      require('nvim-treesitter.configs').setup({
+        ensure_installed = { "go", "typescript", "javascript", "json", "sql", "lua", "html", "css", "tsx" },
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+              ["aB"] = "@block.outer",
+              ["iB"] = "@block.inner",
+              ["aP"] = "@parameter.outer",
+              ["iP"] = "@parameter.inner",
+            },
+            selection_modes = {
+              ['@parameter.outer'] = 'v', -- charwise
+              ['@function.outer'] = 'V', -- linewise
+              ['@class.outer'] = '<c-v>', -- blockwise
+            },
           },
-          selection_modes = {
-            ['@parameter.outer'] = 'v',       -- charwise
-            ['@function.outer'] = 'V',        -- linewise
-            ['@class.outer'] = '<c-v>',       -- blockwise
+          move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+              ["]f"] = "@function.outer",
+              ["]]"] = "@class.outer",
+            },
+            goto_next_end = {
+              ["]F"] = "@function.outer",
+              ["]["] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[f"] = "@function.outer",
+              ["[["] = "@class.outer",
+            },
+            goto_previous_end = {
+              ["[F"] = "@function.outer",
+              ["[]"] = "@class.outer",
+            },
+          },
+          swap = {
+            enable = true,
+            swap_next = {
+              ["<leader>a"] = "@parameter.inner",
+            },
+            swap_previous = {
+              ["<leader>A"] = "@parameter.inner",
+            },
           },
         },
-        move = {
-          enable = true,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]f"] = "@function.outer",
-            ["]]"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]F"] = "@function.outer",
-            ["]["] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[["] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[F"] = "@function.outer",
-            ["[]"] = "@class.outer",
-          },
-        },
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>a"] = "@parameter.inner",
-          },
-          swap_previous = {
-            ["<leader>A"] = "@parameter.inner",
-          },
-        },
-      },
-    },
+      }) -- Removed the extra comma and closing brace here
+    end,
   },
+
 
   -- -----------------------------
   -- Null-ls for Formatting and Linting
@@ -270,7 +273,7 @@ require("lazy").setup({
         local pid_or_err
         local port = 38697
         handle, pid_or_err = vim.loop.spawn("dlv", {
-          args = {"dap", "-l", "127.0.0.1:" .. port},
+          args = { "dap", "-l", "127.0.0.1:" .. port },
           detached = true,
         }, function(code)
           handle:close()
