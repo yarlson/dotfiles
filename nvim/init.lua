@@ -50,7 +50,7 @@ require("lazy").setup({
     opts = {
       ensure_installed = {
         -- LSP Servers
-        "gopls", "tsserver", "eslint", "tailwindcss", "sqlls", "jsonls",
+        "gopls", "ts_ls", "eslint", "tailwindcss", "sqlls", "jsonls",
         -- Formatters
         "prettier", "gofmt", "sql-formatter",
         -- Debuggers
@@ -63,7 +63,7 @@ require("lazy").setup({
     dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
     opts = {
       ensure_installed = {
-        "gopls", "tsserver", "eslint", "tailwindcss", "sqlls", "jsonls",
+        "gopls", "ts_ls", "eslint", "tailwindcss", "sqlls", "jsonls",
       },
     },
   },
@@ -71,10 +71,10 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require('lspconfig')
-      local cmp_nvim_lsp = require('cmp_nvim_lsp') -- Corrected
-      local capabilities = cmp_nvim_lsp.default_capabilities() -- Corrected
+      local cmp_nvim_lsp = require('cmp_nvim_lsp')
+      local capabilities = cmp_nvim_lsp.default_capabilities()
 
-      local servers = { "gopls", "tsserver", "eslint", "tailwindcss", "sqlls", "jsonls" }
+      local servers = { "gopls", "ts_ls", "eslint", "tailwindcss", "sqlls", "jsonls" }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
           capabilities = capabilities,
@@ -211,7 +211,6 @@ require("lazy").setup({
           null_ls.builtins.formatting.gofmt,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.diagnostics.eslint,
-          null_ls.builtins.formatting.tailwindcss,
           null_ls.builtins.formatting.sql_formatter,
         },
         on_attach = function(client)
@@ -241,7 +240,7 @@ require("lazy").setup({
   },
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, -- Corrected dependency
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, -- Added nvim-neotest/nvim-nio
     config = function()
       local dap, dapui = require('dap'), require('dapui')
       dapui.setup()
@@ -261,7 +260,6 @@ require("lazy").setup({
     dependencies = { "mfussenegger/nvim-dap" },
     config = function()
       require("dap-go").setup()
-      -- Corrected setup function
       -- Removed incorrect setup_dap_main()
     end,
   },
