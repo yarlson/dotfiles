@@ -86,7 +86,8 @@ require("lazy").setup({
         keymap('n', 'K', vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Documentation" }))
         keymap('n', '<leader>rn', vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename Symbol" }))
         keymap('n', '<leader>ca', vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
-        keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, vim.tbl_extend("force", opts, { desc = "Format Document" }))
+        keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end,
+          vim.tbl_extend("force", opts, { desc = "Format Document" }))
 
         -- DAP keybindings with descriptions (require DAP to be loaded)
         local dap_ok, dap = pcall(require, 'dap')
@@ -96,7 +97,8 @@ require("lazy").setup({
           keymap('n', '<leader>ds', dap.step_over, vim.tbl_extend("force", opts, { desc = "Step Over" }))
           keymap('n', '<leader>di', dap.step_into, vim.tbl_extend("force", opts, { desc = "Step Into" }))
           keymap('n', '<leader>do', dap.step_out, vim.tbl_extend("force", opts, { desc = "Step Out" }))
-          keymap('n', '<leader>du', function() require('dapui').toggle() end, vim.tbl_extend("force", opts, { desc = "Toggle DAP UI" }))
+          keymap('n', '<leader>du', function() require('dapui').toggle() end,
+            vim.tbl_extend("force", opts, { desc = "Toggle DAP UI" }))
         end
       end
 
@@ -116,11 +118,12 @@ require("lazy").setup({
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      "L3MON4D3/LuaSnip",         -- Snippet engine
-      "saadparwaiz1/cmp_luasnip", -- Snippet completions
-      "hrsh7th/cmp-nvim-lsp",     -- LSP completions
-      "hrsh7th/cmp-buffer",       -- Buffer completions
-      "hrsh7th/cmp-path",         -- Path completions
+      "L3MON4D3/LuaSnip",               -- Snippet engine
+      "saadparwaiz1/cmp_luasnip",       -- Snippet completions
+      "hrsh7th/cmp-nvim-lsp",           -- LSP completions
+      "hrsh7th/cmp-buffer",             -- Buffer completions
+      "hrsh7th/cmp-path",               -- Path completions
+      "supermaven-inc/supermaven-nvim", -- Supermaven completion source
     },
     config = function()
       local cmp = require('cmp')
@@ -141,6 +144,7 @@ require("lazy").setup({
           ['<S-Tab>'] = cmp.mapping.select_prev_item(),
         }),
         sources = {
+          { name = 'supermaven' },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'buffer' },
@@ -426,6 +430,19 @@ require("lazy").setup({
       }
       -- Toggleterm keybinding with description
       vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { noremap = true, silent = true, desc = "Toggle Terminal" })
+    end,
+  },
+
+  -- -----------------------------
+  -- Supermaven Plugin Integration
+  -- -----------------------------
+  {
+    "supermaven-inc/supermaven-nvim",      -- Replace 'author' with the actual GitHub username if different
+    dependencies = { "hrsh7th/nvim-cmp" }, -- Ensure it loads after nvim-cmp
+    config = function()
+      require('supermaven-nvim').setup({
+        disable_inline_completion = false
+      })
     end,
   },
 })
