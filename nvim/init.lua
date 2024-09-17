@@ -2,7 +2,6 @@
 -- 1. Leader Key Configuration
 -- -------------------------------
 
--- Set leader key to space
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -17,7 +16,7 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   })
 end
@@ -28,26 +27,19 @@ vim.opt.rtp:prepend(lazypath)
 -- -------------------------------
 
 require("lazy").setup({
-  -- -----------------------------
-  -- Plugin Manager (lazy.nvim)
-  -- -----------------------------
+  -- Plugin Manager
   {
     "folke/lazy.nvim",
-    lazy = false, -- Make sure it's loaded during startup
+    lazy = false,
   },
 
-  -- -----------------------------
   -- LSP and Autocompletion
-  -- -----------------------------
   {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
-        -- LSP Servers
         "gopls", "ts_ls", "eslint", "tailwindcss", "sqlls", "jsonls",
-        -- Formatters
         "prettier", "gofmt", "sql-formatter",
-        -- Debuggers
         "delve",
       },
     },
@@ -68,37 +60,40 @@ require("lazy").setup({
       local cmp_nvim_lsp = require('cmp_nvim_lsp')
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
-      -- Define an on_attach function to map keys after the language server attaches to the current buffer
       local on_attach = function(client, bufnr)
-        -- Disable format on save for eslint and other linters to prevent conflicts
         if client.name ~= "eslint" then
           client.server_capabilities.document_formatting = true
         end
 
-        -- Key bindings for LSP functionalities
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        -- LSP-related keybindings with descriptions
-        keymap('n', 'gd', vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to Definition" }))
-        keymap('n', 'gr', vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Find References" }))
-        keymap('n', 'gi', vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to Implementation" }))
-        keymap('n', 'K', vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Documentation" }))
-        keymap('n', '<leader>rn', vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename Symbol" }))
-        keymap('n', '<leader>ca', vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
+        keymap('n', 'gd', vim.lsp.buf.definition,
+          { desc = "Go to Definition", noremap = true, silent = true, buffer = bufnr })
+        keymap('n', 'gr', vim.lsp.buf.references,
+          { desc = "Find References", noremap = true, silent = true, buffer = bufnr })
+        keymap('n', 'gi', vim.lsp.buf.implementation,
+          { desc = "Go to Implementation", noremap = true, silent = true, buffer = bufnr })
+        keymap('n', 'K', vim.lsp.buf.hover,
+          { desc = "Hover Documentation", noremap = true, silent = true, buffer = bufnr })
+        keymap('n', '<leader>rn', vim.lsp.buf.rename,
+          { desc = "Rename Symbol", noremap = true, silent = true, buffer = bufnr })
+        keymap('n', '<leader>ca', vim.lsp.buf.code_action,
+          { desc = "Code Action", noremap = true, silent = true, buffer = bufnr })
         keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end,
-          vim.tbl_extend("force", opts, { desc = "Format Document" }))
+          { desc = "Format Document", noremap = true, silent = true, buffer = bufnr })
 
-        -- DAP keybindings with descriptions (require DAP to be loaded)
         local dap_ok, dap = pcall(require, 'dap')
         if dap_ok then
-          keymap('n', '<leader>db', dap.toggle_breakpoint, vim.tbl_extend("force", opts, { desc = "Toggle Breakpoint" }))
-          keymap('n', '<leader>dc', dap.continue, vim.tbl_extend("force", opts, { desc = "Continue Execution" }))
-          keymap('n', '<leader>ds', dap.step_over, vim.tbl_extend("force", opts, { desc = "Step Over" }))
-          keymap('n', '<leader>di', dap.step_into, vim.tbl_extend("force", opts, { desc = "Step Into" }))
-          keymap('n', '<leader>do', dap.step_out, vim.tbl_extend("force", opts, { desc = "Step Out" }))
+          keymap('n', '<leader>db', dap.toggle_breakpoint,
+            { desc = "Toggle Breakpoint", noremap = true, silent = true, buffer = bufnr })
+          keymap('n', '<leader>dc', dap.continue,
+            { desc = "Continue Execution", noremap = true, silent = true, buffer = bufnr })
+          keymap('n', '<leader>ds', dap.step_over, { desc = "Step Over", noremap = true, silent = true, buffer = bufnr })
+          keymap('n', '<leader>di', dap.step_into, { desc = "Step Into", noremap = true, silent = true, buffer = bufnr })
+          keymap('n', '<leader>do', dap.step_out, { desc = "Step Out", noremap = true, silent = true, buffer = bufnr })
           keymap('n', '<leader>du', function() require('dapui').toggle() end,
-            vim.tbl_extend("force", opts, { desc = "Toggle DAP UI" }))
+            { desc = "Toggle DAP UI", noremap = true, silent = true, buffer = bufnr })
         end
       end
 
@@ -112,18 +107,16 @@ require("lazy").setup({
     end,
   },
 
-  -- -----------------------------
-  -- Autocompletion Plugins
-  -- -----------------------------
+  -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      "L3MON4D3/LuaSnip",               -- Snippet engine
-      "saadparwaiz1/cmp_luasnip",       -- Snippet completions
-      "hrsh7th/cmp-nvim-lsp",           -- LSP completions
-      "hrsh7th/cmp-buffer",             -- Buffer completions
-      "hrsh7th/cmp-path",               -- Path completions
-      "supermaven-inc/supermaven-nvim", -- Supermaven completion source
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "supermaven-inc/supermaven-nvim",
     },
     config = function()
       local cmp = require('cmp')
@@ -162,9 +155,7 @@ require("lazy").setup({
     end,
   },
 
-  -- -----------------------------
   -- Treesitter and Text Objects
-  -- -----------------------------
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -192,14 +183,14 @@ require("lazy").setup({
               ["iP"] = "@parameter.inner",
             },
             selection_modes = {
-              ['@parameter.outer'] = 'v', -- charwise
-              ['@function.outer'] = 'V',  -- linewise
-              ['@class.outer'] = '<c-v>', -- blockwise
+              ['@parameter.outer'] = 'v',
+              ['@function.outer'] = 'V',
+              ['@class.outer'] = '<c-v>',
             },
           },
           move = {
             enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
+            set_jumps = true,
             goto_next_start = {
               ["]f"] = "@function.outer",
               ["]]"] = "@class.outer",
@@ -227,14 +218,11 @@ require("lazy").setup({
             },
           },
         },
-      }) -- Removed the extra comma and closing brace here
+      })
     end,
   },
 
-
-  -- -----------------------------
   -- Null-ls for Formatting and Linting
-  -- -----------------------------
   {
     "jose-elias-alvarez/null-ls.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
@@ -262,15 +250,12 @@ require("lazy").setup({
     end,
   },
 
-  -- -----------------------------
   -- Debugging with nvim-dap
-  -- -----------------------------
   {
     "mfussenegger/nvim-dap",
     config = function()
       local dap = require('dap')
 
-      -- Go-specific DAP configurations
       dap.adapters.go = function(callback, config)
         local handle
         local pid_or_err
@@ -299,13 +284,11 @@ require("lazy").setup({
           program = "${file}",
         },
       }
-
-      -- Additional DAP configurations can be added here
     end,
   },
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }, -- Added nvim-neotest/nvim-nio
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     config = function()
       local dap, dapui = require('dap'), require('dapui')
       dapui.setup()
@@ -325,21 +308,16 @@ require("lazy").setup({
     dependencies = { "mfussenegger/nvim-dap" },
     config = function()
       require("dap-go").setup()
-      -- Removed incorrect setup_dap_main()
     end,
   },
 
-  -- -----------------------------
   -- Git Integration
-  -- -----------------------------
   {
     "lewis6991/gitsigns.nvim",
     opts = {},
   },
 
-  -- -----------------------------
   -- Fuzzy Finder with Telescope
-  -- -----------------------------
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -354,7 +332,6 @@ require("lazy").setup({
           },
         },
       }
-      -- Telescope keybindings with descriptions
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = "Find Files" })
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live Grep" })
@@ -363,12 +340,10 @@ require("lazy").setup({
     end,
   },
 
-  -- -----------------------------
   -- UI Enhancements
-  -- -----------------------------
   {
     "folke/tokyonight.nvim",
-    priority = 1000, -- Ensure this is loaded first
+    priority = 1000,
     config = function()
       vim.cmd [[colorscheme tokyonight]]
     end,
@@ -391,16 +366,12 @@ require("lazy").setup({
         options = {
           numbers = "buffer_id",
           diagnostics = "nvim_lsp",
-          -- Additional options can be added here
         }
       }
     end,
   },
 
-  -- -----------------------------
   -- Additional Quality of Life Plugins
-  -- -----------------------------
-  -- Install and configure 'which-key.nvim' using lazy.nvim
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -428,17 +399,14 @@ require("lazy").setup({
         size = 20,
         open_mapping = [[<c-\>]],
       }
-      -- Toggleterm keybinding with description
       vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { noremap = true, silent = true, desc = "Toggle Terminal" })
     end,
   },
 
-  -- -----------------------------
   -- Supermaven Plugin Integration
-  -- -----------------------------
   {
-    "supermaven-inc/supermaven-nvim",      -- Replace 'author' with the actual GitHub username if different
-    dependencies = { "hrsh7th/nvim-cmp" }, -- Ensure it loads after nvim-cmp
+    "supermaven-inc/supermaven-nvim",
+    dependencies = { "hrsh7th/nvim-cmp" },
     config = function()
       require('supermaven-nvim').setup({
         disable_inline_completion = false
@@ -451,18 +419,14 @@ require("lazy").setup({
 -- 4. Additional Configurations
 -- -------------------------------
 
--- Enable indentation based on Treesitter
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 
--- Enable line numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
 
--- Ensure LuaSnip and friendly-snippets are loaded
 require("luasnip.loaders.from_vscode").lazy_load()
 
--- Configure diagnostic signs and settings
 vim.diagnostic.config({
   virtual_text = true,
   signs = true,
