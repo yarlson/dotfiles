@@ -455,6 +455,10 @@ require("lazy").setup({
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 
+-- Enable line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
+
 -- Ensure LuaSnip and friendly-snippets are loaded
 require("luasnip.loaders.from_vscode").lazy_load()
 
