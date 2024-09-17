@@ -79,24 +79,24 @@ require("lazy").setup({
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        -- LSP-related keybindings
-        keymap('n', 'gd', vim.lsp.buf.definition, opts)
-        keymap('n', 'gr', vim.lsp.buf.references, opts)
-        keymap('n', 'gi', vim.lsp.buf.implementation, opts)
-        keymap('n', 'K', vim.lsp.buf.hover, opts)
-        keymap('n', '<leader>rn', vim.lsp.buf.rename, opts)
-        keymap('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-        keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, opts)
+        -- LSP-related keybindings with descriptions
+        keymap('n', 'gd', vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to Definition" }))
+        keymap('n', 'gr', vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Find References" }))
+        keymap('n', 'gi', vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to Implementation" }))
+        keymap('n', 'K', vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover Documentation" }))
+        keymap('n', '<leader>rn', vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename Symbol" }))
+        keymap('n', '<leader>ca', vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code Action" }))
+        keymap('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, vim.tbl_extend("force", opts, { desc = "Format Document" }))
 
-        -- DAP keybindings (require DAP to be loaded)
+        -- DAP keybindings with descriptions (require DAP to be loaded)
         local dap_ok, dap = pcall(require, 'dap')
         if dap_ok then
-          keymap('n', '<leader>db', dap.toggle_breakpoint, opts)
-          keymap('n', '<leader>dc', dap.continue, opts)
-          keymap('n', '<leader>ds', dap.step_over, opts)
-          keymap('n', '<leader>di', dap.step_into, opts)
-          keymap('n', '<leader>do', dap.step_out, opts)
-          keymap('n', '<leader>du', function() require('dapui').toggle() end, opts)
+          keymap('n', '<leader>db', dap.toggle_breakpoint, vim.tbl_extend("force", opts, { desc = "Toggle Breakpoint" }))
+          keymap('n', '<leader>dc', dap.continue, vim.tbl_extend("force", opts, { desc = "Continue Execution" }))
+          keymap('n', '<leader>ds', dap.step_over, vim.tbl_extend("force", opts, { desc = "Step Over" }))
+          keymap('n', '<leader>di', dap.step_into, vim.tbl_extend("force", opts, { desc = "Step Into" }))
+          keymap('n', '<leader>do', dap.step_out, vim.tbl_extend("force", opts, { desc = "Step Out" }))
+          keymap('n', '<leader>du', function() require('dapui').toggle() end, vim.tbl_extend("force", opts, { desc = "Toggle DAP UI" }))
         end
       end
 
@@ -189,7 +189,7 @@ require("lazy").setup({
             },
             selection_modes = {
               ['@parameter.outer'] = 'v', -- charwise
-              ['@function.outer'] = 'V', -- linewise
+              ['@function.outer'] = 'V',  -- linewise
               ['@class.outer'] = '<c-v>', -- blockwise
             },
           },
@@ -351,11 +351,11 @@ require("lazy").setup({
           },
         },
       }
-      -- Telescope keybindings
+      -- Telescope keybindings with descriptions
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = "Find Files" })
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = "Live Grep" })
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "Buffers" })
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "List Buffers" })
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Help Tags" })
     end,
   },
@@ -397,49 +397,20 @@ require("lazy").setup({
   -- -----------------------------
   -- Additional Quality of Life Plugins
   -- -----------------------------
+  -- Install and configure 'which-key.nvim' using lazy.nvim
   {
     "folke/which-key.nvim",
-    config = function()
-      require("which-key").setup {
-        -- You can add your own configuration here
-      }
-
-      -- Register leader key mappings for LSP and DAP
-      require("which-key").register({
-        f = {
-          name = "Find",
-          f = { "<cmd>Telescope find_files<cr>", "Find Files" },
-          g = { "<cmd>Telescope live_grep<cr>", "Live Grep" },
-          b = { "<cmd>Telescope buffers<cr>", "Buffers" },
-          h = { "<cmd>Telescope help_tags<cr>", "Help Tags" },
-        },
-        r = {
-          name = "Rename",
-          r = { vim.lsp.buf.rename, "Rename Symbol" },
-        },
-        c = {
-          name = "Code Actions",
-          a = { vim.lsp.buf.code_action, "Code Action" },
-        },
-        d = {
-          name = "Diagnostics",
-          d = { "<cmd>Telescope diagnostics<cr>", "Show Diagnostics" },
-        },
-        b = {
-          name = "Breakpoints",
-          b = { require('dap').toggle_breakpoint, "Toggle Breakpoint" },
-          c = { require('dap').continue, "Continue" },
-          s = { require('dap').step_over, "Step Over" },
-          i = { require('dap').step_into, "Step Into" },
-          o = { require('dap').step_out, "Step Out" },
-          u = { require('dapui').toggle, "Toggle DAP UI" },
-        },
-        t = {
-          name = "Test",
-          t = { "<cmd>GoTest<cr>", "Run Go Tests" },
-        },
-      }, { prefix = "<leader>" })
-    end,
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
   },
   {
     "numToStr/Comment.nvim",
@@ -454,7 +425,7 @@ require("lazy").setup({
         size = 20,
         open_mapping = [[<c-\>]],
       }
-      -- Toggleterm keybinding
+      -- Toggleterm keybinding with description
       vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { noremap = true, silent = true, desc = "Toggle Terminal" })
     end,
   },
