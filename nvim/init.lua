@@ -241,7 +241,6 @@ require("lazy").setup({
           null_ls.builtins.formatting.gofmt,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.diagnostics.eslint,
-          null_ls.builtins.formatting.tailwindcss,
           null_ls.builtins.formatting.sql_formatter,
         },
         on_attach = function(client)
