@@ -75,7 +75,6 @@ require('lazy').setup {
         'debugpy',
         'dockerls',
         'yamlls',
-        'groovyls',
       },
     },
   },
@@ -94,7 +93,6 @@ require('lazy').setup {
         'terraformls',
         'dockerls',
         'yamlls',
-        'groovyls',
       },
     },
   },
@@ -151,7 +149,6 @@ require('lazy').setup {
         'terraformls',
         'dockerls',
         'yamlls',
-        'groovyls',
       }
 
       for _, lsp in ipairs(servers) do
@@ -250,7 +247,6 @@ require('lazy').setup {
           'terraform',
           'dockerfile',
           'yaml',
-          'groovy',
         },
         auto_install = true, -- Automatically install missing parsers
         highlight = { enable = true }, -- Enable syntax highlighting
@@ -332,7 +328,6 @@ require('lazy').setup {
           python = { 'black' },
           terraform = { 'terraform_fmt' },
           dockerfile = { 'prettier', 'dockerfile_lint' },
-          groovy = { 'google-java-format' },
         },
         format_on_save = { -- Automatically format files on save
           timeout_ms = 1000, -- Timeout for formatting
@@ -459,9 +454,58 @@ require('lazy').setup {
   -- ---------------------------------
   {
     'lewis6991/gitsigns.nvim',
-    opts = {}, -- Default configuration
-  },
+    opts = {
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
 
+        local function map(mode, lhs, rhs, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, lhs, rhs, opts)
+        end
+
+        -- Navigation
+        map('n', ']h', function()
+          if vim.wo.diff then
+            return ']h'
+          end
+          vim.schedule(function()
+            gs.next_hunk()
+          end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Next Git Hunk' })
+
+        map('n', '[h', function()
+          if vim.wo.diff then
+            return '[h'
+          end
+          vim.schedule(function()
+            gs.prev_hunk()
+          end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Previous Git Hunk' })
+
+        -- Actions
+        map({ 'n', 'v' }, '<leader>gs', ':Gitsigns stage_hunk<CR>', { desc = 'Stage Hunk' })
+        map({ 'n', 'v' }, '<leader>gr', ':Gitsigns reset_hunk<CR>', { desc = 'Reset Hunk' })
+        map('n', '<leader>gS', gs.stage_buffer, { desc = 'Stage Buffer' })
+        map('n', '<leader>gu', gs.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
+        map('n', '<leader>gR', gs.reset_buffer, { desc = 'Reset Buffer' })
+        map('n', '<leader>gp', gs.preview_hunk, { desc = 'Preview Hunk' })
+        map('n', '<leader>gb', function()
+          gs.blame_line { full = true }
+        end, { desc = 'Blame Line' })
+        map('n', '<leader>gd', gs.diffthis, { desc = 'Diff This' })
+        map('n', '<leader>gD', function()
+          gs.diffthis '~'
+        end, { desc = 'Diff Against HEAD' })
+        map('n', '<leader>gt', gs.toggle_deleted, { desc = 'Toggle Deleted Lines' })
+
+        -- Text object
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'Select Hunk' })
+      end,
+    },
+  },
   -- ---------------------------------
   -- Buffer Management Plugins
   -- ---------------------------------
@@ -682,16 +726,6 @@ vim.diagnostic.config {
   underline = true, -- Underline diagnostic text
   severity_sort = false, -- Do not sort diagnostics by severity
 }
-
--- -------------------------------
--- Filetype Detection Enhancements
--- -------------------------------
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = 'Jenkinsfile',
-  callback = function()
-    vim.bo.filetype = 'groovy'
-  end,
-})
 
 -- -------------------------------
 -- End of Configuration
