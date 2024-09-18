@@ -366,6 +366,14 @@ require("lazy").setup({
         options = {
           numbers = "buffer_id",
           diagnostics = "nvim_lsp",
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "File Explorer",
+              text_align = "left",
+              separator = true,
+            }
+          },
         }
       }
     end,
@@ -413,6 +421,37 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- -------------------------------
+  -- 7. File Browser Plugin (nvim-tree.lua)
+  -- -------------------------------
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup {
+        view = {
+          width = 30,
+          side = 'left',
+          -- auto_resize = true, -- Removed due to deprecation
+        },
+        renderer = {
+          icons = {
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+            },
+          },
+        },
+        update_focused_file = {
+          enable = true,
+          update_cwd = true,
+        },
+      }
+      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true, desc = "Toggle File Explorer" })
+    end,
+  },
 })
 
 -- -------------------------------
@@ -436,5 +475,18 @@ vim.diagnostic.config({
 })
 
 -- -------------------------------
+-- 5. System Clipboard Configuration
+-- -------------------------------
+
+vim.opt.clipboard = "unnamedplus"
+
+-- -------------------------------
+-- 6. Disable Mouse
+-- -------------------------------
+
+vim.opt.mouse = ""
+
+-- -------------------------------
 -- End of Configuration
 -- -------------------------------
+
