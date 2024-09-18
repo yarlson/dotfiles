@@ -1,14 +1,31 @@
+-- ===========================================
+-- Neovim Configuration
+-- ===========================================
+
 -- -------------------------------
 -- 1. Leader Key Configuration
 -- -------------------------------
-
+-- Set the global and local leader keys to space for easier keybinding shortcuts.
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- -------------------------------
--- 2. Bootstrap lazy.nvim
+-- 2. Core Neovim Settings
 -- -------------------------------
+-- Basic editor settings for indentation, line numbers, and more.
+vim.opt.autoindent = true -- Enable automatic indentation
+vim.opt.smartindent = true -- Enable smart indentation
+vim.opt.tabstop = 4 -- Number of spaces that a <Tab> counts for
+vim.opt.shiftwidth = 4 -- Number of spaces to use for each step of (auto)indent
+vim.opt.number = true -- Show absolute line numbers
+vim.opt.relativenumber = true -- Show relative line numbers
+vim.opt.clipboard = 'unnamedplus' -- Use the system clipboard
+vim.opt.mouse = '' -- Disable mouse support
 
+-- -------------------------------
+-- 3. Bootstrap lazy.nvim Plugin Manager
+-- -------------------------------
+-- Ensure that lazy.nvim is installed. If not, clone it from GitHub.
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -16,28 +33,33 @@ if not vim.loop.fs_stat(lazypath) then
     'clone',
     '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable',
+    '--branch=stable', -- Use the stable release
     lazypath,
   }
 end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(lazypath) -- Prepend lazy.nvim to runtime path
 
 -- -------------------------------
--- 3. Plugin Setup with lazy.nvim
+-- 4. Plugin Setup with lazy.nvim
 -- -------------------------------
-
+-- Configure and initialize all plugins using lazy.nvim.
 require('lazy').setup {
-  -- Plugin Manager
+
+  -- ---------------------------------
+  -- Plugin Management
+  -- ---------------------------------
   {
     'folke/lazy.nvim',
-    lazy = false,
+    lazy = false, -- Load immediately
   },
 
-  -- LSP and Autocompletion
+  -- ---------------------------------
+  -- Language Server Protocol (LSP) & Autocompletion
+  -- ---------------------------------
   {
     'williamboman/mason.nvim',
     opts = {
-      ensure_installed = {
+      ensure_installed = { -- Automatically install these LSP servers and tools
         'gopls',
         'ts_ls',
         'eslint',
@@ -55,7 +77,7 @@ require('lazy').setup {
     'williamboman/mason-lspconfig.nvim',
     dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
     opts = {
-      ensure_installed = {
+      ensure_installed = { -- Ensure these LSP servers are installed
         'gopls',
         'ts_ls',
         'eslint',
@@ -72,6 +94,7 @@ require('lazy').setup {
       local cmp_nvim_lsp = require 'cmp_nvim_lsp'
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
+      -- Define keybindings and behaviors when an LSP server attaches to a buffer
       local on_attach = function(client, bufnr)
         if client.name ~= 'eslint' then
           client.server_capabilities.document_formatting = true
@@ -80,29 +103,32 @@ require('lazy').setup {
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        keymap('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition', noremap = true, silent = true, buffer = bufnr })
-        keymap('n', 'gr', vim.lsp.buf.references, { desc = 'Find References', noremap = true, silent = true, buffer = bufnr })
-        keymap('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation', noremap = true, silent = true, buffer = bufnr })
-        keymap('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation', noremap = true, silent = true, buffer = bufnr })
-        keymap('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename Symbol', noremap = true, silent = true, buffer = bufnr })
-        keymap('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action', noremap = true, silent = true, buffer = bufnr })
+        -- LSP-related keybindings
+        keymap('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
+        keymap('n', 'gr', vim.lsp.buf.references, { desc = 'Find References' })
+        keymap('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation' })
+        keymap('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation' })
+        keymap('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename Symbol' })
+        keymap('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action' })
         keymap('n', '<leader>f', function()
           vim.lsp.buf.format { async = true }
-        end, { desc = 'Format Document', noremap = true, silent = true, buffer = bufnr })
+        end, { desc = 'Format Document' })
 
+        -- DAP (Debug Adapter Protocol) keybindings if DAP is available
         local dap_ok, dap = pcall(require, 'dap')
         if dap_ok then
-          keymap('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint', noremap = true, silent = true, buffer = bufnr })
-          keymap('n', '<leader>dc', dap.continue, { desc = 'Continue Execution', noremap = true, silent = true, buffer = bufnr })
-          keymap('n', '<leader>ds', dap.step_over, { desc = 'Step Over', noremap = true, silent = true, buffer = bufnr })
-          keymap('n', '<leader>di', dap.step_into, { desc = 'Step Into', noremap = true, silent = true, buffer = bufnr })
-          keymap('n', '<leader>do', dap.step_out, { desc = 'Step Out', noremap = true, silent = true, buffer = bufnr })
+          keymap('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint' })
+          keymap('n', '<leader>dc', dap.continue, { desc = 'Continue Execution' })
+          keymap('n', '<leader>ds', dap.step_over, { desc = 'Step Over' })
+          keymap('n', '<leader>di', dap.step_into, { desc = 'Step Into' })
+          keymap('n', '<leader>do', dap.step_out, { desc = 'Step Out' })
           keymap('n', '<leader>du', function()
             require('dapui').toggle()
-          end, { desc = 'Toggle DAP UI', noremap = true, silent = true, buffer = bufnr })
+          end, { desc = 'Toggle DAP UI' })
         end
       end
 
+      -- List of LSP servers to configure
       local servers = { 'gopls', 'ts_ls', 'eslint', 'tailwindcss', 'sqlls', 'jsonls' }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
@@ -113,16 +139,18 @@ require('lazy').setup {
     end,
   },
 
-  -- Autocompletion
+  -- ---------------------------------
+  -- Autocompletion Plugins
+  -- ---------------------------------
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'supermaven-inc/supermaven-nvim',
+      'L3MON4D3/LuaSnip', -- Snippet engine
+      'saadparwaiz1/cmp_luasnip', -- Snippet completions
+      'hrsh7th/cmp-nvim-lsp', -- LSP completions
+      'hrsh7th/cmp-buffer', -- Buffer completions
+      'hrsh7th/cmp-path', -- Path completions
+      'supermaven-inc/supermaven-nvim', -- Additional completion source
     },
     config = function()
       local cmp = require 'cmp'
@@ -131,14 +159,14 @@ require('lazy').setup {
       cmp.setup {
         snippet = {
           expand = function(args)
-            luasnip.lsp_expand(args.body)
+            luasnip.lsp_expand(args.body) -- Expand snippets using LuaSnip
           end,
         },
         mapping = cmp.mapping.preset.insert {
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true }, -- Confirm selection
           ['<Tab>'] = cmp.mapping.select_next_item(),
           ['<S-Tab>'] = cmp.mapping.select_prev_item(),
         },
@@ -154,27 +182,39 @@ require('lazy').setup {
   },
   {
     'L3MON4D3/LuaSnip',
-    dependencies = { 'rafamadriz/friendly-snippets' },
+    dependencies = { 'rafamadriz/friendly-snippets' }, -- Collection of snippets
     config = function()
       require('luasnip').setup {}
-      require('luasnip.loaders.from_vscode').lazy_load()
+      require('luasnip.loaders.from_vscode').lazy_load() -- Load snippets from VSCode
     end,
   },
 
-  -- Treesitter and Text Objects
+  -- ---------------------------------
+  -- Treesitter for Enhanced Syntax Highlighting and Text Objects
+  -- ---------------------------------
   {
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
+    build = ':TSUpdate', -- Update Treesitter parsers
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/nvim-treesitter-textobjects', -- Additional text objects
     },
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'go', 'typescript', 'javascript', 'json', 'sql', 'lua', 'html', 'css', 'tsx' },
-        auto_install = true,
-        highlight = { enable = true },
-        indent = { enable = true },
-        textobjects = {
+        ensure_installed = { -- Languages to install parsers for
+          'go',
+          'typescript',
+          'javascript',
+          'json',
+          'sql',
+          'lua',
+          'html',
+          'css',
+          'tsx',
+        },
+        auto_install = true, -- Automatically install missing parsers
+        highlight = { enable = true }, -- Enable syntax highlighting
+        indent = { enable = true }, -- Enable indentation based on syntax
+        textobjects = { -- Define custom text objects
           select = {
             enable = true,
             lookahead = true,
@@ -196,7 +236,7 @@ require('lazy').setup {
           },
           move = {
             enable = true,
-            set_jumps = true,
+            set_jumps = true, -- Set jumps in the jumplist
             goto_next_start = {
               [']f'] = '@function.outer',
               [']]'] = '@class.outer',
@@ -228,19 +268,14 @@ require('lazy').setup {
     end,
   },
 
-  -- Formatter.nvim removed
-  -- Null-ls.nvim removed
-
-  -- Formatter.nvim removed
-
-  -- Formatter.nvim is removed as per the latest instructions
-
-  -- Conform.nvim for Code Formatting
+  -- ---------------------------------
+  -- Code Formatting with Conform.nvim
+  -- ---------------------------------
   {
     'stevearc/conform.nvim',
     config = function()
       require('conform').setup {
-        formatters_by_ft = {
+        formatters_by_ft = { -- Specify formatters for different filetypes
           lua = { 'stylua' },
           go = { 'gofmt' },
           javascript = { 'prettier' },
@@ -254,13 +289,13 @@ require('lazy').setup {
           yaml = { 'prettier' },
           markdown = { 'prettier' },
         },
-        format_on_save = {
-          timeout_ms = 1000, -- Time to wait for formatting to complete, in milliseconds
-          lsp_fallback = true, -- Fallback to LSP formatting if no formatter is specified
+        format_on_save = { -- Automatically format files on save
+          timeout_ms = 1000, -- Timeout for formatting
+          lsp_fallback = true, -- Use LSP formatting if no formatter is specified
         },
       }
 
-      -- Format on save using conform.nvim
+      -- Trigger Conform formatting before saving a buffer
       vim.api.nvim_create_autocmd('BufWritePre', {
         group = vim.api.nvim_create_augroup('ConformFormatOnSave', { clear = true }),
         callback = function()
@@ -270,12 +305,15 @@ require('lazy').setup {
     end,
   },
 
+  -- ---------------------------------
   -- Debugging with nvim-dap
+  -- ---------------------------------
   {
     'mfussenegger/nvim-dap',
     config = function()
       local dap = require 'dap'
 
+      -- Configure Delve for Go debugging
       dap.adapters.go = function(callback, config)
         local handle
         local pid_or_err
@@ -310,9 +348,13 @@ require('lazy').setup {
     config = function()
       local dap, dapui = require 'dap', require 'dapui'
       dapui.setup()
+
+      -- Automatically open DAP UI when debugging starts
       dap.listeners.after.event_initialized['dapui_config'] = function()
         dapui.open()
       end
+
+      -- Automatically close DAP UI when debugging ends
       dap.listeners.before.event_terminated['dapui_config'] = function()
         dapui.close()
       end
@@ -325,23 +367,29 @@ require('lazy').setup {
     'leoluz/nvim-dap-go',
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
-      require('dap-go').setup()
+      require('dap-go').setup() -- Setup Go debugging integration
     end,
   },
 
-  -- Git Integration
+  -- ---------------------------------
+  -- Git Integration with gitsigns.nvim
+  -- ---------------------------------
   {
     'lewis6991/gitsigns.nvim',
-    opts = {},
+    opts = {}, -- Default configuration
   },
 
-  -- Buffer Deletion Plugin
+  -- ---------------------------------
+  -- Buffer Management Plugins
+  -- ---------------------------------
   {
     'famiu/bufdelete.nvim',
-    cmd = { 'Bdelete', 'Bwipeout' },
+    cmd = { 'Bdelete', 'Bwipeout' }, -- Load on specific commands
   },
 
+  -- ---------------------------------
   -- Fuzzy Finder with Telescope
+  -- ---------------------------------
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -351,7 +399,7 @@ require('lazy').setup {
         defaults = {
           mappings = {
             i = {
-              ['<C-u>'] = false,
+              ['<C-u>'] = false, -- Disable default mappings
               ['<C-d>'] = false,
             },
           },
@@ -365,7 +413,7 @@ require('lazy').setup {
                   local action_state = require 'telescope.actions.state'
                   local entry = action_state.get_selected_entry()
                   if entry then
-                    require('bufdelete').bufdelete(entry.bufnr, true)
+                    require('bufdelete').bufdelete(entry.bufnr, true) -- Delete buffer without closing Telescope
                   end
                   actions.close(prompt_bufnr)
                 end,
@@ -374,6 +422,8 @@ require('lazy').setup {
           },
         },
       }
+
+      -- Keybindings for Telescope functions
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find Files' })
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live Grep' })
@@ -382,12 +432,14 @@ require('lazy').setup {
     end,
   },
 
+  -- ---------------------------------
   -- UI Enhancements
+  -- ---------------------------------
   {
     'folke/tokyonight.nvim',
-    priority = 1000,
+    priority = 1000, -- Ensure colorscheme loads first
     config = function()
-      vim.cmd [[colorscheme tokyonight]]
+      vim.cmd [[colorscheme tokyonight]] -- Set tokyonight as the colorscheme
     end,
   },
   {
@@ -395,7 +447,7 @@ require('lazy').setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('lualine').setup {
-        options = { theme = 'tokyonight' },
+        options = { theme = 'tokyonight' }, -- Match colorscheme
       }
     end,
   },
@@ -406,9 +458,9 @@ require('lazy').setup {
     config = function()
       require('bufferline').setup {
         options = {
-          numbers = 'buffer_id',
-          diagnostics = 'nvim_lsp',
-          offsets = {
+          numbers = 'buffer_id', -- Display buffer numbers
+          diagnostics = 'nvim_lsp', -- Show LSP diagnostics
+          offsets = { -- Adjust for file explorer
             {
               filetype = 'NvimTree',
               text = 'File Explorer',
@@ -421,16 +473,18 @@ require('lazy').setup {
     end,
   },
 
+  -- ---------------------------------
   -- Additional Quality of Life Plugins
+  -- ---------------------------------
   {
     'folke/which-key.nvim',
-    event = 'VeryLazy',
+    event = 'VeryLazy', -- Load on very lazy event
     opts = {},
     keys = {
       {
         '<leader>?',
         function()
-          require('which-key').show { global = false }
+          require('which-key').show { global = false } -- Show buffer-local keymaps
         end,
         desc = 'Buffer Local Keymaps (which-key)',
       },
@@ -439,43 +493,44 @@ require('lazy').setup {
   {
     'numToStr/Comment.nvim',
     config = function()
-      require('Comment').setup()
+      require('Comment').setup() -- Enable commenting functionality
     end,
   },
   {
     'akinsho/toggleterm.nvim',
     config = function()
       require('toggleterm').setup {
-        size = 20,
-        open_mapping = [[<c-\>]],
+        size = 20, -- Terminal window size
+        open_mapping = [[<c-\>]], -- Keybinding to toggle terminal
       }
-      vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { noremap = true, silent = true, desc = 'Toggle Terminal' })
+      vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { desc = 'Toggle Terminal' })
     end,
   },
 
+  -- ---------------------------------
   -- Supermaven Plugin Integration
+  -- ---------------------------------
   {
     'supermaven-inc/supermaven-nvim',
     dependencies = { 'hrsh7th/nvim-cmp' },
     config = function()
       require('supermaven-nvim').setup {
-        disable_inline_completion = false,
+        disable_inline_completion = false, -- Enable inline completions
       }
     end,
   },
 
-  -- -------------------------------
-  -- 7. File Browser Plugin (nvim-tree.lua)
-  -- -------------------------------
+  -- ---------------------------------
+  -- File Explorer with nvim-tree.lua
+  -- ---------------------------------
   {
     'nvim-tree/nvim-tree.lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('nvim-tree').setup {
         view = {
-          width = 30,
-          side = 'left',
-          -- auto_resize = true, -- Removed due to deprecation
+          width = 30, -- Width of the file explorer
+          side = 'left', -- Position on the left
         },
         renderer = {
           icons = {
@@ -491,13 +546,16 @@ require('lazy').setup {
           update_cwd = true,
         },
       }
-      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true, desc = 'Toggle File Explorer' })
+      -- Keybinding to toggle the file explorer
+      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer' })
     end,
   },
 }
+
 -- -------------------------------
--- 8. Bufdelete Keybindings
+-- 5. Buffer Deletion Keybindings
 -- -------------------------------
+-- Keybindings for managing buffers efficiently.
 
 -- Delete the current buffer with <leader>bd
 vim.keymap.set('n', '<leader>bd', '<cmd>Bdelete<CR>', {
@@ -506,7 +564,7 @@ vim.keymap.set('n', '<leader>bd', '<cmd>Bdelete<CR>', {
   silent = true,
 })
 
--- Delete all buffers and open the file explorer with <leader>ba
+-- Delete all buffers except NvimTree and open the file explorer with <leader>ba
 vim.keymap.set('n', '<leader>ba', function()
   local bufdelete = require 'bufdelete'
   local buffers = vim.api.nvim_list_bufs()
@@ -526,38 +584,21 @@ end, {
 })
 
 -- -------------------------------
--- 4. Additional Configurations
+-- 6. Additional Configurations
 -- -------------------------------
+-- Configure diagnostics and other miscellaneous settings.
 
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-
-vim.opt.number = true
-vim.opt.relativenumber = true
-
+-- Load VSCode-style snippets
 require('luasnip.loaders.from_vscode').lazy_load()
 
+-- Diagnostic configurations for LSP
 vim.diagnostic.config {
-  virtual_text = true,
-  signs = true,
-  update_in_insert = false,
-  underline = true,
-  severity_sort = false,
+  virtual_text = true, -- Show virtual text for diagnostics
+  signs = true, -- Show signs in the gutter
+  update_in_insert = false, -- Don't update diagnostics in insert mode
+  underline = true, -- Underline diagnostic text
+  severity_sort = false, -- Do not sort diagnostics by severity
 }
-
--- -------------------------------
--- 5. System Clipboard Configuration
--- -------------------------------
-
-vim.opt.clipboard = 'unnamedplus'
-
--- -------------------------------
--- 6. Disable Mouse
--- -------------------------------
-
-vim.opt.mouse = ''
 
 -- -------------------------------
 -- End of Configuration
