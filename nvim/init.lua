@@ -629,6 +629,7 @@ require('lazy').setup {
       require('toggleterm').setup {
         size = 20, -- Terminal window size
         open_mapping = [[<c-\>]], -- Keybinding to toggle terminal
+        direction = 'float', -- Open terminal in a floating window
       }
       vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { desc = 'Toggle Terminal' })
     end,
