@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
@@ -7,27 +5,60 @@ ZSH_THEME="robbyrussell"
 # Plugins
 plugins=(
     git
-    nvm
-    # zsh-autosuggestions
-    # zsh-completions
+    node
+    zsh-autosuggestions
+    zsh-completions
     brew
+    asdf
+    docker
+    kubectl
     fzf
-    thefuck
 )
 
-# Source Oh My Zsh
 source "$ZSH/oh-my-zsh.sh"
 
 # Environment variables
 export EDITOR="vim"
 
 # PATH configuration
-export PATH="$HOME/go/bin:/usr/local/bin:/Users/yar/.local/bin:$PATH"
+export PATH="$HOME/go/bin:/usr/local/bin:/opt/homebrew/opt/go@1.21/bin:$PATH"
 
 # Load custom aliases
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 
-# Custom aliases
+# Aliases
+# Git
+alias g='git'
+alias ga='git add'
+alias gc='git commit -m'
+alias gp='git push'
+alias gl='git log --oneline'
+alias gs='git status'
+
+# Docker
+alias d='docker'
+alias dc='docker-compose'
+alias dps='docker ps'
+alias di='docker images'
+
+# Kubernetes
+alias k='kubectl'
+alias ka='kubectl apply -f'
+alias kd='kubectl delete -f'
+alias kl='kubectl logs'
+alias kx='kubectl exec -it'
+alias kg='kubectl get'
+
+# Node.js
+alias n='npm'
+alias ns='npm start'
+alias nt='npm test'
+alias ni='npm install'
+alias nr='npm run'
+
+# General
+alias c='code .'
+alias l='ls -lah'
 alias mc='mc --nosubshell'
 
 # Zsh completion styles
@@ -40,18 +71,23 @@ zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower
 # Initialize zsh-completions
 autoload -U compinit && compinit
 
-# FZF configuration (if additional settings are needed)
+# FZF configuration
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
+# NVM configuration
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# pnpm
-export PNPM_HOME="/Users/yar/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm endA
+# Go configuration
+export GOROOT="/usr/local/go"
+export GOPATH="$HOME/go"
 
-alias docker-compose="docker compose"
+# Kubectl autocomplete
+source <(kubectl completion zsh)
+
+# Docker compose completion
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i
