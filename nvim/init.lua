@@ -317,17 +317,41 @@ require("lazy").setup({
     opts = {},
   },
 
+  -- Buffer Deletion Plugin
+  {
+    "famiu/bufdelete.nvim",
+    cmd = { "Bdelete", "Bwipeout" },
+  },
+
   -- Fuzzy Finder with Telescope
   {
     "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
+      local actions = require('telescope.actions')
       require('telescope').setup {
         defaults = {
           mappings = {
             i = {
               ["<C-u>"] = false,
               ["<C-d>"] = false,
+            },
+          },
+        },
+        pickers = {
+          buffers = {
+            mappings = {
+              i = {
+                ["<C-d>"] = function(prompt_bufnr)
+                  local actions = require('telescope.actions')
+                  local action_state = require('telescope.actions.state')
+                  local entry = action_state.get_selected_entry()
+                  if entry then
+                    require('bufdelete').bufdelete(entry.bufnr, true)
+                  end
+                  actions.close(prompt_bufnr)
+                end,
+              },
             },
           },
         },
@@ -489,4 +513,3 @@ vim.opt.mouse = ""
 -- -------------------------------
 -- End of Configuration
 -- -------------------------------
-
