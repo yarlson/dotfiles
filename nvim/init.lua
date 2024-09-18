@@ -73,6 +73,9 @@ require('lazy').setup {
         'pyright',
         'terraformls',
         'debugpy',
+        'dockerls',
+        'yamlls',
+        'groovyls',
       },
     },
   },
@@ -87,8 +90,11 @@ require('lazy').setup {
         'tailwindcss',
         'sqlls',
         'jsonls',
-        'pyright', -- Python LSP
-        'terraformls', -- Terraform LSP
+        'pyright',
+        'terraformls',
+        'dockerls',
+        'yamlls',
+        'groovyls',
       },
     },
   },
@@ -134,13 +140,38 @@ require('lazy').setup {
       end
 
       -- List of LSP servers to configure
-      local servers = { 'gopls', 'ts_ls', 'eslint', 'tailwindcss', 'sqlls', 'jsonls', 'pyright', 'terraformls' }
+      local servers = {
+        'gopls',
+        'ts_ls',
+        'eslint',
+        'tailwindcss',
+        'sqlls',
+        'jsonls',
+        'pyright',
+        'terraformls',
+        'dockerls',
+        'yamlls',
+        'groovyls',
+      }
+
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
           capabilities = capabilities,
           on_attach = on_attach,
         }
       end
+
+      -- Additional configurations for specific LSP servers (optional)
+      lspconfig.yamlls.setup {
+        settings = {
+          yaml = {
+            schemas = {
+              ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] = 'docker-compose*.yml',
+            },
+            keyOrdering = false,
+          },
+        },
+      }
     end,
   },
 
@@ -217,6 +248,9 @@ require('lazy').setup {
           'tsx',
           'python',
           'terraform',
+          'dockerfile',
+          'yaml',
+          'groovy',
         },
         auto_install = true, -- Automatically install missing parsers
         highlight = { enable = true }, -- Enable syntax highlighting
@@ -293,10 +327,12 @@ require('lazy').setup {
           html = { 'prettier' },
           css = { 'prettier' },
           json = { 'prettier' },
-          yaml = { 'prettier' },
+          yaml = { 'prettier', 'yamlfmt' },
           markdown = { 'prettier' },
           python = { 'black' },
           terraform = { 'terraform_fmt' },
+          dockerfile = { 'prettier', 'dockerfile_lint' },
+          groovy = { 'google-java-format' },
         },
         format_on_save = { -- Automatically format files on save
           timeout_ms = 1000, -- Timeout for formatting
@@ -646,6 +682,16 @@ vim.diagnostic.config {
   underline = true, -- Underline diagnostic text
   severity_sort = false, -- Do not sort diagnostics by severity
 }
+
+-- -------------------------------
+-- Filetype Detection Enhancements
+-- -------------------------------
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = 'Jenkinsfile',
+  callback = function()
+    vim.bo.filetype = 'groovy'
+  end,
+})
 
 -- -------------------------------
 -- End of Configuration
