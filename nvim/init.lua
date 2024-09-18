@@ -70,6 +70,9 @@ require('lazy').setup {
         'gofmt',
         'sql-formatter',
         'delve',
+        'pyright',
+        'terraformls',
+        'debugpy',
       },
     },
   },
@@ -84,6 +87,8 @@ require('lazy').setup {
         'tailwindcss',
         'sqlls',
         'jsonls',
+        'pyright', -- Python LSP
+        'terraformls', -- Terraform LSP
       },
     },
   },
@@ -129,7 +134,7 @@ require('lazy').setup {
       end
 
       -- List of LSP servers to configure
-      local servers = { 'gopls', 'ts_ls', 'eslint', 'tailwindcss', 'sqlls', 'jsonls' }
+      local servers = { 'gopls', 'ts_ls', 'eslint', 'tailwindcss', 'sqlls', 'jsonls', 'pyright', 'terraformls' }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
           capabilities = capabilities,
@@ -210,6 +215,8 @@ require('lazy').setup {
           'html',
           'css',
           'tsx',
+          'python',
+          'terraform',
         },
         auto_install = true, -- Automatically install missing parsers
         highlight = { enable = true }, -- Enable syntax highlighting
@@ -288,6 +295,8 @@ require('lazy').setup {
           json = { 'prettier' },
           yaml = { 'prettier' },
           markdown = { 'prettier' },
+          python = { 'black' },
+          terraform = { 'terraform_fmt' },
         },
         format_on_save = { -- Automatically format files on save
           timeout_ms = 1000, -- Timeout for formatting
@@ -340,6 +349,34 @@ require('lazy').setup {
           program = '${file}',
         },
       }
+
+      dap.adapters.python = {
+        type = 'executable',
+        command = 'python',
+        args = { '-m', 'debugpy.adapter' },
+      }
+
+      dap.configurations.python = {
+        {
+          -- The first three options are required by nvim-dap
+          type = 'python', -- the type here established the link to the adapter definition: `dap.adapters.python`
+          request = 'launch',
+          name = 'Launch file',
+
+          -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+          program = '${file}', -- This configuration will launch the current file if used.
+          pythonPath = function()
+            -- Use the virtual environment if available, else fallback to system python
+            local venv_path = os.getenv 'VIRTUAL_ENV'
+            if venv_path then
+              return venv_path .. '/bin/python'
+            else
+              return '/usr/bin/python'
+            end
+          end,
+        },
+      }
     end,
   },
   {
@@ -368,6 +405,16 @@ require('lazy').setup {
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
       require('dap-go').setup() -- Setup Go debugging integration
+    end,
+  },
+
+  -- DAP for Python Enhancements
+  {
+    'mfussenegger/nvim-dap-python',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    config = function()
+      require('dap-python').setup '~/.virtualenvs/debugpy/bin/python' -- Adjust the path to your debugpy installation
+      require('dap-python').test_runner = 'pytest'
     end,
   },
 
