@@ -495,6 +495,35 @@ require('lazy').setup {
     end,
   },
 }
+-- -------------------------------
+-- 8. Bufdelete Keybindings
+-- -------------------------------
+
+-- Delete the current buffer with <leader>bd
+vim.keymap.set('n', '<leader>bd', '<cmd>Bdelete<CR>', {
+  desc = 'Delete Current Buffer',
+  noremap = true,
+  silent = true,
+})
+
+-- Delete all buffers and open the file explorer with <leader>ba
+vim.keymap.set('n', '<leader>ba', function()
+  local bufdelete = require 'bufdelete'
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local buf_ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+      if buf_ft ~= 'NvimTree' then
+        bufdelete.bufdelete(buf, true)
+      end
+    end
+  end
+end, {
+  desc = 'Delete All Buffers Except NvimTree and Open File Explorer',
+  noremap = true,
+  silent = true,
+})
 
 -- -------------------------------
 -- 4. Additional Configurations
