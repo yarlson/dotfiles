@@ -457,6 +457,7 @@ require('lazy').setup {
   -- ---------------------------------
   {
     'lewis6991/gitsigns.nvim',
+    event = { 'BufRead', 'BufNewFile' },
     opts = {
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
