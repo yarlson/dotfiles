@@ -21,7 +21,7 @@ source "$ZSH/oh-my-zsh.sh"
 export EDITOR="vim"
 
 # PATH configuration
-export PATH="$HOME/go/bin:/usr/local/bin:/opt/homebrew/opt/go@1.21/bin:$PATH"
+export PATH="$HOME/go/bin:/usr/local/bin:/opt/homebrew/opt/go@1.21/bin:$HOME/.local/bin:$PATH"
 
 # Load custom aliases
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
