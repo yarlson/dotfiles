@@ -331,6 +331,7 @@ require('lazy').setup {
           python = { 'black' },
           terraform = { 'terraform_fmt' },
           dockerfile = { 'prettier', 'dockerfile_lint' },
+          hcl = { 'terraform_fmt' },
         },
         format_on_save = { -- Automatically format files on save
           timeout_ms = 1000, -- Timeout for formatting
