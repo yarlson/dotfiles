@@ -878,5 +878,13 @@ vim.diagnostic.config {
 }
 
 -- -------------------------------
+-- 7. Buffer Navigation Keybindings
+-- -------------------------------
+-- Keybindings to switch to next/previous buffer.
+
+vim.keymap.set('n', '<C-l>', ':bnext<CR>', { desc = 'Next Buffer', noremap = true, silent = true })
+vim.keymap.set('n', '<C-h>', ':bprevious<CR>', { desc = 'Previous Buffer', noremap = true, silent = true })
+
+-- -------------------------------
 -- End of Configuration
 -- -------------------------------

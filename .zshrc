@@ -77,7 +77,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
 # Go configuration
-export GOROOT="/usr/local/go"
 export GOPATH="$HOME/go"
 
 # Kubectl autocomplete
