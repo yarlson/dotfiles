@@ -9,7 +9,6 @@ plugins=(
     zsh-autosuggestions
     zsh-completions
     brew
-    asdf
     docker
     kubectl
     fzf
@@ -20,8 +19,10 @@ source "$ZSH/oh-my-zsh.sh"
 # Environment variables
 export EDITOR="vim"
 
-# PATH configuration
-export PATH="$HOME/go/bin:/usr/local/bin:/opt/homebrew/opt/go@1.21/bin:$HOME/.local/bin:$PATH"
+# Go configuration
+export GOROOT="/opt/homebrew/opt/go/libexec"
+export GOPATH="$HOME/go"
+export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin"
 
 # Load custom aliases
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
@@ -68,20 +69,24 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|?=** r:|?=**'
 
-# Initialize zsh-completions
-autoload -U compinit && compinit
+# Set fpath for custom completions
+fpath=(~/.zsh/completion $fpath)
+
+# Autoload compinit
+autoload -U compinit
+
+# Initialize kubectl completion
+if type kubectl &>/dev/null; then
+    source <(kubectl completion zsh)
+    # Add completion for alias 'k'
+    compdef __start_kubectl k
+fi
+
+# Initialize compinit
+compinit -i
 
 # FZF configuration
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
-# Go configuration
-export GOPATH="$HOME/go"
-
-# Kubectl autocomplete
-source <(kubectl completion zsh)
-
-# Docker compose completion
-fpath=(~/.zsh/completion $fpath)
-autoload -Uz compinit && compinit -i
