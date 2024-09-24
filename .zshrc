@@ -33,6 +33,8 @@ alias g='git'
 alias ga='git add'
 alias gc='git commit -m'
 alias gp='git push'
+alias gpf='git push --force'
+alias gpr='git pull -r'
 alias gl='git log --oneline'
 alias gs='git status'
 
