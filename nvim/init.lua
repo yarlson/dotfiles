@@ -86,15 +86,16 @@ require('lazy').setup {
     dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
     opts = {
       ensure_installed = { -- Ensure these LSP servers are installed
-        'gopls',
-        'ts_ls',
+        'dockerls',
         'eslint',
-        'tailwindcss',
-        'sqlls',
+        'gopls',
         'jsonls',
         'pyright',
+        'sqlls',
+        'tailwindcss',
+        'templ',
         'terraformls',
-        'dockerls',
+        'ts_ls',
         'yamlls',
       },
     },
@@ -142,15 +143,16 @@ require('lazy').setup {
 
       -- List of LSP servers to configure
       local servers = {
-        'gopls',
-        'ts_ls',
+        'dockerls',
         'eslint',
-        'tailwindcss',
-        'sqlls',
+        'gopls',
         'jsonls',
         'pyright',
+        'sqlls',
+        'tailwindcss',
+        'templ',
         'terraformls',
-        'dockerls',
+        'ts_ls',
         'yamlls',
       }
 
@@ -237,18 +239,19 @@ require('lazy').setup {
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = { -- Languages to install parsers for
+          'css',
+          'dockerfile',
           'go',
-          'typescript',
+          'html',
           'javascript',
           'json',
-          'sql',
           'lua',
-          'html',
-          'css',
-          'tsx',
           'python',
+          'sql',
+          'templ',
           'terraform',
-          'dockerfile',
+          'tsx',
+          'typescript',
           'yaml',
         },
         auto_install = true, -- Automatically install missing parsers
