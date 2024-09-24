@@ -22,7 +22,7 @@ export EDITOR="vim"
 # Go configuration
 export GOROOT="/opt/homebrew/opt/go/libexec"
 export GOPATH="$HOME/go"
-export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin"
+export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:/usr/local/bin"
 
 # Load custom aliases
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
