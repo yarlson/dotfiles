@@ -28,6 +28,9 @@ export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin:$GOROOT/bin:/usr/local/bin"
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 
 # Aliases
+
+alias n='nvim'
+
 # Git
 alias g='git'
 alias ga='git add'
@@ -53,7 +56,7 @@ alias kx='kubectl exec -it'
 alias kg='kubectl get'
 
 # Node.js
-alias n='npm'
+alias np='npm'
 alias ns='npm start'
 alias nt='npm test'
 alias ni='npm install'

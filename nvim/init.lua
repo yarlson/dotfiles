@@ -226,6 +226,7 @@ require('lazy').setup {
     build = ':TSUpdate', -- Update Treesitter parsers
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects', -- Additional text objects
+      'vrischmann/tree-sitter-templ',
     },
     config = function()
       require('nvim-treesitter.configs').setup {
@@ -706,9 +707,30 @@ require('lazy').setup {
       }
       -- Keybinding to toggle the file explorer
       vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer' })
+
+      -- Keybinding to focus on NvimTree window
+      vim.keymap.set('n', '<C-w>e', function()
+        local nvim_tree = require 'nvim-tree.api'
+        local current_buf = vim.api.nvim_get_current_buf()
+        local current_buf_ft = vim.api.nvim_buf_get_option(current_buf, 'filetype')
+
+        if current_buf_ft == 'NvimTree' then
+          vim.cmd 'wincmd p' -- If already in NvimTree, go to previous window
+        else
+          nvim_tree.tree.focus() -- Focus on NvimTree
+        end
+      end, { desc = 'Focus NvimTree' })
     end,
   },
-
+  -- ---------------------------------
+  -- Templ Integration
+  -- ---------------------------------
+  {
+    'catgoose/templ-goto-definition',
+    ft = { 'go' },
+    config = true,
+    dependenciies = 'nvim-treesitter/nvim-treesitter', -- optional
+  },
   -- ---------------------------------
   -- Avante.nvim Integration
   -- ---------------------------------
@@ -878,6 +900,8 @@ vim.diagnostic.config {
 
 vim.keymap.set('n', '<C-l>', ':bnext<CR>', { desc = 'Next Buffer', noremap = true, silent = true })
 vim.keymap.set('n', '<C-h>', ':bprevious<CR>', { desc = 'Previous Buffer', noremap = true, silent = true })
+
+vim.filetype.add { extension = { templ = 'templ' } }
 
 -- -------------------------------
 -- End of Configuration
