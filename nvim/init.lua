@@ -731,7 +731,7 @@ require('lazy').setup {
     config = true,
     dependenciies = 'nvim-treesitter/nvim-treesitter', -- optional
   },
-  -- ---------------------------------
+  ------------------------------
   -- Avante.nvim Integration
   -- ---------------------------------
   {
