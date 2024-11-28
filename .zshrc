@@ -67,6 +67,9 @@ alias c='code .'
 alias l='ls -lah'
 alias mc='mc --nosubshell'
 
+# LLM usage
+alias fix='f() { llm -m claude-3.5-sonnet -s "You are a grammar correction assistant. Return only corrected sentences without explanations, focusing on improving grammar, word choice, word order, and verb tenses." "$1"; }; f'
+
 # Zsh completion styles
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-ipaddr:ip\ address hosts:-host:host files'
@@ -95,3 +98,11 @@ export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
+export CGO_CFLAGS="-I/opt/homebrew/opt/sqlite/include"
+export CGO_LDFLAGS="-L/opt/homebrew/opt/sqlite/lib"
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"

@@ -75,7 +75,7 @@ num_history_items_recorded=60
 vfs_timeout=60
 ftpfs_directory_timeout=900
 ftpfs_retry_seconds=30
-fish_directory_timeout=900
+shell_directory_timeout=900
 editor_tab_spacing=8
 editor_word_wrap_line_length=72
 editor_option_save_mode=0
@@ -83,14 +83,12 @@ editor_backup_extension=~
 editor_filesize_threshold=64M
 editor_stop_format_chars=-+*\\,.;:&>
 mcview_eof=
-skin=catppuccin
-
+skin=tokyo-night
 filepos_max_saved_entries=1024
-shell_directory_timeout=900
 
 [Layout]
 output_lines=0
-left_panel_size=46
+left_panel_size=94
 top_panel_size=0
 message_visible=true
 keybar_visible=true
@@ -117,10 +115,6 @@ clipboard_paste=
 base_color=
 xterm-256color=
 color_terminals=
-screen-256color=
-xterm-kitty=
-alacritty=
-xterm=
 
 [Panels]
 show_mini_info=true
@@ -144,7 +138,7 @@ quick_search_mode=2
 select_flags=6
 
 [Panelize]
-Find *.orig after patching=find . -name \\*.orig -print
-Find SUID and SGID programs=find . \\( \\( -perm -04000 -a -perm /011 \\) -o \\( -perm -02000 -a -perm /01 \\) \\) -print
 Find rejects after patching=find . -name \\*.rej -print
 Modified git files=git ls-files --modified
+Find SUID and SGID programs=find . \\( \\( -perm -04000 -a -perm /011 \\) -o \\( -perm -02000 -a -perm /01 \\) \\) -print
+Find *.orig after patching=find . -name \\*.orig -print
