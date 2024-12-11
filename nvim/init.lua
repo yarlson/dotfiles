@@ -21,6 +21,7 @@ vim.opt.number = true -- Show absolute line numbers
 vim.opt.relativenumber = true -- Show relative line numbers
 vim.opt.clipboard = 'unnamedplus' -- Use the system clipboard
 vim.opt.mouse = '' -- Disable mouse support
+vim.opt.termguicolors = true
 
 -- Set global statusline as recommended by avante.nvim
 vim.opt.laststatus = 3
