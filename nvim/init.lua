@@ -147,6 +147,7 @@ require('lazy').setup {
         'terraformls',
         'ts_ls',
         'yamlls',
+        'zls',
       }
 
       for _, lsp in ipairs(servers) do
