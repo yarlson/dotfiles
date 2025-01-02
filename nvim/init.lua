@@ -89,6 +89,7 @@ require('lazy').setup {
         'terraformls',
         'ts_ls',
         'yamlls',
+        'zls',
       },
     },
   },
@@ -246,6 +247,7 @@ require('lazy').setup {
           'tsx',
           'typescript',
           'yaml',
+          'zig',
         },
         auto_install = true, -- Automatically install missing parsers
         highlight = { enable = true }, -- Enable syntax highlighting
@@ -843,6 +845,9 @@ require('lazy').setup {
         },
       }
     end,
+  },
+  {
+    'ziglang/zig.vim',
   },
 }
 
