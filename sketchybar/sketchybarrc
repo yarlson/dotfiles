@@ -93,7 +93,7 @@ sketchybar --add item clock right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change \
            --add item weather right \
-           --set weather update_freq=60 script="$PLUGIN_DIR/weather.sh"
+           --set weather update_freq=60 script="$PLUGIN_DIR/weather/weather"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

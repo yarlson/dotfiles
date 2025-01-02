@@ -69,6 +69,7 @@ const WeatherError = error{
     FetchFailed,
     CacheReadFailed,
     InvalidResponse,
+    EnvironmentVariableNotFound,
 };
 
 /// Fetches current weather data from wttr.in API
@@ -126,11 +127,27 @@ fn getWeather(allocator: std.mem.Allocator, cache_path: []const u8) !WeatherResu
     };
 }
 
+/// Updates the sketchybar item with weather information
+fn updateSketchybar(allocator: std.mem.Allocator, name: []const u8, weather_data: []const u8) !void {
+    const command = try std.fmt.allocPrint(allocator, "sketchybar --set {s} label='{s}'", .{ name, weather_data });
+    defer allocator.free(command);
+
+    _ = try std.process.Child.run(.{
+        .allocator = allocator,
+        .argv = &.{ "/bin/sh", "-c", command },
+    });
+}
+
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
 
     const allocator = gpa.allocator();
+
+    const name = std.process.getEnvVarOwned(allocator, "NAME") catch {
+        return WeatherError.EnvironmentVariableNotFound;
+    };
+    defer allocator.free(name);
 
     const cache_path = try getCachePath(allocator);
     defer allocator.free(cache_path);
@@ -139,5 +156,5 @@ pub fn main() !void {
     defer weather_result.deinit();
 
     const trimmed = std.mem.trimRight(u8, weather_result.data, &.{ ' ', '\n', '\r' });
-    try std.io.getStdOut().writer().print("{s}", .{trimmed});
+    try updateSketchybar(allocator, name, trimmed);
 }
