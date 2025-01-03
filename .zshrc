@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/yar/.zsh/completions:"* ]]; then export FPATH="/Users/yar/.zsh/completions:$FPATH"; fi
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
@@ -17,7 +19,7 @@ plugins=(
 source "$ZSH/oh-my-zsh.sh"
 
 # Environment variables
-export EDITOR="vim"
+export EDITOR="nvim"
 
 # Go configuration
 export GOROOT="/opt/homebrew/opt/go/libexec"
@@ -110,3 +112,6 @@ export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 # gpg
 export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+# Deno
+. "/Users/yar/.deno/env"

@@ -70,6 +70,7 @@ require('lazy').setup {
         'prettier',
         'pyright',
         'sql-formatter',
+        'zls',
       },
     },
   },
@@ -314,6 +315,13 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     config = function()
       require('conform').setup {
+        formatters = {
+          zigfmt = {
+            command = 'zig',
+            args = { 'fmt', '--stdin' },
+            stdin = true,
+          },
+        },
         formatters_by_ft = { -- Specify formatters for different filetypes
           lua = { 'stylua' },
           go = { 'gofmt' },
@@ -331,6 +339,7 @@ require('lazy').setup {
           terraform = { 'terraform_fmt' },
           dockerfile = { 'prettier', 'dockerfile_lint' },
           hcl = { 'terraform_fmt' },
+          zig = { 'zigfmt' },
         },
         format_on_save = { -- Automatically format files on save
           timeout_ms = 1000, -- Timeout for formatting
@@ -409,6 +418,29 @@ require('lazy').setup {
               return '/usr/bin/python'
             end
           end,
+        },
+      }
+
+      -- LLDB adapter configuration for Zig
+      dap.adapters.lldb = {
+        type = 'executable',
+        command = '/usr/bin/lldb-vscode', -- Adjust this path if necessary
+        name = 'lldb',
+      }
+
+      -- DAP configurations for Zig using LLDB
+      dap.configurations.zig = {
+        {
+          name = 'Launch Zig Program',
+          type = 'lldb',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/zig-out/bin/', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          stopOnEntry = false,
+          args = {},
+          runInTerminal = false,
         },
       }
     end,

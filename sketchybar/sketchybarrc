@@ -85,7 +85,7 @@ source "$ITEM_DIR/notification_count.sh"
 source "$ITEM_DIR/slack.sh"
 
 sketchybar --add item clock right \
-           --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
+           --set clock update_freq=10 icon= script="$PLUGIN_DIR/clock.sh" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
@@ -94,6 +94,8 @@ sketchybar --add item clock right \
            --subscribe battery system_woke power_source_change \
            --add item weather right \
            --set weather update_freq=60 script="$PLUGIN_DIR/weather/weather"
+           --add item merge_queue right \
+           --set merge_queue update_freq=30 script="$PLUGIN_DIR/merge_queue.sh"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
