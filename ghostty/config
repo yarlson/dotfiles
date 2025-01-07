@@ -5,3 +5,4 @@ font-family=JetBrainsMono Nerd Font Mono
 font-size=15
 shell-integration-features=no-cursor
 background=#1a1b26
+macos-option-as-alt = true
