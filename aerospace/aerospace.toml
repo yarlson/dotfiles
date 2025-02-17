@@ -19,7 +19,7 @@ after-login-command = []
 after-startup-command = [
     'exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar',
     'exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar --reload',
-    'exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0xff7aa2f7 inactive_color=0xff1a1b26 width=2.0 hidpi=on style=round'
+    'exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0x575653 inactive_color=0x343331 width=2.0 hidpi=on style=round'
 ]
 
 # Notify Sketchybar about workspace change

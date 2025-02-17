@@ -17,21 +17,6 @@ if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
 	# Create a second window for shell
 	tmux new-window -t "$SESSION_NAME":2 -c "$CURRENT_DIR"
 
-	# Create the 2x2 grid in the second window
-	# First split vertically into two equal panes
-	tmux split-window -v -t "$SESSION_NAME":2 -c "$CURRENT_DIR"
-
-	# Split the top pane horizontally
-	tmux select-pane -t 1
-	tmux split-window -h -c "$CURRENT_DIR"
-
-	# Split the bottom pane horizontally
-	tmux select-pane -t 3
-	tmux split-window -h -c "$CURRENT_DIR"
-
-	# Select the top-left pane in second window
-	tmux select-pane -t 1
-
 	# Select the nvim window (first window)
 	tmux select-window -t "$SESSION_NAME":1
 fi
