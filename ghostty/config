@@ -7,3 +7,4 @@ shell-integration-features=no-cursor
 theme=flexoki-dark
 background=#1C1B1A
 macos-option-as-alt = true
+shell-integration-features = sudo

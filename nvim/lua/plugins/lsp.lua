@@ -3,13 +3,14 @@ return {
     'williamboman/mason.nvim',
     opts = {
       ensure_installed = {
-        'debugpy',
-        'delve',
-        'gofmt',
-        'prettier',
-        'pyright',
+        'debugpy', -- Python debugging
+        'delve', -- Go debugging
+        'gofmt', -- Go formatting
+        'prettier', -- Code formatting
+        'pyright', -- Python LSP
         'sql-formatter',
-        'zls',
+        'zls', -- Zig LSP
+        'intelephense', -- PHP LSP
       },
     },
   },
@@ -30,6 +31,7 @@ return {
         'ts_ls',
         'yamlls',
         'zls',
+        'intelephense',
       },
     },
   },
@@ -41,7 +43,6 @@ return {
       local cmp_nvim_lsp = require 'cmp_nvim_lsp'
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
-      -- Define keybindings and behaviors when an LSP server attaches to a buffer
       local on_attach = function(client, bufnr)
         if client.name ~= 'eslint' then
           client.server_capabilities.document_formatting = true
@@ -50,7 +51,6 @@ return {
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        -- LSP-related keybindings
         keymap('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
         keymap('n', 'gr', vim.lsp.buf.references, { desc = 'Find References' })
         keymap('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation' })
@@ -61,7 +61,6 @@ return {
           vim.lsp.buf.format { async = true }
         end, { desc = 'Format Document' })
 
-        -- DAP (Debug Adapter Protocol) keybindings if DAP is available
         local dap_ok, dap = pcall(require, 'dap')
         if dap_ok then
           keymap('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint' })
@@ -75,7 +74,6 @@ return {
         end
       end
 
-      -- List of LSP servers to configure
       local servers = {
         'dockerls',
         'eslint',
@@ -89,6 +87,7 @@ return {
         'ts_ls',
         'yamlls',
         'zls',
+        'intelephense',
       }
 
       for _, lsp in ipairs(servers) do
@@ -98,7 +97,6 @@ return {
         }
       end
 
-      -- Additional configurations for specific LSP servers
       lspconfig.yamlls.setup {
         settings = {
           yaml = {
@@ -111,4 +109,4 @@ return {
       }
     end,
   },
-} 
+}

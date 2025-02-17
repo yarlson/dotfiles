@@ -16,6 +16,7 @@ return {
           'javascript',
           'json',
           'lua',
+          'php',
           'python',
           'sql',
           'templ',
@@ -81,4 +82,4 @@ return {
       }
     end,
   },
-} 
+}

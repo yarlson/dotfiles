@@ -1,19 +1,16 @@
 return {
   {
-    'folke/tokyonight.nvim',
+    'kepano/flexoki-neovim',
     priority = 1000,
     config = function()
-      vim.cmd [[colorscheme tokyonight]]
+      vim.cmd [[colorscheme flexoki-dark]]
     end,
   },
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('lualine').setup {
-        options = { theme = 'tokyonight' },
-      }
+      require('lualine').setup()
     end,
   },
-  -- Add other UI plugins here
-} 
+}

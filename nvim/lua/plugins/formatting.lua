@@ -9,6 +9,11 @@ return {
             args = { 'fmt', '--stdin' },
             stdin = true,
           },
+          php_cs_fixer = {
+            command = 'php-cs-fixer',
+            args = { 'fix', '--using-cache=no', '--quiet', '--format=json', '--' },
+            stdin = false,
+          },
         },
         formatters_by_ft = {
           lua = { 'stylua' },
@@ -28,6 +33,7 @@ return {
           dockerfile = { 'prettier', 'dockerfile_lint' },
           hcl = { 'terraform_fmt' },
           zig = { 'zigfmt' },
+          php = { 'php_cs_fixer' },
         },
         format_on_save = {
           timeout_ms = 1000,
@@ -36,4 +42,5 @@ return {
       }
     end,
   },
-} 
+}
+
