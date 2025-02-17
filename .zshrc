@@ -117,5 +117,3 @@ export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
-# Deno
-. "/Users/yar/.deno/env"
