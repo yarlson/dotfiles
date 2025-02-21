@@ -73,9 +73,9 @@ alias mc='mc --nosubshell'
 alias z='zed "$1"'
 
 # LLM usage
-alias fix='function *fix() { llm -m claude-3.5-sonnet -s "You are a grammar correction assistant. Return only corrected sentences without explanations, focusing on improving grammar, word choice, word order, and verb tenses." "$1"; }; *fix'
-alias jira='function *jira() { llm -m claude-3.5-sonnet -s "$(cat ~/prompts/prompts/development/jira.txt)" "$1"; }; *jira'
-alias pjira='function *pjira() { llm -m claude-3.5-sonnet -s "$(cat ~/prompts/prompts/development/p-jira.txt)" "$1"; }; *pjira'
+alias fix='function _fix() { llm -m claude-3.5-sonnet -s "You are a grammar correction assistant. Return only corrected sentences without explanations, focusing on improving grammar, word choice, word order, and verb tenses." "$1"; }; _fix'
+alias jira='function _jira() { llm -m claude-3.5-sonnet -s "$(cat ~/home/prompts/prompts/development/jira.txt)" "$1"; }; _jira'
+alias pjira='function _pjira() { llm -m claude-3.5-sonnet -s "$(cat ~/home/prompts/prompts/development/p-jira.txt)" "$1"; }; _pjira'
 
 # Zsh completion styles
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
