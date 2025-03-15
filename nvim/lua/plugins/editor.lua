@@ -38,7 +38,7 @@ return {
         open_mapping = [[<c-\>]],
         direction = 'horizontal',
       }
-      vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { desc = 'Toggle Terminal' })
+      vim.keymap.set('n', '<leader>t', function() require("toggleterm").toggle() end, { desc = 'Toggle Terminal' })
     end,
   },
 
@@ -66,7 +66,7 @@ return {
           update_cwd = true,
         },
       }
-      vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'Toggle File Explorer' })
+      vim.keymap.set('n', '<leader>e', function() require("nvim-tree.api").tree.toggle() end, { desc = 'Toggle File Explorer' })
       vim.keymap.set('n', '<C-w>e', function()
         local nvim_tree = require 'nvim-tree.api'
         local current_buf = vim.api.nvim_get_current_buf()
@@ -80,4 +80,4 @@ return {
       end, { desc = 'Focus NvimTree' })
     end,
   },
-} 
+}

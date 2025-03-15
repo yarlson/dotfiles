@@ -6,13 +6,14 @@ return {
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
 
+        -- Create a helper function to set keymaps
         local function map(mode, lhs, rhs, opts)
           opts = opts or {}
           opts.buffer = bufnr
           vim.keymap.set(mode, lhs, rhs, opts)
         end
 
-        -- Navigation
+        -- Navigation keymaps
         map('n', ']h', function()
           if vim.wo.diff then return ']h' end
           vim.schedule(function() gs.next_hunk() end)
@@ -25,21 +26,29 @@ return {
           return '<Ignore>'
         end, { expr = true, desc = 'Previous Git Hunk' })
 
-        -- Actions
-        map({ 'n', 'v' }, '<leader>gs', ':Gitsigns stage_hunk<CR>', { desc = 'Stage Hunk' })
-        map({ 'n', 'v' }, '<leader>gr', ':Gitsigns reset_hunk<CR>', { desc = 'Reset Hunk' })
+        -- Action keymaps - replace string commands with function calls
+        map({ 'n', 'v' }, '<leader>gs', function() gs.stage_hunk() end, { desc = 'Stage Hunk' })
+        map({ 'n', 'v' }, '<leader>gr', function() gs.reset_hunk() end, { desc = 'Reset Hunk' })
         map('n', '<leader>gS', gs.stage_buffer, { desc = 'Stage Buffer' })
         map('n', '<leader>gu', gs.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
         map('n', '<leader>gR', gs.reset_buffer, { desc = 'Reset Buffer' })
         map('n', '<leader>gp', gs.preview_hunk, { desc = 'Preview Hunk' })
-        map('n', '<leader>gb', function() gs.blame_line { full = true } end, { desc = 'Blame Line' })
+        map('n', '<leader>gb', function() gs.blame_line({ full = true }) end, { desc = 'Blame Line' })
         map('n', '<leader>gd', gs.diffthis, { desc = 'Diff This' })
         map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Diff Against HEAD' })
         map('n', '<leader>gt', gs.toggle_deleted, { desc = 'Toggle Deleted Lines' })
 
-        -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'Select Hunk' })
+        -- Text object - replace command string with function call
+        map({ 'o', 'x' }, 'ih', function() gs.select_hunk() end, { desc = 'Select Hunk' })
       end,
+      signs = {
+        add = { text = '│' },
+        change = { text = '│' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
+      },
     },
   },
-} 
+}

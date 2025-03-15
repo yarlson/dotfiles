@@ -10,38 +10,48 @@ return {
       'supermaven-inc/supermaven-nvim',
     },
     config = function()
-      local cmp = require 'cmp'
-      local luasnip = require 'luasnip'
+      local cmp = require('cmp')
+      local luasnip = require('luasnip')
 
-      cmp.setup {
+      -- Define completion mappings separately for clarity
+      local cmp_mappings = {
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<Tab>'] = cmp.mapping.select_next_item(),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+      }
+
+      -- Define completion sources in priority order
+      local cmp_sources = {
+        { name = 'supermaven' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'buffer' },
+        { name = 'path' },
+      }
+
+      -- Configure cmp
+      cmp.setup({
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
         },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        mapping = cmp.mapping.preset.insert(cmp_mappings),
+        sources = cmp_sources,
+        experimental = {
+          ghost_text = true,
         },
-        sources = {
-          { name = 'supermaven' },
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'buffer' },
-          { name = 'path' },
-        },
-      }
+      })
     end,
   },
   {
     'L3MON4D3/LuaSnip',
     dependencies = { 'rafamadriz/friendly-snippets' },
     config = function()
-      require('luasnip').setup {}
+      require('luasnip').setup({})
       require('luasnip.loaders.from_vscode').lazy_load()
     end,
   },
@@ -49,9 +59,9 @@ return {
     'supermaven-inc/supermaven-nvim',
     dependencies = { 'hrsh7th/nvim-cmp' },
     config = function()
-      require('supermaven-nvim').setup {
+      require('supermaven-nvim').setup({
         disable_inline_completion = false,
-      }
+      })
     end,
   },
-} 
+}

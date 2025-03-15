@@ -3,8 +3,13 @@ return {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
-      local actions = require 'telescope.actions'
-      require('telescope').setup {
+      -- Configure Telescope
+      local telescope = require('telescope')
+      local actions = require('telescope.actions')
+      local builtin = require('telescope.builtin')
+
+      -- Setup the main telescope configuration
+      telescope.setup {
         defaults = {
           file_ignore_patterns = { '.git/' },
           mappings = {
@@ -19,8 +24,7 @@ return {
             mappings = {
               i = {
                 ['<C-d>'] = function(prompt_bufnr)
-                  local actions = require 'telescope.actions'
-                  local action_state = require 'telescope.actions.state'
+                  local action_state = require('telescope.actions.state')
                   local entry = action_state.get_selected_entry()
                   if entry then
                     require('bufdelete').bufdelete(entry.bufnr, true)
@@ -43,14 +47,22 @@ return {
         },
       }
 
-      require('telescope').load_extension 'projects'
+      -- Load extensions
+      telescope.load_extension('projects')
 
-      local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find Files' })
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live Grep' })
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'List Buffers' })
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help Tags' })
-      vim.keymap.set('n', '<leader>fp', require('telescope').extensions.projects.projects, { desc = 'Find Projects' })
+      -- Define keymaps in a separate section
+      local telescope_keymaps = {
+        { mode = 'n', key = '<leader>ff', action = builtin.find_files, desc = 'Find Files' },
+        { mode = 'n', key = '<leader>fg', action = builtin.live_grep, desc = 'Live Grep' },
+        { mode = 'n', key = '<leader>fb', action = builtin.buffers, desc = 'List Buffers' },
+        { mode = 'n', key = '<leader>fh', action = builtin.help_tags, desc = 'Help Tags' },
+        { mode = 'n', key = '<leader>fp', action = telescope.extensions.projects.projects, desc = 'Find Projects' },
+      }
+
+      -- Apply all keymaps
+      for _, mapping in ipairs(telescope_keymaps) do
+        vim.keymap.set(mapping.mode, mapping.key, mapping.action, { desc = mapping.desc })
+      end
     end,
   },
 
@@ -64,7 +76,7 @@ return {
         show_hidden = true,
         silent_chdir = false,
         ignore_lsp = {},
-        datapath = vim.fn.stdpath 'data',
+        datapath = vim.fn.stdpath('data'),
       }
     end,
   },
