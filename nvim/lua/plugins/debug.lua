@@ -2,7 +2,7 @@ return {
   {
     'mfussenegger/nvim-dap',
     config = function()
-      local dap = require('dap')
+      local dap = require 'dap'
 
       -- Configure Go debugging
       local function setup_go_adapter()
@@ -19,7 +19,7 @@ return {
             end
           end)
           vim.defer_fn(function()
-            callback({ type = 'server', host = '127.0.0.1', port = port })
+            callback { type = 'server', host = '127.0.0.1', port = port }
           end, 100)
         end
 
@@ -48,7 +48,7 @@ return {
             name = 'Launch file',
             program = '${file}',
             pythonPath = function()
-              local venv_path = os.getenv('VIRTUAL_ENV')
+              local venv_path = os.getenv 'VIRTUAL_ENV'
               if venv_path then
                 return venv_path .. '/bin/python'
               else
@@ -93,33 +93,33 @@ return {
     'rcarriga/nvim-dap-ui',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     config = function()
-      local dap = require('dap')
-      local dapui = require('dapui')
+      local dap = require 'dap'
+      local dapui = require 'dapui'
 
       -- Configure DAP UI
-      dapui.setup({
-        icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+      dapui.setup {
+        icons = { expanded = '▾', collapsed = '▸', current_frame = '▸' },
         mappings = {
           -- Use a table to apply multiple mappings
-          expand = { "<CR>", "<2-LeftMouse>" },
-          open = "o",
-          remove = "d",
-          edit = "e",
-          repl = "r",
-          toggle = "t",
+          expand = { '<CR>', '<2-LeftMouse>' },
+          open = 'o',
+          remove = 'd',
+          edit = 'e',
+          repl = 'r',
+          toggle = 't',
         },
-      })
+      }
 
       -- Configure auto-open/close behavior
-      dap.listeners.after.event_initialized["dapui_config"] = function()
+      dap.listeners.after.event_initialized['dapui_config'] = function()
         dapui.open()
       end
 
-      dap.listeners.before.event_terminated["dapui_config"] = function()
+      dap.listeners.before.event_terminated['dapui_config'] = function()
         dapui.close()
       end
 
-      dap.listeners.before.event_exited["dapui_config"] = function()
+      dap.listeners.before.event_exited['dapui_config'] = function()
         dapui.close()
       end
     end,
@@ -128,15 +128,76 @@ return {
     'leoluz/nvim-dap-go',
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
-      require('dap-go').setup({})
+      require('dap-go').setup {}
     end,
   },
   {
     'mfussenegger/nvim-dap-python',
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
-      require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
+      require('dap-python').setup '~/.virtualenvs/debugpy/bin/python'
       require('dap-python').test_runner = 'pytest'
     end,
+  },
+  -- Streamlined testing workflow with neotest
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-neotest/neotest-go',
+      'nvim-neotest/neotest-python',
+    },
+    config = function()
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-python' {
+            dap = { justMyCode = false },
+            runner = 'pytest',
+          },
+          require 'neotest-go' {},
+        },
+        status = { virtual_text = true },
+        output = { open_on_run = true },
+      }
+    end,
+    keys = {
+      {
+        '<leader>tf',
+        function()
+          require('neotest').run.run(vim.fn.expand '%')
+        end,
+        desc = 'Run File Tests (Neotest)',
+      },
+      {
+        '<leader>tn',
+        function()
+          require('neotest').run.run()
+        end,
+        desc = 'Run Nearest Test (Neotest)',
+      },
+      {
+        '<leader>ts',
+        function()
+          require('neotest').summary.toggle()
+        end,
+        desc = 'Toggle Test Summary (Neotest)',
+      },
+      {
+        '<leader>to',
+        function()
+          require('neotest').output.open { enter = true }
+        end,
+        desc = 'Show Test Output (Neotest)',
+      },
+      {
+        '<leader>td',
+        function()
+          require('neotest').run.run { strategy = 'dap' }
+        end,
+        desc = 'Debug Nearest Test (Neotest)',
+      },
+    },
   },
 }

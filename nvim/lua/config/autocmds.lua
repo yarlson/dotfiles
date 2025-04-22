@@ -11,7 +11,7 @@ local function create_augroups(definitions)
 end
 
 -- Define autocommands
-create_augroups({
+create_augroups {
   -- Format on save with Conform
   ConformFormatOnSave = {
     {
@@ -23,7 +23,8 @@ create_augroups({
       },
     },
   },
-})
+}
 
 -- Set filetype for templ files
 vim.filetype.add { extension = { templ = 'templ' } }
+

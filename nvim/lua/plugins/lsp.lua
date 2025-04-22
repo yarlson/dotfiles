@@ -19,7 +19,7 @@ return {
   },
   -- Add neodev.nvim for better Neovim Lua development
   {
-    "folke/neodev.nvim",
+    'folke/neodev.nvim',
     opts = {
       library = {
         enabled = true,
@@ -62,7 +62,7 @@ return {
     },
     config = function()
       -- Setup neodev first (must be called before lua_ls)
-      require("neodev").setup({})
+      require('neodev').setup {}
 
       local lspconfig = require 'lspconfig'
       local cmp_nvim_lsp = require 'cmp_nvim_lsp'
@@ -153,7 +153,7 @@ return {
               },
               workspace = {
                 -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file("", true),
+                library = vim.api.nvim_get_runtime_file('', true),
                 checkThirdParty = false,
               },
               -- Do not send telemetry data
@@ -165,8 +165,8 @@ return {
                 enable = true,
                 -- Use stylua rather than the built-in formatter
                 defaultConfig = {
-                  indent_style = "space",
-                  indent_size = "2",
+                  indent_style = 'space',
+                  indent_size = '2',
                 },
               },
             },
@@ -181,5 +181,70 @@ return {
         lspconfig[server_name].setup(config)
       end
     end,
+  },
+  -- Inline function signatures
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'BufReadPre',
+    opts = {
+      bind = true,
+      hint_prefix = '💡 ',
+      handler_opts = {
+        border = 'rounded',
+      },
+    },
+    config = function(_, opts)
+      require('lsp_signature').setup(opts)
+    end,
+  },
+  -- Enhanced diagnostics UI with Trouble
+  {
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {}, -- Use default options
+    keys = {
+      {
+        '<leader>xx',
+        function()
+          require('trouble').toggle()
+        end,
+        desc = 'Toggle Trouble (Diagnostics)',
+      },
+      {
+        '<leader>xw',
+        function()
+          require('trouble').toggle 'workspace_diagnostics'
+        end,
+        desc = 'Workspace Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xd',
+        function()
+          require('trouble').toggle 'document_diagnostics'
+        end,
+        desc = 'Document Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xl',
+        function()
+          require('trouble').toggle 'loclist'
+        end,
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xq',
+        function()
+          require('trouble').toggle 'quickfix'
+        end,
+        desc = 'Quickfix List (Trouble)',
+      },
+      {
+        'gR',
+        function()
+          require('trouble').lsp_references()
+        end,
+        desc = 'LSP References (Trouble)',
+      },
+    },
   },
 }

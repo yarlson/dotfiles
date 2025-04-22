@@ -1,0 +1,1316 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+lua/
+  config/
+    autocmds.lua
+    keymaps.lua
+    options.lua
+  plugins/
+    completion.lua
+    debug.lua
+    editor.lua
+    formatting.lua
+    git.lua
+    lsp.lua
+    telescope.lua
+    treesitter.lua
+    ui.lua
+.luacheckrc
+.stylua.toml
+clenup.sh
+init.lua
+lazy-lock.json
+
+================================================================
+Files
+================================================================
+
+================
+File: lua/config/autocmds.lua
+================
+-- Define autocommands with Neovim's native API
+local function create_augroups(definitions)
+  for group_name, definition in pairs(definitions) do
+    local augroup = vim.api.nvim_create_augroup(group_name, { clear = true })
+    for _, def in ipairs(definition) do
+      local opts = def.opts or {}
+      opts.group = augroup
+      vim.api.nvim_create_autocmd(def.event, opts)
+    end
+  end
+end
+
+-- Define autocommands
+create_augroups({
+  -- Format on save with Conform
+  ConformFormatOnSave = {
+    {
+      event = 'BufWritePre',
+      opts = {
+        callback = function()
+          require('conform').format { async = false }
+        end,
+      },
+    },
+  },
+})
+
+-- Set filetype for templ files
+vim.filetype.add { extension = { templ = 'templ' } }
+
+================
+File: lua/config/keymaps.lua
+================
+local keymap = vim.keymap.set
+
+-- Buffer navigation
+-- Standard Neovim buffer nav (still useful)
+keymap('n', '<C-l>', function()
+  vim.cmd.bnext()
+end, { desc = 'Next Buffer (Standard)' })
+keymap('n', '<C-h>', function()
+  vim.cmd.bprevious()
+end, { desc = 'Previous Buffer (Standard)' })
+
+-- Bufferline specific navigation
+keymap('n', '[b', '<Cmd>BufferLineCyclePrev<CR>', { desc = 'Previous Buffer (Bufferline)' })
+keymap('n', ']b', '<Cmd>BufferLineCycleNext<CR>', { desc = 'Next Buffer (Bufferline)' })
+
+-- Buffer closing
+keymap('n', '<leader>bd', function()
+  vim.cmd.Bdelete()
+end, { desc = 'Delete Current Buffer (Bdelete)' }) -- Keep original Bdelete too
+
+-- Jump to buffer by number (Bufferline)
+for i = 1, 9 do
+  keymap('n', '<leader>' .. i, function()
+    vim.cmd('BufferLineGoToBuffer ' .. i)
+  end, { desc = 'Go to Buffer ' .. i })
+end
+
+-- Project navigation (using Telescope which integrates with project.nvim)
+-- Keymap <leader>fp is already defined in lua/plugins/telescope.lua for finding projects
+
+-- Add other keymaps from your original init.lua here
+
+================
+File: lua/config/options.lua
+================
+-- Core Neovim settings
+local opt = vim.opt
+
+-- Leader keys
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+-- Editor settings
+local editor_opts = {
+  autoindent = true,
+  smartindent = true,
+  tabstop = 4,
+  shiftwidth = 4,
+  number = true,
+  relativenumber = true,
+  clipboard = 'unnamedplus',
+  mouse = '',
+  termguicolors = true,
+  laststatus = 3,
+  fillchars = { eob = ' ' },
+  list = true,
+  listchars = { tab = '▸ ', trail = '▸', extends = '❯', precedes = '❮' },
+  undofile = true,
+  undodir = vim.fn.stdpath 'cache' .. '/undo',
+  undolevels = 1000,
+  updatetime = 300,
+}
+
+-- Apply editor settings
+for k, v in pairs(editor_opts) do
+  opt[k] = v
+end
+
+-- Append to shortmess to avoid "Pattern not found" messages
+opt.shortmess:append 'c'
+
+-- Search settings
+local search_opts = {
+  hlsearch = true,
+  incsearch = true,
+  ignorecase = true,
+  smartcase = true,
+}
+
+-- Apply search settings
+for k, v in pairs(search_opts) do
+  opt[k] = v
+end
+
+-- Folding settings
+local fold_opts = {
+  foldmethod = 'indent',
+  foldlevel = 99,
+  foldnestmax = 10,
+}
+
+-- Apply folding settings
+for k, v in pairs(fold_opts) do
+  opt[k] = v
+end
+
+-- Indentation settings
+local indent_opts = {
+  shiftround = true,
+  expandtab = true,
+  smarttab = true,
+}
+
+-- Apply indentation settings
+for k, v in pairs(indent_opts) do
+  opt[k] = v
+end
+
+-- Line wrapping settings
+local wrap_opts = {
+  wrap = false,
+  linebreak = true,
+  showbreak = '↳ ',
+  breakindent = true,
+  showmatch = true,
+}
+
+-- Apply line wrapping settings
+for k, v in pairs(wrap_opts) do
+  opt[k] = v
+end
+
+================
+File: lua/plugins/completion.lua
+================
+return {
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'supermaven-inc/supermaven-nvim',
+    },
+    config = function()
+      local cmp = require 'cmp'
+      local luasnip = require 'luasnip'
+
+      -- Define completion mappings separately for clarity
+      local cmp_mappings = {
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<CR>'] = cmp.mapping.confirm { select = true },
+        ['<Tab>'] = cmp.mapping.select_next_item(),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+      }
+
+      -- Define completion sources in priority order
+      local cmp_sources = {
+        { name = 'supermaven' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'buffer' },
+        { name = 'path' },
+      }
+
+      -- Configure cmp
+      cmp.setup {
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert(cmp_mappings),
+        sources = cmp_sources,
+        experimental = {
+          ghost_text = true,
+        },
+      }
+
+      -- Helper functions for toggling completion
+      local function toggle_cmp(enable, is_global)
+        if is_global then
+          -- Toggle cmp globally
+          local config = cmp.get_config()
+          config.enabled = enable
+          cmp.setup(config)
+        else
+          -- Toggle cmp for current buffer
+          cmp.setup.buffer { enabled = enable }
+        end
+      end
+
+      local function toggle_supermaven(enable)
+        -- Use the official supermaven API
+        local api = require 'supermaven-nvim.api'
+
+        if enable then
+          -- Start supermaven if it's not already running
+          if not api.is_running() then
+            api.start()
+          end
+        else
+          -- Stop supermaven if it's running
+          if api.is_running() then
+            api.stop()
+          end
+        end
+      end
+
+      local function toggle_completion(enable, is_global)
+        -- Handle supermaven (globally only, as it doesn't support per-buffer control)
+        toggle_supermaven(enable)
+
+        -- Handle cmp (globally or per-buffer)
+        toggle_cmp(enable, is_global)
+
+        local scope = is_global and 'globally for all buffers' or 'for this buffer'
+        local state = enable and 'enabled' or 'disabled'
+        vim.notify('Completion (cmp and supermaven) ' .. state .. ' ' .. scope .. '.', vim.log.levels.INFO)
+      end
+
+      -- Custom commands to toggle cmp and supermaven completion
+      vim.api.nvim_create_user_command('Cmpoff', function()
+        -- Disable cmp for this buffer only
+        toggle_cmp(false, false)
+        vim.notify('nvim-cmp completion disabled for this buffer.', vim.log.levels.INFO)
+      end, { desc = 'Disable nvim-cmp completion for the current buffer', nargs = 0 })
+
+      vim.api.nvim_create_user_command('Cmpon', function()
+        -- Enable cmp for this buffer only
+        toggle_cmp(true, false)
+        vim.notify('nvim-cmp completion enabled for this buffer.', vim.log.levels.INFO)
+      end, { desc = 'Enable nvim-cmp completion for the current buffer', nargs = 0 })
+
+      vim.api.nvim_create_user_command('CmpoffAll', function()
+        toggle_completion(false, true)
+      end, { desc = 'Disable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
+
+      vim.api.nvim_create_user_command('CmponAll', function()
+        toggle_completion(true, true)
+      end, { desc = 'Enable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
+    end,
+  },
+  {
+    'L3MON4D3/LuaSnip',
+    dependencies = { 'rafamadriz/friendly-snippets' },
+    config = function()
+      require('luasnip').setup {}
+      require('luasnip.loaders.from_vscode').lazy_load()
+    end,
+  },
+  {
+    'supermaven-inc/supermaven-nvim',
+    dependencies = { 'hrsh7th/nvim-cmp' },
+    config = function()
+      require('supermaven-nvim').setup {
+        disable_inline_completion = false,
+      }
+    end,
+  },
+}
+
+================
+File: lua/plugins/debug.lua
+================
+return {
+  {
+    'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require('dap')
+
+      -- Configure Go debugging
+      local function setup_go_adapter()
+        dap.adapters.go = function(callback, config)
+          local handle
+          local port = 38697
+          handle, _ = vim.loop.spawn('dlv', {
+            args = { 'dap', '-l', '127.0.0.1:' .. port },
+            detached = true,
+          }, function(code)
+            handle:close()
+            if code ~= 0 then
+              vim.notify('Delve exited with code ' .. code, vim.log.levels.WARN)
+            end
+          end)
+          vim.defer_fn(function()
+            callback({ type = 'server', host = '127.0.0.1', port = port })
+          end, 100)
+        end
+
+        dap.configurations.go = {
+          {
+            type = 'go',
+            name = 'Debug',
+            request = 'launch',
+            program = '${file}',
+          },
+        }
+      end
+
+      -- Configure Python debugging
+      local function setup_python_adapter()
+        dap.adapters.python = {
+          type = 'executable',
+          command = 'python',
+          args = { '-m', 'debugpy.adapter' },
+        }
+
+        dap.configurations.python = {
+          {
+            type = 'python',
+            request = 'launch',
+            name = 'Launch file',
+            program = '${file}',
+            pythonPath = function()
+              local venv_path = os.getenv('VIRTUAL_ENV')
+              if venv_path then
+                return venv_path .. '/bin/python'
+              else
+                return '/usr/bin/python'
+              end
+            end,
+          },
+        }
+      end
+
+      -- Configure Zig debugging
+      local function setup_zig_adapter()
+        dap.adapters.lldb = {
+          type = 'executable',
+          command = '/usr/bin/lldb-vscode',
+          name = 'lldb',
+        }
+
+        dap.configurations.zig = {
+          {
+            name = 'Launch Zig Program',
+            type = 'lldb',
+            request = 'launch',
+            program = function()
+              return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/zig-out/bin/', 'file')
+            end,
+            cwd = '${workspaceFolder}',
+            stopOnEntry = false,
+            args = {},
+            runInTerminal = false,
+          },
+        }
+      end
+
+      -- Set up all debug adapters
+      setup_go_adapter()
+      setup_python_adapter()
+      setup_zig_adapter()
+    end,
+  },
+  {
+    'rcarriga/nvim-dap-ui',
+    dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+    config = function()
+      local dap = require('dap')
+      local dapui = require('dapui')
+
+      -- Configure DAP UI
+      dapui.setup({
+        icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+        mappings = {
+          -- Use a table to apply multiple mappings
+          expand = { "<CR>", "<2-LeftMouse>" },
+          open = "o",
+          remove = "d",
+          edit = "e",
+          repl = "r",
+          toggle = "t",
+        },
+      })
+
+      -- Configure auto-open/close behavior
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+  {
+    'leoluz/nvim-dap-go',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    config = function()
+      require('dap-go').setup({})
+    end,
+  },
+  {
+    'mfussenegger/nvim-dap-python',
+    dependencies = { 'mfussenegger/nvim-dap' },
+    config = function()
+      require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
+      require('dap-python').test_runner = 'pytest'
+    end,
+  },
+}
+
+================
+File: lua/plugins/editor.lua
+================
+return {
+  -- Buffer deletion
+  {
+    'famiu/bufdelete.nvim',
+    cmd = { 'Bdelete', 'Bwipeout' },
+  },
+
+  -- Which-key for keybinding help
+  {
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    opts = {},
+    keys = {
+      {
+        '<leader>?',
+        function()
+          require('which-key').show { global = false }
+        end,
+        desc = 'Buffer Local Keymaps (which-key)',
+      },
+    },
+  },
+
+  -- Comment.nvim for easy commenting
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end,
+  },
+
+  -- Terminal integration
+  {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup {
+        size = 15,
+        open_mapping = [[<c-\>]],
+        direction = 'horizontal',
+      }
+      vim.keymap.set('n', '<leader>t', function() require("toggleterm").toggle() end, { desc = 'Toggle Terminal' })
+    end,
+  },
+
+  -- File explorer
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('nvim-tree').setup {
+        view = {
+          width = 30,
+          side = 'left',
+        },
+        renderer = {
+          icons = {
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+            },
+          },
+        },
+        update_focused_file = {
+          enable = true,
+          update_cwd = true,
+        },
+      }
+      vim.keymap.set('n', '<leader>e', function() require("nvim-tree.api").tree.toggle() end, { desc = 'Toggle File Explorer' })
+      vim.keymap.set('n', '<C-w>e', function()
+        local nvim_tree = require 'nvim-tree.api'
+        local current_buf = vim.api.nvim_get_current_buf()
+        local current_buf_ft = vim.api.nvim_buf_get_option(current_buf, 'filetype')
+
+        if current_buf_ft == 'NvimTree' then
+          vim.cmd 'wincmd p'
+        else
+          nvim_tree.tree.focus()
+        end
+      end, { desc = 'Focus NvimTree' })
+    end,
+  },
+}
+
+================
+File: lua/plugins/formatting.lua
+================
+return {
+  {
+    'stevearc/conform.nvim',
+    config = function()
+      -- Define custom formatters
+      local custom_formatters = {
+        zigfmt = {
+          command = 'zig',
+          args = { 'fmt', '--stdin' },
+          stdin = true,
+        },
+        php_cs_fixer = {
+          command = 'php-cs-fixer',
+          args = { 'fix', '--using-cache=no', '--quiet', '--format=json', '--' },
+          stdin = false,
+        },
+      }
+
+      -- Define formatters by filetype
+      local formatters_by_ft = {
+        lua = { 'stylua' },
+        go = { 'gofmt' },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        sql = { 'sql_formatter' },
+        sh = { 'shfmt' },
+        bash = { 'shfmt' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        json = { 'prettier' },
+        yaml = { 'prettier', 'yamlfmt' },
+        markdown = { 'prettier' },
+        python = { 'black' },
+        terraform = { 'terraform_fmt' },
+        dockerfile = { 'prettier', 'dockerfile_lint' },
+        hcl = { 'terraform_fmt' },
+        zig = { 'zigfmt' },
+        php = { 'php_cs_fixer' },
+      }
+
+      -- Define format on save options
+      local format_on_save_opts = {
+        timeout_ms = 1000,
+        lsp_fallback = true,
+      }
+
+      -- Configure conform
+      require('conform').setup({
+        formatters = custom_formatters,
+        formatters_by_ft = formatters_by_ft,
+        format_on_save = format_on_save_opts,
+      })
+    end,
+  },
+}
+
+================
+File: lua/plugins/git.lua
+================
+return {
+  {
+    'lewis6991/gitsigns.nvim',
+    event = { 'BufRead', 'BufNewFile' },
+    opts = {
+      on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+
+        -- Create a helper function to set keymaps
+        local function map(mode, lhs, rhs, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, lhs, rhs, opts)
+        end
+
+        -- Navigation keymaps
+        map('n', ']h', function()
+          if vim.wo.diff then return ']h' end
+          vim.schedule(function() gs.next_hunk() end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Next Git Hunk' })
+
+        map('n', '[h', function()
+          if vim.wo.diff then return '[h' end
+          vim.schedule(function() gs.prev_hunk() end)
+          return '<Ignore>'
+        end, { expr = true, desc = 'Previous Git Hunk' })
+
+        -- Action keymaps - replace string commands with function calls
+        map({ 'n', 'v' }, '<leader>gs', function() gs.stage_hunk() end, { desc = 'Stage Hunk' })
+        map({ 'n', 'v' }, '<leader>gr', function() gs.reset_hunk() end, { desc = 'Reset Hunk' })
+        map('n', '<leader>gS', gs.stage_buffer, { desc = 'Stage Buffer' })
+        map('n', '<leader>gu', gs.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
+        map('n', '<leader>gR', gs.reset_buffer, { desc = 'Reset Buffer' })
+        map('n', '<leader>gp', gs.preview_hunk, { desc = 'Preview Hunk' })
+        map('n', '<leader>gb', function() gs.blame_line({ full = true }) end, { desc = 'Blame Line' })
+        map('n', '<leader>gd', gs.diffthis, { desc = 'Diff This' })
+        map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Diff Against HEAD' })
+        map('n', '<leader>gt', gs.toggle_deleted, { desc = 'Toggle Deleted Lines' })
+
+        -- Text object - replace command string with function call
+        map({ 'o', 'x' }, 'ih', function() gs.select_hunk() end, { desc = 'Select Hunk' })
+      end,
+      signs = {
+        add = { text = '│' },
+        change = { text = '│' },
+        delete = { text = '_' },
+        topdelete = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked = { text = '┆' },
+      },
+    },
+  },
+}
+
+================
+File: lua/plugins/lsp.lua
+================
+return {
+  {
+    'williamboman/mason.nvim',
+    opts = {
+      ensure_installed = {
+        'debugpy', -- Python debugging
+        'delve', -- Go debugging
+        'gofmt', -- Go formatting
+        'prettier', -- Code formatting
+        'pyright', -- Python LSP
+        'sql-formatter',
+        'zls', -- Zig LSP
+        'intelephense', -- PHP LSP
+        'stylua', -- Lua formatting
+        'lua-language-server', -- Lua LSP
+        'luacheck', -- Lua static analyzer
+      },
+    },
+  },
+  -- Add neodev.nvim for better Neovim Lua development
+  {
+    "folke/neodev.nvim",
+    opts = {
+      library = {
+        enabled = true,
+        runtime = true,
+        types = true,
+        plugins = true,
+      },
+      setup_jsonls = true, -- configures jsonls to provide completion for project config
+      lspconfig = true,
+      pathStrict = true,
+    },
+  },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
+    opts = {
+      ensure_installed = {
+        'dockerls',
+        'eslint',
+        'gopls',
+        'jsonls',
+        'pyright',
+        'sqlls',
+        'tailwindcss',
+        'templ',
+        'terraformls',
+        'ts_ls',
+        'yamlls',
+        'zls',
+        'intelephense',
+        'lua_ls', -- Lua language server
+      },
+    },
+  },
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'folke/neodev.nvim', -- Add dependency here too
+    },
+    config = function()
+      -- Setup neodev first (must be called before lua_ls)
+      require("neodev").setup({})
+
+      local lspconfig = require 'lspconfig'
+      local cmp_nvim_lsp = require 'cmp_nvim_lsp'
+      local capabilities = cmp_nvim_lsp.default_capabilities()
+
+      -- Define LSP keymaps function
+      local function setup_lsp_keymaps(client, bufnr)
+        -- Create a local keymap function
+        local function buf_keymap(mode, lhs, rhs, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, lhs, rhs, opts)
+        end
+
+        -- LSP navigation keymaps
+        buf_keymap('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
+        buf_keymap('n', 'gr', vim.lsp.buf.references, { desc = 'Find References' })
+        buf_keymap('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to Implementation' })
+        buf_keymap('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation' })
+        buf_keymap('n', '<leader>rn', vim.lsp.buf.rename, { desc = 'Rename Symbol' })
+        buf_keymap('n', '<leader>ca', vim.lsp.buf.code_action, { desc = 'Code Action' })
+        buf_keymap('n', '<leader>f', function()
+          vim.lsp.buf.format { async = true }
+        end, { desc = 'Format Document' })
+
+        -- Debug keymaps (only if dap is available)
+        local dap_ok, dap = pcall(require, 'dap')
+        if dap_ok then
+          buf_keymap('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle Breakpoint' })
+          buf_keymap('n', '<leader>dc', dap.continue, { desc = 'Continue Execution' })
+          buf_keymap('n', '<leader>ds', dap.step_over, { desc = 'Step Over' })
+          buf_keymap('n', '<leader>di', dap.step_into, { desc = 'Step Into' })
+          buf_keymap('n', '<leader>do', dap.step_out, { desc = 'Step Out' })
+          buf_keymap('n', '<leader>du', function()
+            require('dapui').toggle()
+          end, { desc = 'Toggle DAP UI' })
+        end
+      end
+
+      -- On attach function for LSP servers
+      local on_attach = function(client, bufnr)
+        if client.name ~= 'eslint' then
+          client.server_capabilities.document_formatting = true
+        end
+
+        setup_lsp_keymaps(client, bufnr)
+      end
+
+      -- Server configuration table
+      local server_configs = {
+        dockerls = {},
+        eslint = {},
+        gopls = {},
+        jsonls = {},
+        pyright = {},
+        sqlls = {},
+        tailwindcss = {},
+        templ = {},
+        terraformls = {},
+        ts_ls = {},
+        intelephense = {},
+        zls = {},
+        yamlls = {
+          settings = {
+            yaml = {
+              schemas = {
+                ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] = 'docker-compose*.yml',
+              },
+              keyOrdering = false,
+            },
+          },
+        },
+        -- Add Lua Language Server with Neovim-specific configuration
+        lua_ls = {
+          settings = {
+            Lua = {
+              runtime = {
+                -- Use LuaJIT for Neovim
+                version = 'LuaJIT',
+              },
+              diagnostics = {
+                -- Recognize the vim global
+                globals = {
+                  'vim',
+                  -- Add other globals used in your config
+                  'require',
+                },
+              },
+              workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+              },
+              -- Do not send telemetry data
+              telemetry = {
+                enable = false,
+              },
+              -- Format settings
+              format = {
+                enable = true,
+                -- Use stylua rather than the built-in formatter
+                defaultConfig = {
+                  indent_style = "space",
+                  indent_size = "2",
+                },
+              },
+            },
+          },
+        },
+      }
+
+      -- Set up each LSP server with its configuration
+      for server_name, config in pairs(server_configs) do
+        config.capabilities = capabilities
+        config.on_attach = on_attach
+        lspconfig[server_name].setup(config)
+      end
+    end,
+  },
+}
+
+================
+File: lua/plugins/telescope.lua
+================
+return {
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      -- Configure Telescope
+      local telescope = require('telescope')
+      local actions = require('telescope.actions')
+      local builtin = require('telescope.builtin')
+
+      -- Setup the main telescope configuration
+      telescope.setup {
+        defaults = {
+          file_ignore_patterns = { '.git/' },
+          mappings = {
+            i = {
+              ['<C-u>'] = false,
+              ['<C-d>'] = false,
+            },
+          },
+        },
+        pickers = {
+          buffers = {
+            mappings = {
+              i = {
+                ['<C-d>'] = function(prompt_bufnr)
+                  local action_state = require('telescope.actions.state')
+                  local entry = action_state.get_selected_entry()
+                  if entry then
+                    require('bufdelete').bufdelete(entry.bufnr, true)
+                  end
+                  actions.close(prompt_bufnr)
+                end,
+              },
+            },
+          },
+        },
+        extensions = {
+          projects = {
+            base_dirs = {
+              '~/home',
+              '~/work',
+            },
+            hidden_files = true,
+            theme = 'dropdown',
+          },
+        },
+      }
+
+      -- Load extensions
+      telescope.load_extension('projects')
+
+      -- Define keymaps in a separate section
+      local telescope_keymaps = {
+        { mode = 'n', key = '<leader>ff', action = builtin.find_files, desc = 'Find Files' },
+        { mode = 'n', key = '<leader>fg', action = builtin.live_grep, desc = 'Live Grep' },
+        { mode = 'n', key = '<leader>fb', action = builtin.buffers, desc = 'List Buffers' },
+        { mode = 'n', key = '<leader>fh', action = builtin.help_tags, desc = 'Help Tags' },
+        { mode = 'n', key = '<leader>fp', action = telescope.extensions.projects.projects, desc = 'Find Projects' },
+      }
+
+      -- Apply all keymaps
+      for _, mapping in ipairs(telescope_keymaps) do
+        vim.keymap.set(mapping.mode, mapping.key, mapping.action, { desc = mapping.desc })
+      end
+    end,
+  },
+
+  -- Project management
+  {
+    'ahmedkhalf/project.nvim',
+    config = function()
+      require('project_nvim').setup {
+        detection_methods = { 'pattern', 'lsp' },
+        patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json' },
+        show_hidden = true,
+        silent_chdir = false,
+        ignore_lsp = {},
+        datapath = vim.fn.stdpath('data'),
+      }
+    end,
+  },
+}
+
+================
+File: lua/plugins/treesitter.lua
+================
+return {
+  {
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+      'vrischmann/tree-sitter-templ',
+    },
+    config = function()
+      -- Define parsers to install
+      local parsers = {
+        'css',
+        'dockerfile',
+        'go',
+        'html',
+        'javascript',
+        'json',
+        'lua',
+        'php',
+        'python',
+        'sql',
+        'templ',
+        'terraform',
+        'tsx',
+        'typescript',
+        'yaml',
+        'zig',
+      }
+
+      -- Text objects selection configuration
+      local select_textobjects = {
+        enable = true,
+        lookahead = true,
+        keymaps = {
+          ['af'] = '@function.outer',
+          ['if'] = '@function.inner',
+          ['ac'] = '@class.outer',
+          ['ic'] = '@class.inner',
+          ['aB'] = '@block.outer',
+          ['iB'] = '@block.inner',
+          ['aP'] = '@parameter.outer',
+          ['iP'] = '@parameter.inner',
+        },
+        selection_modes = {
+          ['@parameter.outer'] = 'v',
+          ['@function.outer'] = 'V',
+          ['@class.outer'] = '<c-v>',
+        },
+      }
+
+      -- Text objects movement configuration
+      local move_textobjects = {
+        enable = true,
+        set_jumps = true,
+        goto_next_start = {
+          [']f'] = '@function.outer',
+          [']]'] = '@class.outer',
+        },
+        goto_next_end = {
+          [']F'] = '@function.outer',
+          [']['] = '@class.outer',
+        },
+        goto_previous_start = {
+          ['[f'] = '@function.outer',
+          ['[['] = '@class.outer',
+        },
+        goto_previous_end = {
+          ['[F'] = '@function.outer',
+          ['[]'] = '@class.outer',
+        },
+      }
+
+      -- Text objects swap configuration
+      local swap_textobjects = {
+        enable = true,
+        swap_next = {
+          ['<leader>a'] = '@parameter.inner',
+        },
+        swap_previous = {
+          ['<leader>A'] = '@parameter.inner',
+        },
+      }
+
+      -- Main treesitter configuration
+      require('nvim-treesitter.configs').setup({
+        ensure_installed = parsers,
+        auto_install = true,
+        highlight = { enable = true },
+        indent = { enable = true },
+        textobjects = {
+          select = select_textobjects,
+          move = move_textobjects,
+          swap = swap_textobjects,
+        },
+      })
+    end,
+  },
+}
+
+================
+File: lua/plugins/ui.lua
+================
+return {
+  {
+    'kepano/flexoki-neovim',
+    priority = 1000,
+    config = function()
+      vim.api.nvim_command('colorscheme flexoki-dark')
+    end,
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('lualine').setup({
+        options = {
+          theme = 'auto',
+          component_separators = { left = '|', right = '|' },
+          section_separators = { left = '', right = '' },
+        },
+      })
+    end,
+  },
+  {
+    'akinsho/bufferline.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    version = "*",
+    opts = {
+      options = {
+        mode = "buffers",
+        numbers = "ordinal",
+        close_command = "Bdelete! %d",
+        right_mouse_command = "Bdelete! %d",
+        diagnostics = "nvim_lsp",
+        diagnostics_indicator = function(count, level, diagnostics_dict, context)
+          local s = " "
+          for e, n in pairs(diagnostics_dict) do
+            local sym = e == "error" and " " or (e == "warning" and " " or " ")
+            s = s .. n .. sym
+          end
+          return s
+        end,
+        offsets = {
+          {
+            filetype = "NvimTree",
+            text = "File Explorer",
+            text_align = "left",
+            separator = true,
+          },
+        },
+        separator_style = "thin",
+        always_show_bufferline = true,
+        show_buffer_close_icons = true,
+        show_close_icon = true,
+      },
+    },
+  },
+}
+
+================
+File: .luacheckrc
+================
+-- Globals for Neovim Lua configuration
+globals = {
+    "vim",
+    -- Additional Neovim-related globals
+    "assert",
+    "pcall",
+    "xpcall",
+    "select",
+    "pairs",
+    "ipairs",
+    "type",
+    "tonumber",
+    "tostring",
+    "error",
+    "warn",
+    -- Common modules/plugins often used in Neovim config
+    "require",
+    "packer",
+    "use",
+}
+
+-- Standard globals to ignore
+ignore = {
+    "111", -- Setting non-standard global
+    "212", -- Unused argument
+    "213", -- Unused loop variable
+    "542", -- Empty if branch
+}
+
+-- Files to exclude
+exclude_files = {
+    "lua/lazy-lock.json",
+    "lazy-lock.json",
+    ".luacheckrc",
+    "*.json",
+    "*.txt",
+    "*.md"
+}
+
+-- Maximum line length
+max_line_length = 160
+
+-- Allow self to be defined as a parameter in class methods
+self = false
+
+-- Set max cyclomatic complexity (prevents deeply nested code)
+max_cyclomatic_complexity = 15
+
+-- Standard Lua stdlib
+std = "lua54"  -- LuaJIT is closest to Lua 5.4
+
+================
+File: .stylua.toml
+================
+column_width = 160
+line_endings = "Unix"
+indent_type = "Spaces"
+indent_width = 2
+quote_style = "AutoPreferSingle"
+call_parentheses = "None"
+
+================
+File: clenup.sh
+================
+#!/bin/bash
+
+set -euo pipefail
+
+echo "Starting Neovim cleanup..."
+
+directories=(
+	"$HOME/.local/share/nvim"
+	"$HOME/.cache/nvim"
+)
+
+for dir in "${directories[@]}"; do
+	if [ -e "$dir" ]; then
+		echo "Removing $dir..."
+		rm -rf "$dir"
+	else
+		echo "$dir does not exist, skipping."
+	fi
+done
+
+echo "Neovim cleanup completed."
+
+================
+File: init.lua
+================
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable',
+    lazypath,
+  }
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Load core configurations
+require 'config.options'
+require 'config.keymaps'
+require 'config.autocmds'
+
+-- Setup plugins
+require('lazy').setup('plugins', {
+  change_detection = {
+    notify = false,
+  },
+})
+
+================
+File: lazy-lock.json
+================
+{
+  "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
+  "LuaSnip": { "branch": "master", "commit": "c9b9a22904c97d0eb69ccb9bab76037838326817" },
+  "bufdelete.nvim": { "branch": "master", "commit": "f6bcea78afb3060b198125256f897040538bcb81" },
+  "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
+  "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
+  "cmp-nvim-lsp": { "branch": "main", "commit": "a8912b88ce488f411177fc8aed358b04dc246d7b" },
+  "cmp-path": { "branch": "main", "commit": "c6635aae33a50d6010bf1aa756ac2398a2d54c32" },
+  "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
+  "conform.nvim": { "branch": "master", "commit": "372fc521f8421b7830ea6db4d6ea3bae1c77548c" },
+  "flexoki-neovim": { "branch": "main", "commit": "975654bce67514114db89373539621cff42befb5" },
+  "friendly-snippets": { "branch": "main", "commit": "fc8f183479a472df60aa86f00e295462f2308178" },
+  "gitsigns.nvim": { "branch": "main", "commit": "b79047e81f645875e500b4f433d8133bc421446c" },
+  "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
+  "lualine.nvim": { "branch": "master", "commit": "15884cee63a8c205334ab13ab1c891cd4d27101a" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "1a31f824b9cd5bc6f342fc29e9a53b60d74af245" },
+  "mason.nvim": { "branch": "main", "commit": "fc98833b6da5de5a9c5b1446ac541577059555be" },
+  "neodev.nvim": { "branch": "main", "commit": "46aa467dca16cf3dfe27098042402066d2ae242d" },
+  "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
+  "nvim-dap": { "branch": "master", "commit": "98bf130702eaafad8567c0e3ea1171c2552d58bb" },
+  "nvim-dap-go": { "branch": "main", "commit": "8763ced35b19c8dc526e04a70ab07c34e11ad064" },
+  "nvim-dap-python": { "branch": "master", "commit": "34282820bb713b9a5fdb120ae8dd85c2b3f49b51" },
+  "nvim-dap-ui": { "branch": "master", "commit": "851f6f00480dc9366f37b6b91f3aeadb3b6ba04f" },
+  "nvim-lspconfig": { "branch": "master", "commit": "5af60bbb835d5b6efdc64cdff2a5b27cde4120de" },
+  "nvim-nio": { "branch": "master", "commit": "21f5324bfac14e22ba26553caf69ec76ae8a7662" },
+  "nvim-tree.lua": { "branch": "master", "commit": "be5b788f2dc1522c73fb7afad9092331c8aebe80" },
+  "nvim-treesitter": { "branch": "master", "commit": "684eeac91ed8e297685a97ef70031d19ac1de25a" },
+  "nvim-treesitter-textobjects": { "branch": "master", "commit": "205e3369bc83d8cb83f7409c36120e24611f8c5c" },
+  "nvim-web-devicons": { "branch": "master", "commit": "855c97005c8eebcdd19846f2e54706bffd40ee96" },
+  "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
+  "project.nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },
+  "supermaven-nvim": { "branch": "main", "commit": "07d20fce48a5629686aefb0a7cd4b25e33947d50" },
+  "telescope.nvim": { "branch": "master", "commit": "a4ed82509cecc56df1c7138920a1aeaf246c0ac5" },
+  "toggleterm.nvim": { "branch": "main", "commit": "9a88eae817ef395952e08650b3283726786fb5fb" },
+  "tree-sitter-templ": { "branch": "master", "commit": "7f7f06b3931ca00e8ddfbeab3fc08ad00d297fad" },
+  "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
+}
+
+
+
+================================================================
+End of Codebase
+================================================================

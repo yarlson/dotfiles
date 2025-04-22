@@ -82,7 +82,7 @@ return {
       }
 
       -- Main treesitter configuration
-      require('nvim-treesitter.configs').setup({
+      require('nvim-treesitter.configs').setup {
         ensure_installed = parsers,
         auto_install = true,
         highlight = { enable = true },
@@ -92,7 +92,7 @@ return {
           move = move_textobjects,
           swap = swap_textobjects,
         },
-      })
+      }
     end,
   },
 }

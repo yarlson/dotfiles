@@ -29,4 +29,3 @@ end
 -- Keymap <leader>fp is already defined in lua/plugins/telescope.lua for finding projects
 
 -- Add other keymaps from your original init.lua here
-

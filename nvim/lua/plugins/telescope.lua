@@ -4,9 +4,9 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       -- Configure Telescope
-      local telescope = require('telescope')
-      local actions = require('telescope.actions')
-      local builtin = require('telescope.builtin')
+      local telescope = require 'telescope'
+      local actions = require 'telescope.actions'
+      local builtin = require 'telescope.builtin'
 
       -- Setup the main telescope configuration
       telescope.setup {
@@ -24,7 +24,7 @@ return {
             mappings = {
               i = {
                 ['<C-d>'] = function(prompt_bufnr)
-                  local action_state = require('telescope.actions.state')
+                  local action_state = require 'telescope.actions.state'
                   local entry = action_state.get_selected_entry()
                   if entry then
                     require('bufdelete').bufdelete(entry.bufnr, true)
@@ -48,7 +48,7 @@ return {
       }
 
       -- Load extensions
-      telescope.load_extension('projects')
+      telescope.load_extension 'projects'
 
       -- Define keymaps in a separate section
       local telescope_keymaps = {
@@ -76,7 +76,7 @@ return {
         show_hidden = true,
         silent_chdir = false,
         ignore_lsp = {},
-        datapath = vim.fn.stdpath('data'),
+        datapath = vim.fn.stdpath 'data',
       }
     end,
   },

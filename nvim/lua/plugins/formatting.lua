@@ -45,12 +45,11 @@ return {
       }
 
       -- Configure conform
-      require('conform').setup({
+      require('conform').setup {
         formatters = custom_formatters,
         formatters_by_ft = formatters_by_ft,
         format_on_save = format_on_save_opts,
-      })
+      }
     end,
   },
 }
-

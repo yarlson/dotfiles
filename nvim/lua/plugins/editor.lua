@@ -38,7 +38,9 @@ return {
         open_mapping = [[<c-\>]],
         direction = 'horizontal',
       }
-      vim.keymap.set('n', '<leader>t', function() require("toggleterm").toggle() end, { desc = 'Toggle Terminal' })
+      vim.keymap.set('n', '<leader>t', function()
+        require('toggleterm').toggle()
+      end, { desc = 'Toggle Terminal' })
     end,
   },
 
@@ -66,7 +68,9 @@ return {
           update_cwd = true,
         },
       }
-      vim.keymap.set('n', '<leader>e', function() require("nvim-tree.api").tree.toggle() end, { desc = 'Toggle File Explorer' })
+      vim.keymap.set('n', '<leader>e', function()
+        require('nvim-tree.api').tree.toggle()
+      end, { desc = 'Toggle File Explorer' })
       vim.keymap.set('n', '<C-w>e', function()
         local nvim_tree = require 'nvim-tree.api'
         local current_buf = vim.api.nvim_get_current_buf()
@@ -80,4 +84,58 @@ return {
       end, { desc = 'Focus NvimTree' })
     end,
   },
+
+  -- Faster navigation between frequently used files with Harpoon
+  {
+    'ThePrimeagen/harpoon',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('harpoon').setup {}
+    end,
+    keys = {
+      {
+        '<leader>ha',
+        function()
+          require('harpoon.mark').add_file()
+        end,
+        desc = 'Mark File (Harpoon)',
+      },
+      {
+        '<leader>hh',
+        function()
+          require('harpoon.ui').toggle_quick_menu()
+        end,
+        desc = 'Harpoon Menu',
+      },
+      {
+        '<leader>h1',
+        function()
+          require('harpoon.ui').nav_file(1)
+        end,
+        desc = 'Go to Harpoon File 1',
+      },
+      {
+        '<leader>h2',
+        function()
+          require('harpoon.ui').nav_file(2)
+        end,
+        desc = 'Go to Harpoon File 2',
+      },
+      {
+        '<leader>h3',
+        function()
+          require('harpoon.ui').nav_file(3)
+        end,
+        desc = 'Go to Harpoon File 3',
+      },
+      {
+        '<leader>h4',
+        function()
+          require('harpoon.ui').nav_file(4)
+        end,
+        desc = 'Go to Harpoon File 4',
+      },
+    },
+  },
 }
+
