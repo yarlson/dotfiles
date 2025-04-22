@@ -23,8 +23,22 @@ create_augroups {
       },
     },
   },
+  -- Open Neo-tree on entering a directory
+  NeoTreeOpenOnStart = {
+    {
+      event = 'VimEnter',
+      opts = {
+        callback = function()
+          -- Always open Neo-tree on startup
+          vim.schedule(function()
+            require('neo-tree.command').execute { action = 'show' } -- Use show to ensure it opens
+          end)
+        end,
+        desc = 'Open Neo-tree on VimEnter',
+      },
+    },
+  },
 }
 
 -- Set filetype for templ files
 vim.filetype.add { extension = { templ = 'templ' } }
-

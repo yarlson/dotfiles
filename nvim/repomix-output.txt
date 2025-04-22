@@ -86,7 +86,7 @@ local function create_augroups(definitions)
 end
 
 -- Define autocommands
-create_augroups({
+create_augroups {
   -- Format on save with Conform
   ConformFormatOnSave = {
     {
@@ -98,7 +98,7 @@ create_augroups({
       },
     },
   },
-})
+}
 
 -- Set filetype for templ files
 vim.filetype.add { extension = { templ = 'templ' } }
@@ -369,7 +369,7 @@ return {
   {
     'mfussenegger/nvim-dap',
     config = function()
-      local dap = require('dap')
+      local dap = require 'dap'
 
       -- Configure Go debugging
       local function setup_go_adapter()
@@ -386,7 +386,7 @@ return {
             end
           end)
           vim.defer_fn(function()
-            callback({ type = 'server', host = '127.0.0.1', port = port })
+            callback { type = 'server', host = '127.0.0.1', port = port }
           end, 100)
         end
 
@@ -415,7 +415,7 @@ return {
             name = 'Launch file',
             program = '${file}',
             pythonPath = function()
-              local venv_path = os.getenv('VIRTUAL_ENV')
+              local venv_path = os.getenv 'VIRTUAL_ENV'
               if venv_path then
                 return venv_path .. '/bin/python'
               else
@@ -460,33 +460,33 @@ return {
     'rcarriga/nvim-dap-ui',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     config = function()
-      local dap = require('dap')
-      local dapui = require('dapui')
+      local dap = require 'dap'
+      local dapui = require 'dapui'
 
       -- Configure DAP UI
-      dapui.setup({
-        icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+      dapui.setup {
+        icons = { expanded = '▾', collapsed = '▸', current_frame = '▸' },
         mappings = {
           -- Use a table to apply multiple mappings
-          expand = { "<CR>", "<2-LeftMouse>" },
-          open = "o",
-          remove = "d",
-          edit = "e",
-          repl = "r",
-          toggle = "t",
+          expand = { '<CR>', '<2-LeftMouse>' },
+          open = 'o',
+          remove = 'd',
+          edit = 'e',
+          repl = 'r',
+          toggle = 't',
         },
-      })
+      }
 
       -- Configure auto-open/close behavior
-      dap.listeners.after.event_initialized["dapui_config"] = function()
+      dap.listeners.after.event_initialized['dapui_config'] = function()
         dapui.open()
       end
 
-      dap.listeners.before.event_terminated["dapui_config"] = function()
+      dap.listeners.before.event_terminated['dapui_config'] = function()
         dapui.close()
       end
 
-      dap.listeners.before.event_exited["dapui_config"] = function()
+      dap.listeners.before.event_exited['dapui_config'] = function()
         dapui.close()
       end
     end,
@@ -495,16 +495,77 @@ return {
     'leoluz/nvim-dap-go',
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
-      require('dap-go').setup({})
+      require('dap-go').setup {}
     end,
   },
   {
     'mfussenegger/nvim-dap-python',
     dependencies = { 'mfussenegger/nvim-dap' },
     config = function()
-      require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
+      require('dap-python').setup '~/.virtualenvs/debugpy/bin/python'
       require('dap-python').test_runner = 'pytest'
     end,
+  },
+  -- Streamlined testing workflow with neotest
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-neotest/neotest-go',
+      'nvim-neotest/neotest-python',
+    },
+    config = function()
+      require('neotest').setup {
+        adapters = {
+          require 'neotest-python' {
+            dap = { justMyCode = false },
+            runner = 'pytest',
+          },
+          require 'neotest-go' {},
+        },
+        status = { virtual_text = true },
+        output = { open_on_run = true },
+      }
+    end,
+    keys = {
+      {
+        '<leader>tf',
+        function()
+          require('neotest').run.run(vim.fn.expand '%')
+        end,
+        desc = 'Run File Tests (Neotest)',
+      },
+      {
+        '<leader>tn',
+        function()
+          require('neotest').run.run()
+        end,
+        desc = 'Run Nearest Test (Neotest)',
+      },
+      {
+        '<leader>ts',
+        function()
+          require('neotest').summary.toggle()
+        end,
+        desc = 'Toggle Test Summary (Neotest)',
+      },
+      {
+        '<leader>to',
+        function()
+          require('neotest').output.open { enter = true }
+        end,
+        desc = 'Show Test Output (Neotest)',
+      },
+      {
+        '<leader>td',
+        function()
+          require('neotest').run.run { strategy = 'dap' }
+        end,
+        desc = 'Debug Nearest Test (Neotest)',
+      },
+    },
   },
 }
 
@@ -551,7 +612,9 @@ return {
         open_mapping = [[<c-\>]],
         direction = 'horizontal',
       }
-      vim.keymap.set('n', '<leader>t', function() require("toggleterm").toggle() end, { desc = 'Toggle Terminal' })
+      vim.keymap.set('n', '<leader>t', function()
+        require('toggleterm').toggle()
+      end, { desc = 'Toggle Terminal' })
     end,
   },
 
@@ -579,7 +642,9 @@ return {
           update_cwd = true,
         },
       }
-      vim.keymap.set('n', '<leader>e', function() require("nvim-tree.api").tree.toggle() end, { desc = 'Toggle File Explorer' })
+      vim.keymap.set('n', '<leader>e', function()
+        require('nvim-tree.api').tree.toggle()
+      end, { desc = 'Toggle File Explorer' })
       vim.keymap.set('n', '<C-w>e', function()
         local nvim_tree = require 'nvim-tree.api'
         local current_buf = vim.api.nvim_get_current_buf()
@@ -592,6 +657,59 @@ return {
         end
       end, { desc = 'Focus NvimTree' })
     end,
+  },
+
+  -- Faster navigation between frequently used files with Harpoon
+  {
+    'ThePrimeagen/harpoon',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('harpoon').setup {}
+    end,
+    keys = {
+      {
+        '<leader>ha',
+        function()
+          require('harpoon.mark').add_file()
+        end,
+        desc = 'Mark File (Harpoon)',
+      },
+      {
+        '<leader>hh',
+        function()
+          require('harpoon.ui').toggle_quick_menu()
+        end,
+        desc = 'Harpoon Menu',
+      },
+      {
+        '<leader>h1',
+        function()
+          require('harpoon.ui').nav_file(1)
+        end,
+        desc = 'Go to Harpoon File 1',
+      },
+      {
+        '<leader>h2',
+        function()
+          require('harpoon.ui').nav_file(2)
+        end,
+        desc = 'Go to Harpoon File 2',
+      },
+      {
+        '<leader>h3',
+        function()
+          require('harpoon.ui').nav_file(3)
+        end,
+        desc = 'Go to Harpoon File 3',
+      },
+      {
+        '<leader>h4',
+        function()
+          require('harpoon.ui').nav_file(4)
+        end,
+        desc = 'Go to Harpoon File 4',
+      },
+    },
   },
 }
 
@@ -645,11 +763,11 @@ return {
       }
 
       -- Configure conform
-      require('conform').setup({
+      require('conform').setup {
         formatters = custom_formatters,
         formatters_by_ft = formatters_by_ft,
         format_on_save = format_on_save_opts,
-      })
+      }
     end,
   },
 }
@@ -674,31 +792,49 @@ return {
 
         -- Navigation keymaps
         map('n', ']h', function()
-          if vim.wo.diff then return ']h' end
-          vim.schedule(function() gs.next_hunk() end)
+          if vim.wo.diff then
+            return ']h'
+          end
+          vim.schedule(function()
+            gs.next_hunk()
+          end)
           return '<Ignore>'
         end, { expr = true, desc = 'Next Git Hunk' })
 
         map('n', '[h', function()
-          if vim.wo.diff then return '[h' end
-          vim.schedule(function() gs.prev_hunk() end)
+          if vim.wo.diff then
+            return '[h'
+          end
+          vim.schedule(function()
+            gs.prev_hunk()
+          end)
           return '<Ignore>'
         end, { expr = true, desc = 'Previous Git Hunk' })
 
         -- Action keymaps - replace string commands with function calls
-        map({ 'n', 'v' }, '<leader>gs', function() gs.stage_hunk() end, { desc = 'Stage Hunk' })
-        map({ 'n', 'v' }, '<leader>gr', function() gs.reset_hunk() end, { desc = 'Reset Hunk' })
+        map({ 'n', 'v' }, '<leader>gs', function()
+          gs.stage_hunk()
+        end, { desc = 'Stage Hunk' })
+        map({ 'n', 'v' }, '<leader>gr', function()
+          gs.reset_hunk()
+        end, { desc = 'Reset Hunk' })
         map('n', '<leader>gS', gs.stage_buffer, { desc = 'Stage Buffer' })
         map('n', '<leader>gu', gs.undo_stage_hunk, { desc = 'Undo Stage Hunk' })
         map('n', '<leader>gR', gs.reset_buffer, { desc = 'Reset Buffer' })
         map('n', '<leader>gp', gs.preview_hunk, { desc = 'Preview Hunk' })
-        map('n', '<leader>gb', function() gs.blame_line({ full = true }) end, { desc = 'Blame Line' })
+        map('n', '<leader>gb', function()
+          gs.blame_line { full = true }
+        end, { desc = 'Blame Line' })
         map('n', '<leader>gd', gs.diffthis, { desc = 'Diff This' })
-        map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Diff Against HEAD' })
+        map('n', '<leader>gD', function()
+          gs.diffthis '~'
+        end, { desc = 'Diff Against HEAD' })
         map('n', '<leader>gt', gs.toggle_deleted, { desc = 'Toggle Deleted Lines' })
 
         -- Text object - replace command string with function call
-        map({ 'o', 'x' }, 'ih', function() gs.select_hunk() end, { desc = 'Select Hunk' })
+        map({ 'o', 'x' }, 'ih', function()
+          gs.select_hunk()
+        end, { desc = 'Select Hunk' })
       end,
       signs = {
         add = { text = '│' },
@@ -707,6 +843,36 @@ return {
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
         untracked = { text = '┆' },
+      },
+    },
+  },
+  -- Magit-like Git interface with Neogit
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    config = function()
+      require('neogit').setup {
+        integrations = { diffview = true },
+      }
+    end,
+    keys = {
+      {
+        '<leader>gg',
+        function()
+          require('neogit').open()
+        end,
+        desc = 'Open Neogit',
+      },
+      {
+        '<leader>gc',
+        function()
+          require('neogit').open { 'commit' }
+        end,
+        desc = 'Neogit Commit',
       },
     },
   },
@@ -736,7 +902,7 @@ return {
   },
   -- Add neodev.nvim for better Neovim Lua development
   {
-    "folke/neodev.nvim",
+    'folke/neodev.nvim',
     opts = {
       library = {
         enabled = true,
@@ -779,7 +945,7 @@ return {
     },
     config = function()
       -- Setup neodev first (must be called before lua_ls)
-      require("neodev").setup({})
+      require('neodev').setup {}
 
       local lspconfig = require 'lspconfig'
       local cmp_nvim_lsp = require 'cmp_nvim_lsp'
@@ -870,7 +1036,7 @@ return {
               },
               workspace = {
                 -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file("", true),
+                library = vim.api.nvim_get_runtime_file('', true),
                 checkThirdParty = false,
               },
               -- Do not send telemetry data
@@ -882,8 +1048,8 @@ return {
                 enable = true,
                 -- Use stylua rather than the built-in formatter
                 defaultConfig = {
-                  indent_style = "space",
-                  indent_size = "2",
+                  indent_style = 'space',
+                  indent_size = '2',
                 },
               },
             },
@@ -899,6 +1065,71 @@ return {
       end
     end,
   },
+  -- Inline function signatures
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'BufReadPre',
+    opts = {
+      bind = true,
+      hint_prefix = '💡 ',
+      handler_opts = {
+        border = 'rounded',
+      },
+    },
+    config = function(_, opts)
+      require('lsp_signature').setup(opts)
+    end,
+  },
+  -- Enhanced diagnostics UI with Trouble
+  {
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {}, -- Use default options
+    keys = {
+      {
+        '<leader>xx',
+        function()
+          require('trouble').toggle()
+        end,
+        desc = 'Toggle Trouble (Diagnostics)',
+      },
+      {
+        '<leader>xw',
+        function()
+          require('trouble').toggle 'workspace_diagnostics'
+        end,
+        desc = 'Workspace Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xd',
+        function()
+          require('trouble').toggle 'document_diagnostics'
+        end,
+        desc = 'Document Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xl',
+        function()
+          require('trouble').toggle 'loclist'
+        end,
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xq',
+        function()
+          require('trouble').toggle 'quickfix'
+        end,
+        desc = 'Quickfix List (Trouble)',
+      },
+      {
+        'gR',
+        function()
+          require('trouble').lsp_references()
+        end,
+        desc = 'LSP References (Trouble)',
+      },
+    },
+  },
 }
 
 ================
@@ -910,9 +1141,9 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       -- Configure Telescope
-      local telescope = require('telescope')
-      local actions = require('telescope.actions')
-      local builtin = require('telescope.builtin')
+      local telescope = require 'telescope'
+      local actions = require 'telescope.actions'
+      local builtin = require 'telescope.builtin'
 
       -- Setup the main telescope configuration
       telescope.setup {
@@ -930,7 +1161,7 @@ return {
             mappings = {
               i = {
                 ['<C-d>'] = function(prompt_bufnr)
-                  local action_state = require('telescope.actions.state')
+                  local action_state = require 'telescope.actions.state'
                   local entry = action_state.get_selected_entry()
                   if entry then
                     require('bufdelete').bufdelete(entry.bufnr, true)
@@ -954,7 +1185,7 @@ return {
       }
 
       -- Load extensions
-      telescope.load_extension('projects')
+      telescope.load_extension 'projects'
 
       -- Define keymaps in a separate section
       local telescope_keymaps = {
@@ -982,7 +1213,7 @@ return {
         show_hidden = true,
         silent_chdir = false,
         ignore_lsp = {},
-        datapath = vim.fn.stdpath('data'),
+        datapath = vim.fn.stdpath 'data',
       }
     end,
   },
@@ -1075,7 +1306,7 @@ return {
       }
 
       -- Main treesitter configuration
-      require('nvim-treesitter.configs').setup({
+      require('nvim-treesitter.configs').setup {
         ensure_installed = parsers,
         auto_install = true,
         highlight = { enable = true },
@@ -1085,7 +1316,7 @@ return {
           move = move_textobjects,
           swap = swap_textobjects,
         },
-      })
+      }
     end,
   },
 }
@@ -1098,50 +1329,50 @@ return {
     'kepano/flexoki-neovim',
     priority = 1000,
     config = function()
-      vim.api.nvim_command('colorscheme flexoki-dark')
+      vim.api.nvim_command 'colorscheme flexoki-dark'
     end,
   },
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('lualine').setup({
+      require('lualine').setup {
         options = {
           theme = 'auto',
           component_separators = { left = '|', right = '|' },
           section_separators = { left = '', right = '' },
         },
-      })
+      }
     end,
   },
   {
     'akinsho/bufferline.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    version = "*",
+    version = '*',
     opts = {
       options = {
-        mode = "buffers",
-        numbers = "ordinal",
-        close_command = "Bdelete! %d",
-        right_mouse_command = "Bdelete! %d",
-        diagnostics = "nvim_lsp",
+        mode = 'buffers',
+        numbers = 'ordinal',
+        close_command = 'Bdelete! %d',
+        right_mouse_command = 'Bdelete! %d',
+        diagnostics = 'nvim_lsp',
         diagnostics_indicator = function(count, level, diagnostics_dict, context)
-          local s = " "
+          local s = ' '
           for e, n in pairs(diagnostics_dict) do
-            local sym = e == "error" and " " or (e == "warning" and " " or " ")
+            local sym = e == 'error' and ' ' or (e == 'warning' and ' ' or ' ')
             s = s .. n .. sym
           end
           return s
         end,
         offsets = {
           {
-            filetype = "NvimTree",
-            text = "File Explorer",
-            text_align = "left",
+            filetype = 'NvimTree',
+            text = 'File Explorer',
+            text_align = 'left',
             separator = true,
           },
         },
-        separator_style = "thin",
+        separator_style = 'thin',
         always_show_bufferline = true,
         show_buffer_close_icons = true,
         show_close_icon = true,
@@ -1155,41 +1386,41 @@ File: .luacheckrc
 ================
 -- Globals for Neovim Lua configuration
 globals = {
-    "vim",
-    -- Additional Neovim-related globals
-    "assert",
-    "pcall",
-    "xpcall",
-    "select",
-    "pairs",
-    "ipairs",
-    "type",
-    "tonumber",
-    "tostring",
-    "error",
-    "warn",
-    -- Common modules/plugins often used in Neovim config
-    "require",
-    "packer",
-    "use",
+  'vim',
+  -- Additional Neovim-related globals
+  'assert',
+  'pcall',
+  'xpcall',
+  'select',
+  'pairs',
+  'ipairs',
+  'type',
+  'tonumber',
+  'tostring',
+  'error',
+  'warn',
+  -- Common modules/plugins often used in Neovim config
+  'require',
+  'packer',
+  'use',
 }
 
 -- Standard globals to ignore
 ignore = {
-    "111", -- Setting non-standard global
-    "212", -- Unused argument
-    "213", -- Unused loop variable
-    "542", -- Empty if branch
+  '111', -- Setting non-standard global
+  '212', -- Unused argument
+  '213', -- Unused loop variable
+  '542', -- Empty if branch
 }
 
 -- Files to exclude
 exclude_files = {
-    "lua/lazy-lock.json",
-    "lazy-lock.json",
-    ".luacheckrc",
-    "*.json",
-    "*.txt",
-    "*.md"
+  'lua/lazy-lock.json',
+  'lazy-lock.json',
+  '.luacheckrc',
+  '*.json',
+  '*.txt',
+  '*.md',
 }
 
 -- Maximum line length
@@ -1202,7 +1433,7 @@ self = false
 max_cyclomatic_complexity = 15
 
 -- Standard Lua stdlib
-std = "lua54"  -- LuaJIT is closest to Lua 5.4
+std = 'lua54' -- LuaJIT is closest to Lua 5.4
 
 ================
 File: .stylua.toml
@@ -1224,17 +1455,17 @@ set -euo pipefail
 echo "Starting Neovim cleanup..."
 
 directories=(
-	"$HOME/.local/share/nvim"
-	"$HOME/.cache/nvim"
+    "$HOME/.local/share/nvim"
+    "$HOME/.cache/nvim"
 )
 
 for dir in "${directories[@]}"; do
-	if [ -e "$dir" ]; then
-		echo "Removing $dir..."
-		rm -rf "$dir"
-	else
-		echo "$dir does not exist, skipping."
-	fi
+    if [ -e "$dir" ]; then
+        echo "Removing $dir..."
+        rm -rf "$dir"
+    else
+        echo "$dir does not exist, skipping."
+    fi
 done
 
 echo "Neovim cleanup completed."
@@ -1273,40 +1504,49 @@ File: lazy-lock.json
 ================
 {
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
-  "LuaSnip": { "branch": "master", "commit": "c9b9a22904c97d0eb69ccb9bab76037838326817" },
+  "FixCursorHold.nvim": { "branch": "master", "commit": "1900f89dc17c603eec29960f57c00bd9ae696495" },
+  "LuaSnip": { "branch": "master", "commit": "e808bee352d1a6fcf902ca1a71cee76e60e24071" },
   "bufdelete.nvim": { "branch": "master", "commit": "f6bcea78afb3060b198125256f897040538bcb81" },
   "bufferline.nvim": { "branch": "main", "commit": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3" },
-  "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
-  "cmp-nvim-lsp": { "branch": "main", "commit": "a8912b88ce488f411177fc8aed358b04dc246d7b" },
-  "cmp-path": { "branch": "main", "commit": "c6635aae33a50d6010bf1aa756ac2398a2d54c32" },
-  "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
-  "conform.nvim": { "branch": "master", "commit": "372fc521f8421b7830ea6db4d6ea3bae1c77548c" },
+  "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
+  "cmp-nvim-lsp": { "branch": "main", "commit": "39e2eda76828d88b773cc27a3f61d2ad782c922d" },
+  "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
+  "cmp_luasnip": { "branch": "master", "commit": "05a9ab28b53f71d1aece421ef32fee2cb857a843" },
+  "conform.nvim": { "branch": "master", "commit": "40d4e98fcc3e6f485f0e8924c63734bc7e305967" },
+  "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "flexoki-neovim": { "branch": "main", "commit": "975654bce67514114db89373539621cff42befb5" },
-  "friendly-snippets": { "branch": "main", "commit": "fc8f183479a472df60aa86f00e295462f2308178" },
-  "gitsigns.nvim": { "branch": "main", "commit": "b79047e81f645875e500b4f433d8133bc421446c" },
+  "friendly-snippets": { "branch": "main", "commit": "de8fce94985873666bd9712ea3e49ee17aadb1ed" },
+  "gitsigns.nvim": { "branch": "main", "commit": "863903631e676b33e8be2acb17512fdc1b80b4fb" },
+  "harpoon": { "branch": "master", "commit": "1bc17e3e42ea3c46b33c0bbad6a880792692a1b3" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
-  "lualine.nvim": { "branch": "master", "commit": "15884cee63a8c205334ab13ab1c891cd4d27101a" },
-  "mason-lspconfig.nvim": { "branch": "main", "commit": "1a31f824b9cd5bc6f342fc29e9a53b60d74af245" },
-  "mason.nvim": { "branch": "main", "commit": "fc98833b6da5de5a9c5b1446ac541577059555be" },
+  "lsp_signature.nvim": { "branch": "master", "commit": "15bb33cdb47e85278e168cad11acb1b6fa9c6488" },
+  "lualine.nvim": { "branch": "master", "commit": "b431d228b7bbcdaea818bdc3e25b8cdbe861f056" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "25c11854aa25558ee6c03432edfa0df0217324be" },
+  "mason.nvim": { "branch": "main", "commit": "e2f7f9044ec30067bc11800a9e266664b88cda22" },
   "neodev.nvim": { "branch": "main", "commit": "46aa467dca16cf3dfe27098042402066d2ae242d" },
-  "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
-  "nvim-dap": { "branch": "master", "commit": "98bf130702eaafad8567c0e3ea1171c2552d58bb" },
-  "nvim-dap-go": { "branch": "main", "commit": "8763ced35b19c8dc526e04a70ab07c34e11ad064" },
-  "nvim-dap-python": { "branch": "master", "commit": "34282820bb713b9a5fdb120ae8dd85c2b3f49b51" },
-  "nvim-dap-ui": { "branch": "master", "commit": "851f6f00480dc9366f37b6b91f3aeadb3b6ba04f" },
-  "nvim-lspconfig": { "branch": "master", "commit": "5af60bbb835d5b6efdc64cdff2a5b27cde4120de" },
-  "nvim-nio": { "branch": "master", "commit": "21f5324bfac14e22ba26553caf69ec76ae8a7662" },
-  "nvim-tree.lua": { "branch": "master", "commit": "be5b788f2dc1522c73fb7afad9092331c8aebe80" },
-  "nvim-treesitter": { "branch": "master", "commit": "684eeac91ed8e297685a97ef70031d19ac1de25a" },
-  "nvim-treesitter-textobjects": { "branch": "master", "commit": "205e3369bc83d8cb83f7409c36120e24611f8c5c" },
-  "nvim-web-devicons": { "branch": "master", "commit": "855c97005c8eebcdd19846f2e54706bffd40ee96" },
-  "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
+  "neogit": { "branch": "master", "commit": "9bb1e73c534f767607e0a888f3de4c942825c501" },
+  "neotest": { "branch": "master", "commit": "6267dcd577aa519c828d2526b05844770d3a2c6a" },
+  "neotest-go": { "branch": "main", "commit": "92950ad7be2ca02a41abca5c6600ff6ffaf5b5d6" },
+  "neotest-python": { "branch": "master", "commit": "a2861ab3c9a0bf75a56b11835c2bfc8270f5be7e" },
+  "nvim-cmp": { "branch": "main", "commit": "ae644feb7b67bf1ce4260c231d1d4300b19c6f30" },
+  "nvim-dap": { "branch": "master", "commit": "7ff6936010b7222fea2caea0f67ed77f1b7c60dd" },
+  "nvim-dap-go": { "branch": "main", "commit": "6aa88167ea1224bcef578e8c7160fe8afbb44848" },
+  "nvim-dap-python": { "branch": "master", "commit": "03fe9592409236b9121c03b66a682dfca15a5cac" },
+  "nvim-dap-ui": { "branch": "master", "commit": "ffa89839f97bad360e78428d5c740fdad9a0ff02" },
+  "nvim-lspconfig": { "branch": "master", "commit": "ff69ecca55d83ffc70657f260a799f79a5637831" },
+  "nvim-nio": { "branch": "master", "commit": "a428f309119086dc78dd4b19306d2d67be884eee" },
+  "nvim-tree.lua": { "branch": "master", "commit": "5ad87620ec9d1190d15c88171a3f0122bc16b0fe" },
+  "nvim-treesitter": { "branch": "master", "commit": "84bdd59c0365944e8914697e508d1c087977ee33" },
+  "nvim-treesitter-textobjects": { "branch": "master", "commit": "b91c98afa6c42819aea6cbc1ba38272f5456a5cf" },
+  "nvim-web-devicons": { "branch": "master", "commit": "19d257cf889f79f4022163c3fbb5e08639077bd8" },
+  "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
   "project.nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },
   "supermaven-nvim": { "branch": "main", "commit": "07d20fce48a5629686aefb0a7cd4b25e33947d50" },
-  "telescope.nvim": { "branch": "master", "commit": "a4ed82509cecc56df1c7138920a1aeaf246c0ac5" },
-  "toggleterm.nvim": { "branch": "main", "commit": "9a88eae817ef395952e08650b3283726786fb5fb" },
-  "tree-sitter-templ": { "branch": "master", "commit": "7f7f06b3931ca00e8ddfbeab3fc08ad00d297fad" },
-  "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
+  "telescope.nvim": { "branch": "master", "commit": "df534c3042572fb958586facd02841e10186707c" },
+  "toggleterm.nvim": { "branch": "main", "commit": "137d06fb103952a0fb567882bb8527e2f92d327d" },
+  "tree-sitter-templ": { "branch": "master", "commit": "e3e894ef9e490c3d36d94a51458ec55480991730" },
+  "trouble.nvim": { "branch": "main", "commit": "85bedb7eb7fa331a2ccbecb9202d8abba64d37b3" },
+  "which-key.nvim": { "branch": "main", "commit": "8badb359f7ab8711e2575ef75dfe6fbbd87e4821" }
 }
 
 

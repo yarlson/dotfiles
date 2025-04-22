@@ -44,44 +44,62 @@ return {
     end,
   },
 
-  -- File explorer
+  -- File explorer (Neo-tree)
   {
-    'nvim-tree/nvim-tree.lua',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v3.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'MunifTanjim/nui.nvim',
+    },
+    cmd = 'Neotree',
     config = function()
-      require('nvim-tree').setup {
-        view = {
+      require('neo-tree').setup {
+        close_if_last_window = true,
+        popup_border_style = 'rounded',
+        enable_git_status = true,
+        enable_diagnostics = true,
+        window = {
+          position = 'left',
           width = 30,
-          side = 'left',
-        },
-        renderer = {
-          icons = {
-            show = {
-              file = true,
-              folder = true,
-              folder_arrow = true,
-            },
+          mapping_options = {
+            noremap = true,
+            nowait = true,
           },
         },
-        update_focused_file = {
-          enable = true,
-          update_cwd = true,
+        filesystem = {
+          filtered_items = {
+            visible = false,
+            hide_dotfiles = false,
+            hide_gitignored = true,
+            hide_hidden = true,
+          },
+          follow_current_file = {
+            enabled = true,
+          },
+          use_libuv_file_watcher = true,
+        },
+        default_component_configs = {
+          indent = {
+            padding = 0,
+          },
         },
       }
+
       vim.keymap.set('n', '<leader>e', function()
-        require('nvim-tree.api').tree.toggle()
-      end, { desc = 'Toggle File Explorer' })
+        require('neo-tree.command').execute { toggle = true }
+      end, { desc = 'Toggle File Explorer (Neo-tree)' })
+
       vim.keymap.set('n', '<C-w>e', function()
-        local nvim_tree = require 'nvim-tree.api'
         local current_buf = vim.api.nvim_get_current_buf()
         local current_buf_ft = vim.api.nvim_buf_get_option(current_buf, 'filetype')
-
-        if current_buf_ft == 'NvimTree' then
+        if current_buf_ft == 'neo-tree' then
           vim.cmd 'wincmd p'
         else
-          nvim_tree.tree.focus()
+          vim.cmd 'Neotree focus'
         end
-      end, { desc = 'Focus NvimTree' })
+      end, { desc = 'Focus File Explorer (Neo-tree)' })
     end,
   },
 
@@ -138,4 +156,3 @@ return {
     },
   },
 }
-
