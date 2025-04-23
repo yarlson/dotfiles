@@ -131,6 +131,15 @@ return {
       vim.api.nvim_create_user_command('CmponAll', function()
         toggle_completion(true, true)
       end, { desc = 'Enable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
+      
+      -- Disable cmp for markdown files
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'markdown' },
+        callback = function()
+          toggle_cmp(false, false)
+          vim.notify('nvim-cmp completion disabled for markdown file.', vim.log.levels.INFO)
+        end,
+      })
     end,
   },
   {
