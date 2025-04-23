@@ -21,6 +21,7 @@ return {
         ['<CR>'] = cmp.mapping.confirm { select = true },
         ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        ['<Esc>'] = cmp.mapping.abort(),
       }
 
       -- Define completion sources in priority order
@@ -41,10 +42,32 @@ return {
         },
         mapping = cmp.mapping.preset.insert(cmp_mappings),
         sources = cmp_sources,
+        window = {
+          completion = {
+            winhighlight = 'Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel',
+            border = 'rounded',
+          },
+          documentation = {
+            winhighlight = 'Normal:CmpDoc',
+            border = 'rounded',
+          },
+        },
         experimental = {
           ghost_text = true,
         },
       }
+
+      -- Create highlight groups for CMP with less transparency
+      local palette = require('flexoki.palette').palette()
+
+      -- Simple approach - match editor background
+      vim.api.nvim_set_hl(0, 'Pmenu', { bg = palette['bg'], blend = 0 }) -- Match editor background
+      vim.api.nvim_set_hl(0, 'PmenuSel', { bg = palette['ui-3'], fg = palette['tx'], blend = 0 }) -- Selected item
+
+      -- Set CMP specific highlights to match
+      vim.api.nvim_set_hl(0, 'CmpPmenu', { bg = palette['bg'], fg = palette['tx'], blend = 0 })
+      vim.api.nvim_set_hl(0, 'CmpSel', { bg = palette['ui-3'], fg = palette['tx'], blend = 0 })
+      vim.api.nvim_set_hl(0, 'CmpDoc', { bg = palette['bg'], fg = palette['tx'], blend = 0 })
 
       -- Helper functions for toggling completion
       local function toggle_cmp(enable, is_global)
