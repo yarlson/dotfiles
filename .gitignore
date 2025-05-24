@@ -1,2 +1,2 @@
-tmux/plugins
-raycast/extensions
+.config/tmux/plugins
+.config/raycast/extensions
