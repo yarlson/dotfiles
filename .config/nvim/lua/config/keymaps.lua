@@ -25,7 +25,19 @@ for i = 1, 9 do
   end, { desc = 'Go to Buffer ' .. i })
 end
 
--- Project navigation (using Telescope which integrates with project.nvim)
--- Keymap <leader>fp is already defined in lua/plugins/telescope.lua for finding projects
+-- Infra specific keymaps
+keymap('n', '<leader>dt', '<cmd>Telescope terraform_doc<CR>', { desc = 'Terraform Documentation' })
+keymap('n', '<leader>dy', '<cmd>Telescope yaml_schema<CR>', { desc = 'YAML Schema Selector' })
 
--- Add other keymaps from your original init.lua here
+-- REST client keymaps (for API testing)
+keymap('n', '<leader>rr', '<Plug>RestNvim', { desc = 'Run REST request under cursor' })
+keymap('n', '<leader>rp', '<Plug>RestNvimPreview', { desc = 'Preview REST request' })
+keymap('n', '<leader>rl', '<Plug>RestNvimLast', { desc = 'Re-run last REST request' })
+
+-- Git conflict resolution
+keymap('n', '<leader>co', '<cmd>GitConflictChooseOurs<CR>', { desc = 'Choose Ours (Git Conflict)' })
+keymap('n', '<leader>ct', '<cmd>GitConflictChooseTheirs<CR>', { desc = 'Choose Theirs (Git Conflict)' })
+keymap('n', '<leader>cb', '<cmd>GitConflictChooseBoth<CR>', { desc = 'Choose Both (Git Conflict)' })
+keymap('n', '<leader>c0', '<cmd>GitConflictChooseNone<CR>', { desc = 'Choose None (Git Conflict)' })
+keymap('n', ']x', '<cmd>GitConflictNextConflict<CR>', { desc = 'Next Git Conflict' })
+keymap('n', '[x', '<cmd>GitConflictPrevConflict<CR>', { desc = 'Previous Git Conflict' })

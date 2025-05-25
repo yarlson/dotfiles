@@ -14,6 +14,14 @@ return {
         'stylua', -- Lua formatting
         'lua-language-server', -- Lua LSP
         'luacheck', -- Lua static analyzer
+        'ansible-lint', -- Ansible linting
+        'terraform-ls', -- Terraform LSP
+        'tflint', -- Terraform linting
+        'yamllint', -- YAML linting
+        'yaml-language-server', -- YAML LSP
+        'hadolint', -- Dockerfile linting
+        'shellcheck', -- Shell script linting
+        'shfmt', -- Shell formatting
       },
     },
   },
@@ -51,6 +59,9 @@ return {
         'zls',
         'intelephense',
         'lua_ls', -- Lua language server
+        'ansiblels', -- Ansible LSP
+        'bashls', -- Bash LSP
+        'helm_ls', -- Helm LSP
       },
     },
   },
@@ -121,7 +132,16 @@ return {
         sqlls = {},
         tailwindcss = {},
         templ = {},
-        terraformls = {},
+        terraformls = {
+          settings = {
+            terraform = {
+              validate = true,
+              lint = {
+                enable = true,
+              },
+            },
+          },
+        },
         ts_ls = {},
         intelephense = {},
         zls = {},
@@ -130,8 +150,65 @@ return {
             yaml = {
               schemas = {
                 ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] = 'docker-compose*.yml',
+                ['https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json'] = '.gitlab-ci.yml',
+                ['https://json.schemastore.org/github-workflow.json'] = '.github/workflows/*.yml',
+                ['https://json.schemastore.org/ansible-playbook.json'] = 'playbook*.yml',
+                ['https://json.schemastore.org/kustomization.json'] = 'kustomization.yaml',
+                ['https://json.schemastore.org/chart.json'] = 'Chart.yaml',
               },
               keyOrdering = false,
+              validate = true,
+              completion = true,
+              hover = true,
+              customTags = {
+                '!vault',
+                '!encrypted/pkcs1-oaep',
+                '!reference sequence',
+                '!include',
+                '!include_dir_named',
+                '!include_dir_list',
+                '!include_dir_merge_named',
+                '!include_dir_merge_list',
+              },
+            },
+          },
+        },
+        -- DevOps LSPs
+        ansiblels = {
+          settings = {
+            ansible = {
+              ansible = {
+                path = 'ansible',
+              },
+              executionEnvironment = {
+                enabled = false,
+              },
+              python = {
+                interpreterPath = 'python3',
+              },
+              validation = {
+                enabled = true,
+                lint = {
+                  enabled = true,
+                  path = 'ansible-lint',
+                },
+              },
+            },
+          },
+        },
+        bashls = {
+          settings = {
+            bashIde = {
+              globPattern = '**/*@(.sh|.inc|.bash|.command)',
+            },
+          },
+        },
+        helm_ls = {
+          settings = {
+            ['helm-ls'] = {
+              yamlls = {
+                path = 'yaml-language-server',
+              },
             },
           },
         },
@@ -246,5 +323,66 @@ return {
         desc = 'LSP References (Trouble)',
       },
     },
+  },
+  {
+    'someone-stole-my-name/yaml-companion.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    config = function()
+      local cfg = require('yaml-companion').setup {
+        -- Built-in schemas for common DevOps tools
+        schemas = {
+          {
+            name = 'Kubernetes',
+            uri = 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.22.4-standalone-strict/all.json',
+          },
+          {
+            name = 'GitLab CI',
+            uri = 'https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json',
+          },
+          {
+            name = 'GitHub Actions',
+            uri = 'https://json.schemastore.org/github-workflow.json',
+          },
+          {
+            name = 'Ansible Playbook',
+            uri = 'https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook',
+          },
+          {
+            name = 'Ansible Tasks',
+            uri = 'https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks',
+          },
+          {
+            name = 'Docker Compose',
+            uri = 'https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json',
+          },
+        },
+        lspconfig = {
+          cmd = { 'yaml-language-server', '--stdio' },
+          settings = {
+            yaml = {
+              validate = true,
+              hover = true,
+              completion = true,
+              customTags = {
+                '!vault',
+                '!encrypted/pkcs1-oaep',
+                '!reference sequence',
+                '!include',
+                '!include_dir_named',
+                '!include_dir_list',
+                '!include_dir_merge_named',
+                '!include_dir_merge_list',
+              },
+            },
+          },
+        },
+      }
+      require('lspconfig')['yamlls'].setup(cfg)
+      require('telescope').load_extension 'yaml_schema'
+    end,
   },
 }

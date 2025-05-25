@@ -14,6 +14,17 @@ return {
           args = { 'fix', '--using-cache=no', '--quiet', '--format=json', '--' },
           stdin = false,
         },
+        -- DevOps formatters
+        terragrunt_fmt = {
+          command = 'terragrunt',
+          args = { 'hclfmt', '--terragrunt-hclfmt-file', '$FILENAME' },
+          stdin = false,
+        },
+        ansible_lint = {
+          command = 'ansible-lint',
+          args = { '--fix', '$FILENAME' },
+          stdin = false,
+        },
       }
 
       -- Define formatters by filetype
@@ -36,6 +47,14 @@ return {
         hcl = { 'terraform_fmt' },
         zig = { 'zigfmt' },
         php = { 'php_cs_fixer' },
+        -- DevOps specific
+        ['yaml.ansible'] = { 'ansible_lint' },
+        ['yaml.gitlab'] = { 'prettier' },
+        ['yaml.github'] = { 'prettier' },
+        ['yaml.docker-compose'] = { 'prettier' },
+        ['yaml.kubernetes'] = { 'prettier' },
+        terragrunt = { 'terragrunt_fmt' },
+        helm = { 'prettier' },
       }
 
       -- Define format on save options

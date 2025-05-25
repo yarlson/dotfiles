@@ -1,4 +1,9 @@
 return {
+  -- Terraform documentation extension for telescope
+  {
+    'ANGkeith/telescope-terraform-doc.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+  },
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -11,7 +16,16 @@ return {
       -- Setup the main telescope configuration
       telescope.setup {
         defaults = {
-          file_ignore_patterns = { '.git/' },
+          file_ignore_patterns = { 
+            '.git/', 
+            '%.terraform/',
+            'node_modules/',
+            '%.terragrunt%-cache/',
+            '%.ansible/tmp/',
+            'target/',
+            'dist/',
+            'build/',
+          },
           mappings = {
             i = {
               ['<C-u>'] = false,
@@ -49,6 +63,7 @@ return {
 
       -- Load extensions
       telescope.load_extension 'projects'
+      telescope.load_extension 'terraform_doc'
 
       -- Define keymaps in a separate section
       local telescope_keymaps = {
@@ -72,7 +87,9 @@ return {
     config = function()
       require('project_nvim').setup {
         detection_methods = { 'pattern', 'lsp' },
-        patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json' },
+        patterns = { 
+          '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json',
+        },
         show_hidden = true,
         silent_chdir = false,
         ignore_lsp = {},

@@ -1,4 +1,9 @@
 return {
+  -- Helm syntax support
+  {
+    'towolf/vim-helm',
+    ft = 'helm',
+  },
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -25,6 +30,16 @@ return {
         'typescript',
         'yaml',
         'zig',
+        'bash',
+        'hcl',
+        'groovy',
+        'helm',
+        'toml',
+        'ini',
+        'gitignore',
+        'gitcommit',
+        'git_rebase',
+        'git_config',
       }
 
       -- Text objects selection configuration
