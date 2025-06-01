@@ -16,4 +16,5 @@
 .config/yazi
 .wezterm.lua
 .zshrc
+Brewfile
 scripts
