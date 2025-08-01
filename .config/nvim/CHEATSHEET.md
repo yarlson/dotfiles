@@ -148,6 +148,20 @@
 |-----|--------|-------------|
 | `<leader>t` | Toggle Terminal | Open/close terminal |
 
+## Claude Code Integration
+| Key | Action | Description |
+|-----|--------|-------------|
+| `<leader>cc` | Toggle Claude Code | Open/close Claude Code terminal |
+| `<leader>cC` | Continue Conversation | Resume most recent Claude Code conversation |
+| `<leader>cV` | Verbose Mode | Open Claude Code with verbose logging |
+| `<C-,>` | Toggle (Terminal) | Toggle Claude Code from terminal mode |
+
+**Claude Code Features:**
+- Automatically uses git root as working directory
+- Real-time file reload when Claude modifies files
+- Window navigation with `<C-h/j/k/l>` in terminal
+- Page scrolling with `<C-f/b>` in terminal
+
 ## Text Objects (Treesitter)
 | Key | Action | Description |
 |-----|--------|-------------|
