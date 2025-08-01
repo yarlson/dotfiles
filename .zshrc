@@ -119,9 +119,6 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 export TF_SKIP_PROVIDER_VERIFY=1
 
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
-. "/Users/yaroslavk/.acme.sh/acme.sh.env"
-export PATH="/Users/yaroslavk/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/Users/yaroslavk/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 
 # Task Master aliases added on 6/28/2025
 alias tm='task-master'
