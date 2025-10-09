@@ -1,0 +1,49 @@
+{
+  "outline_panel": {
+    "dock": "right"
+  },
+  "agent_servers": {
+    "claude": {
+      "default_mode": "bypassPermissions"
+    }
+  },
+  "base_keymap": "JetBrains",
+  "icon_theme": "Zed (Default)",
+  "agent": {
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4"
+    },
+    "default_model": {
+      "provider": "openai",
+      "model": "gpt-4o-mini"
+    },
+    "model_parameters": [],
+    "always_allow_tool_actions": true
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "JetBrains Dark"
+  },
+  "vim_mode": true,
+  "vim": {
+    "default_mode": "normal",
+    "toggle_relative_line_numbers": true,
+    "use_system_clipboard": "always",
+    "use_smartcase_find": false,
+    "highlight_on_yank_duration": 200,
+    "custom_digraphs": {},
+    "cursor_shape": {}
+  },
+  "tabs": {
+    "git_status": true,
+    "close_position": "right",
+    "file_icons": true,
+    "show_close_button": "hover",
+    "activate_on_close": "history",
+    "show_diagnostics": "errors"
+  }
+}

@@ -1,3 +1,10 @@
+# Ensure we always have a writable TMPDIR
+if [ ! -w "$TMPDIR" ] || [ -z "$TMPDIR" ]; then
+  export TMPDIR="$HOME/tmp"
+  mkdir -p "$TMPDIR"
+  chmod 700 "$TMPDIR"
+fi
+
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/yar/.zsh/completions:"* ]]; then export FPATH="/Users/yar/.zsh/completions:$FPATH"; fi
 # Oh My Zsh configuration
@@ -75,6 +82,8 @@ alias z='zed "$1"'
 # LLM usage
 alias fix='function _fix() { llm -m claude-3.5-sonnet -s "You are a grammar correction assistant. Return only corrected sentences without explanations, focusing on improving grammar, word choice, word order, and verb tenses." "$1"; }; _fix'
 
+alias pimp='opencode run <<< "Improve the following prompt for clarity, tone, and effectiveness — return only the improved prompt:\n\n$1"'
+
 # Zsh completion styles
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*:(scp|rsync):*' tag-order 'hosts:-ipaddr:ip\ address hosts:-host:host files'
@@ -123,3 +132,6 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 # Task Master aliases added on 6/28/2025
 alias tm='task-master'
 alias taskmaster='task-master'
+
+# opencode
+export PATH=/Users/yar/.opencode/bin:$PATH

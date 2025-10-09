@@ -1,0 +1,23 @@
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-)": [
+        "projects::OpenRecent",
+        {
+          "create_new_window": false
+        }
+      ]
+    }
+  }
+]

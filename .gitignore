@@ -1,2 +1,3 @@
 .config/tmux/plugins
 .config/raycast/extensions
+*.mdb
