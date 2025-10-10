@@ -1,3 +1,10 @@
+# --- Ensure writable TMPDIR ---
+if [ -z "$TMPDIR" ] || [ ! -w "$TMPDIR" ]; then
+  export TMPDIR="$HOME/tmp"
+  mkdir -p "$TMPDIR"
+  chmod 700 "$TMPDIR"
+fi
+
 # --- PATH setup ---
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/go/bin:/usr/local/bin:$PATH"
 
