@@ -1,4 +1,8 @@
 {
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "outline_panel": {
     "dock": "right"
