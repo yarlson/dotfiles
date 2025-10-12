@@ -49,13 +49,3 @@ alias z='zed'
 # --- Editor ---
 export EDITOR="nvim"
 
-my_prompt_input() {
-  zle -I
-  local input result
-  input="$(prompt 'Enter note: ')" || return   # 👈 quotes are critical
-  result=$(echo "$input" | tr '[:lower:]' '[:upper:]')
-  LBUFFER+="$result"
-  zle reset-prompt
-}
-zle -N my_prompt_input
-bindkey '^X' my_prompt_input
