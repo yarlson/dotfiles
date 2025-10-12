@@ -1,0 +1,83 @@
+# ╔══════════════════════════════════════════════════════════╗
+# ║                   STARSHIP CONFIG (YAR)                  ║
+# ╚══════════════════════════════════════════════════════════╝
+format = """
+$directory\
+$git_branch\
+$git_status\
+$golang\
+$aws\
+$line_break\
+$character"""
+
+right_format = "$time"
+
+add_newline = false
+
+# ╭───────────────────────────────╮
+# │ Directory                     │
+# ╰───────────────────────────────╯
+[directory]
+style = "cyan bold"
+truncation_length = 3
+truncate_to_repo = true
+read_only = " "  # nf-mdi-lock
+
+# ╭───────────────────────────────╮
+# │ Git Branch & Status           │
+# ╰───────────────────────────────╯
+[git_branch]
+symbol = " "  # nf-dev-git_branch
+style = "bold purple"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "bold yellow"
+format = "[($all_status$ahead_behind)]($style) "
+conflicted = ""   # nf-cod-git_conflict
+ahead = ""        # nf-fa-arrow_up
+behind = ""       # nf-fa-arrow_down
+diverged = ""     # nf-mdi-source_branch
+untracked = ""    # nf-fa-question_circle
+stashed = ""      # nf-cod-archive
+modified = ""     # nf-oct-diff_modified
+staged = ""       # nf-fa-plus_circle
+renamed = ""      # nf-oct-diff_renamed
+deleted = ""      # nf-fa-minus_circle
+
+# ╭───────────────────────────────╮
+# │ Go                            │
+# ╰───────────────────────────────╯
+[golang]
+symbol = " "  # nf-dev-go
+style = "blue bold"
+
+# ╭───────────────────────────────╮
+# │ AWS Profile (SSO aware)       │
+# ╰───────────────────────────────╯
+[aws]
+symbol = " "  # nf-weather-cloud
+style = "bold yellow"
+format = "[$symbol($profile)]($style) "
+force_display = true
+
+# ╭───────────────────────────────╮
+# │ Character (Prompt Symbol)     │
+# ╰───────────────────────────────╯
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold cyan)"
+
+# ╭───────────────────────────────╮
+# │ Custom tweaks                 │
+# ╰───────────────────────────────╯
+[cmd_duration]
+disabled = true
+min_time = 1500
+format = "  [$duration](dimmed)"  # nf-fa-hourglass
+
+[time]
+disabled = false
+format = " [$time]($style)"       # nf-fa-clock
+style = "dimmed white"

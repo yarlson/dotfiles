@@ -9,6 +9,7 @@
 .config/ranger
 .config/raycast
 .config/sketchybar
+.config/starship.toml
 .config/sway
 .config/tmux
 .config/waybar
