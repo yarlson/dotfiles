@@ -18,7 +18,6 @@
 .config/zed
 .hushlogin
 .wezterm.lua
-.zsh/base.zsh
 .zshrc
 Brewfile
 scripts
