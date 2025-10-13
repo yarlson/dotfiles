@@ -16,7 +16,6 @@
 .config/wofi
 .config/yazi
 .config/zed
-.config/zsh
 .hushlogin
 .wezterm.lua
 .zshrc
