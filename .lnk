@@ -3,7 +3,6 @@
 .config/cava
 .config/ghostty
 .config/kitty
-.config/lnk/.config/zsh/autuin.zsh
 .config/mc
 .config/neofetch
 .config/nvim
