@@ -1,0 +1,1 @@
+../lnk/.config/zsh/autuin.zsh
