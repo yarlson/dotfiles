@@ -44,7 +44,6 @@ eval "$(starship init zsh)"
 
 # --- Aliases ---
 alias n='nvim'
-alias z='zed'
 
 # --- Editor ---
 export EDITOR="nvim"
