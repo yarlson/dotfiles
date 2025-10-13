@@ -1,7 +1,7 @@
 # ~/.zshrc — main entry point
 
 # --- Base config ---
-source ~/.zsh/base.zsh
+source ~/.config/zsh/base.zsh
 
 # --- Host-specific config ---
 HOST_FILE="$HOME/.config/zsh/host/$(hostname -s).zsh"
