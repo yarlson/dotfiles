@@ -18,6 +18,7 @@
 .config/zed
 .config/zsh/atuin.zsh
 .config/zsh/base.zsh
+.config/zsh/zoxide.zsh
 .hushlogin
 .wezterm.lua
 .zshrc
