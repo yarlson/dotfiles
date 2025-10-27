@@ -127,3 +127,23 @@ bindkey -M vicmd '^[OA' atuin-up-search-vicmd
 bindkey -M viins '^[OA' atuin-up-search-viins
 bindkey -M vicmd 'k' atuin-up-search-vicmd
 
+# Disable Atuin's arrow-up interception
+bindkey -r '^[[A'    # normal arrow up
+bindkey -r '^[OA'    # alternate arrow up (some terminals)
+bindkey -M emacs -r '^[[A'
+bindkey -M emacs -r '^[OA'
+bindkey -M viins -r '^[[A'
+bindkey -M vicmd -r '^[[A'
+bindkey -M viins -r '^[OA'
+bindkey -M vicmd -r '^[OA'
+
+# Rebind native Zsh filtered history search to arrow keys (matching base.zsh)
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey -M emacs '^[[A' up-line-or-beginning-search
+bindkey -M emacs '^[[B' down-line-or-beginning-search
+bindkey -M viins '^[[A' up-line-or-beginning-search
+bindkey -M viins '^[[B' down-line-or-beginning-search
+bindkey -M vicmd '^[[A' up-line-or-beginning-search
+bindkey -M vicmd '^[[B' down-line-or-beginning-search
+
