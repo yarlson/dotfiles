@@ -116,34 +116,11 @@ zle -N atuin-up-search-viins _atuin_up_search_viins
 zle -N _atuin_search_widget _atuin_search
 zle -N _atuin_up_search_widget _atuin_up_search
 
+# Ctrl+R for interactive search in all modes
 bindkey -M emacs '^r' atuin-search
 bindkey -M viins '^r' atuin-search-viins
 bindkey -M vicmd '/' atuin-search
-bindkey -M emacs '^[[A' atuin-up-search
-bindkey -M vicmd '^[[A' atuin-up-search-vicmd
-bindkey -M viins '^[[A' atuin-up-search-viins
-bindkey -M emacs '^[OA' atuin-up-search
-bindkey -M vicmd '^[OA' atuin-up-search-vicmd
-bindkey -M viins '^[OA' atuin-up-search-viins
-bindkey -M vicmd 'k' atuin-up-search-vicmd
 
-# Disable Atuin's arrow-up interception
-bindkey -r '^[[A'    # normal arrow up
-bindkey -r '^[OA'    # alternate arrow up (some terminals)
-bindkey -M emacs -r '^[[A'
-bindkey -M emacs -r '^[OA'
-bindkey -M viins -r '^[[A'
-bindkey -M vicmd -r '^[[A'
-bindkey -M viins -r '^[OA'
-bindkey -M vicmd -r '^[OA'
-
-# Rebind native Zsh filtered history search to arrow keys (matching base.zsh)
-bindkey '^[[A' up-line-or-beginning-search
-bindkey '^[[B' down-line-or-beginning-search
-bindkey -M emacs '^[[A' up-line-or-beginning-search
-bindkey -M emacs '^[[B' down-line-or-beginning-search
-bindkey -M viins '^[[A' up-line-or-beginning-search
-bindkey -M viins '^[[B' down-line-or-beginning-search
-bindkey -M vicmd '^[[A' up-line-or-beginning-search
-bindkey -M vicmd '^[[B' down-line-or-beginning-search
+# Note: Arrow key bindings are overridden in keybindings.zsh
+# to use native zsh prefix-filtered history instead of atuin's up-search
 
