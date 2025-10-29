@@ -7,6 +7,7 @@ source ~/.config/zsh/base.zsh
 # Tool integrations
 [[ -f ~/.config/zsh/atuin.zsh ]] && source ~/.config/zsh/atuin.zsh
 [[ -f ~/.config/zsh/zoxide.zsh ]] && source ~/.config/zsh/zoxide.zsh
+[[ -f ~/.config/zsh/git.zsh ]] && source ~/.config/zsh/git.zsh
 
 # Custom keybindings (must load after atuin to override arrow keys)
 [[ -f ~/.config/zsh/keybindings.zsh ]] && source ~/.config/zsh/keybindings.zsh
