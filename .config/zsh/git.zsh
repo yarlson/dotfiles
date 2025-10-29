@@ -5,7 +5,7 @@ wt() {
     return 1
   fi
 
-  # Find repo root
+  # Find git repo root
   local root
   root=$(git rev-parse --show-toplevel 2>/dev/null) || {
     echo "❌ Not inside a Git repository."
@@ -13,10 +13,11 @@ wt() {
   }
 
   local dir="$root/.worktrees/$branch"
-
   mkdir -p "$root/.worktrees"
 
-  # Create worktree
-  git worktree add "$dir" -b "$branch"
+  # Add worktree and move into it
+  if git worktree add "$dir" -b "$branch"; then
+    cd "$dir" || return
+  fi
 }
 
