@@ -1,13 +1,15 @@
+# shellcheck shell=bash disable=SC1090,SC1091
 # ~/.zshrc — main entry point
 # Configuration files are loaded in order for proper override behavior
 
-# Base configuration (PATH, history, completion, prompt)
+# Base configuration (PATH, Go, completion, prompt)
 source ~/.config/zsh/base.zsh
 
-# Tool integrations
-[[ -f ~/.config/zsh/atuin.zsh ]] && source ~/.config/zsh/atuin.zsh
-[[ -f ~/.config/zsh/zoxide.zsh ]] && source ~/.config/zsh/zoxide.zsh
-[[ -f ~/.config/zsh/git.zsh ]] && source ~/.config/zsh/git.zsh
+# History configuration (must load before keybindings)
+[[ -f ~/.config/zsh/history.zsh ]] && source ~/.config/zsh/history.zsh
+
+# Aliases and functions
+[[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 
 # Custom keybindings (must load after atuin to override arrow keys)
 [[ -f ~/.config/zsh/keybindings.zsh ]] && source ~/.config/zsh/keybindings.zsh
