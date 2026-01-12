@@ -1,38 +1,38 @@
 {
-  "disable_ai": true,
+  "colorize_brackets": true,
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "outline_panel": {
-    "dock": "right"
+    "dock": "right",
   },
   "agent_servers": {
     "claude": {
-      "default_mode": "bypassPermissions"
-    }
+      "default_mode": "bypassPermissions",
+    },
   },
   "base_keymap": "JetBrains",
   "icon_theme": "Zed (Default)",
   "agent": {
     "inline_assistant_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4"
+      "model": "claude-sonnet-4",
     },
     "default_model": {
       "provider": "openai",
-      "model": "gpt-4o-mini"
+      "model": "gpt-4o-mini",
     },
     "model_parameters": [],
-    "always_allow_tool_actions": true
+    "always_allow_tool_actions": true,
   },
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {
     "mode": "dark",
     "light": "Vim Cursor Modes",
-    "dark": "JetBrains Dark"
+    "dark": "JetBrains Dark",
   },
   "vim_mode": true,
   "vim": {
@@ -42,7 +42,7 @@
     "use_smartcase_find": false,
     "highlight_on_yank_duration": 200,
     "custom_digraphs": {},
-    "cursor_shape": {}
+    "cursor_shape": {},
   },
   "tabs": {
     "git_status": true,
@@ -50,21 +50,21 @@
     "file_icons": true,
     "show_close_button": "hover",
     "activate_on_close": "history",
-    "show_diagnostics": "errors"
+    "show_diagnostics": "errors",
   },
   "languages": {
     "PHP": {
-      "language_servers": ["phpactor"]
-    }
+      "language_servers": ["phpactor"],
+    },
   },
   "lsp": {
     "tailwindcss-language-server": {
       "settings": {
         "classFunctions": ["cva", "cx"],
         "experimental": {
-          "classRegex": ["[cls|className]\\s\\:\\=\\s\"([^\"]*)"]
-        }
-      }
-    }
-  }
+          "classRegex": ["[cls|className]\\s\\:\\=\\s\"([^\"]*)"],
+        },
+      },
+    },
+  },
 }
