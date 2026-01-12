@@ -29,6 +29,6 @@ export DOCKER_HOST="unix://${HOME}/.colima/docker.sock"
 export PATH="$HOME/.local/bin:$PATH"
 
 # opencode
-export PATH=/Users/yaroslavk/.opencode/bin:$PATH)
+export PATH=/Users/yaroslavk/.opencode/bin:$PATH
 
 export PATH="$HOME/.bun/bin:$PATH"
