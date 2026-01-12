@@ -1,0 +1,18 @@
+{
+  "$schema": "https://zed.dev/schemas/theme",
+  "name": "Vim Cursor Modes",
+  "author": "yar",
+  "extends": "One Dark", // or your current dark/light theme
+  "colors": {
+    // Normal mode
+    "cursor.normal": "#4FC3F7", // blue
+    // Insert mode
+    "cursor.insert": "#81C784", // green
+    // Visual mode
+    "cursor.visual": "#FFB74D", // orange
+    // Replace mode
+    "cursor.replace": "#E57373", // red
+    // Command mode
+    "cursor.command": "#BA68C8" // purple
+  }
+}

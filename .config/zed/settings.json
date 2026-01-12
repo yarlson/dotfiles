@@ -1,4 +1,5 @@
 {
+  "disable_ai": true,
   "telemetry": {
     "diagnostics": false,
     "metrics": false
@@ -30,7 +31,7 @@
   "buffer_font_size": 16,
   "theme": {
     "mode": "dark",
-    "light": "One Light",
+    "light": "Vim Cursor Modes",
     "dark": "JetBrains Dark"
   },
   "vim_mode": true,

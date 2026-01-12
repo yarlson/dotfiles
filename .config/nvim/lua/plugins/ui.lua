@@ -1,9 +1,9 @@
 return {
   {
-    'kepano/flexoki-neovim',
+    'felipeagc/fleet-theme-nvim',
     priority = 1000,
     config = function()
-      vim.api.nvim_command 'colorscheme flexoki-dark'
+      vim.cmd('colorscheme fleet')
     end,
   },
   {

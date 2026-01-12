@@ -18,3 +18,15 @@ source ~/.config/zsh/base.zsh
 HOST_FILE="$HOME/.config/zsh/host/$(hostname -s).zsh"
 [[ -f "$HOST_FILE" ]] && source "$HOST_FILE"
 [[ -f "$HOME/.config/zsh/local.zsh" ]] && source "$HOME/.config/zsh/local.zsh"
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
+# Added by Antigravity
+export PATH="/Users/yaroslavk/.antigravity/antigravity/bin:$PATH"
+
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+export DOCKER_HOST="unix://${HOME}/.colima/docker.sock"
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# opencode
+export PATH=/Users/yaroslavk/.opencode/bin:$PATH
