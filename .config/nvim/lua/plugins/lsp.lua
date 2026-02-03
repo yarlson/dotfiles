@@ -42,7 +42,7 @@ return {
   },
   {
     'williamboman/mason-lspconfig.nvim',
-    dependencies = { 'williamboman/mason.nvim', 'neovim/nvim-lspconfig' },
+    dependencies = { 'williamboman/mason.nvim' },
     opts = {
       ensure_installed = {
         'dockerls',
@@ -69,13 +69,13 @@ return {
     'neovim/nvim-lspconfig',
     dependencies = {
       'hrsh7th/cmp-nvim-lsp',
-      'folke/neodev.nvim', -- Add dependency here too
+      'folke/neodev.nvim',
+      'williamboman/mason-lspconfig.nvim',
     },
     config = function()
       -- Setup neodev first (must be called before lua_ls)
       require('neodev').setup {}
 
-      local lspconfig = require 'lspconfig'
       local cmp_nvim_lsp = require 'cmp_nvim_lsp'
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
@@ -251,12 +251,17 @@ return {
         },
       }
 
-      -- Set up each LSP server with its configuration
+      -- Use vim.lsp.config for Neovim 0.11+ native LSP configuration
       for server_name, config in pairs(server_configs) do
         config.capabilities = capabilities
         config.on_attach = on_attach
-        lspconfig[server_name].setup(config)
+
+        -- Use vim.lsp.config to define the server configuration
+        vim.lsp.config[server_name] = config
       end
+
+      -- Enable all configured servers
+      vim.lsp.enable(vim.tbl_keys(server_configs))
     end,
   },
   -- Inline function signatures
@@ -265,7 +270,7 @@ return {
     event = 'BufReadPre',
     opts = {
       bind = true,
-      hint_prefix = '💡 ',
+      hint_prefix = ' ',
       handler_opts = {
         border = 'rounded',
       },
@@ -327,12 +332,11 @@ return {
   {
     'someone-stole-my-name/yaml-companion.nvim',
     dependencies = {
-      'neovim/nvim-lspconfig',
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope.nvim',
     },
     config = function()
-      local cfg = require('yaml-companion').setup {
+      require('yaml-companion').setup {
         -- Built-in schemas for common DevOps tools
         schemas = {
           {
@@ -360,28 +364,7 @@ return {
             uri = 'https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json',
           },
         },
-        lspconfig = {
-          cmd = { 'yaml-language-server', '--stdio' },
-          settings = {
-            yaml = {
-              validate = true,
-              hover = true,
-              completion = true,
-              customTags = {
-                '!vault',
-                '!encrypted/pkcs1-oaep',
-                '!reference sequence',
-                '!include',
-                '!include_dir_named',
-                '!include_dir_list',
-                '!include_dir_merge_named',
-                '!include_dir_merge_list',
-              },
-            },
-          },
-        },
       }
-      require('lspconfig')['yamlls'].setup(cfg)
       require('telescope').load_extension 'yaml_schema'
     end,
   },

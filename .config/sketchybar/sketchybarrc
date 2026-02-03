@@ -81,7 +81,6 @@ sketchybar --add item chevron left \
 # volume is registered. More info about the event system can be found here:
 # https://felixkratz.github.io/SketchyBar/config/events
 
-source "$ITEM_DIR/notification_count.sh"
 source "$ITEM_DIR/slack.sh"
 
 sketchybar --add item clock right \
@@ -92,8 +91,6 @@ sketchybar --add item clock right \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change \
-           --add item weather right \
-           --set weather update_freq=60 script="$PLUGIN_DIR/weather/weather"
            --add item merge_queue right \
            --set merge_queue update_freq=30 script="$PLUGIN_DIR/merge_queue.sh"
 

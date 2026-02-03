@@ -36,78 +36,98 @@ return {
         'helm',
         'toml',
         'ini',
-        'gitignore',
         'gitcommit',
         'git_rebase',
         'git_config',
       }
 
-      -- Text objects selection configuration
-      local select_textobjects = {
-        enable = true,
-        lookahead = true,
-        keymaps = {
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-          ['aB'] = '@block.outer',
-          ['iB'] = '@block.inner',
-          ['aP'] = '@parameter.outer',
-          ['iP'] = '@parameter.inner',
-        },
-        selection_modes = {
-          ['@parameter.outer'] = 'v',
-          ['@function.outer'] = 'V',
-          ['@class.outer'] = '<c-v>',
-        },
-      }
+      -- Install parsers
+      require('nvim-treesitter').install(parsers)
 
-      -- Text objects movement configuration
-      local move_textobjects = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          [']f'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']F'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[f'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[F'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      }
+      -- Enable treesitter highlighting for all installed parsers
+      for _, lang in ipairs(parsers) do
+        vim.treesitter.language.register(lang, lang)
+      end
 
-      -- Text objects swap configuration
-      local swap_textobjects = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      }
+      -- Enable highlighting and indentation globally
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(args)
+          local ok = pcall(vim.treesitter.start, args.buf)
+          if ok then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
+    end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      -- Text objects selection keymaps
+      local ts_select = require 'nvim-treesitter-textobjects.select'
+      local ts_move = require 'nvim-treesitter-textobjects.move'
+      local ts_swap = require 'nvim-treesitter-textobjects.swap'
 
-      -- Main treesitter configuration
-      require('nvim-treesitter.configs').setup {
-        ensure_installed = parsers,
-        auto_install = true,
-        highlight = { enable = true },
-        indent = { enable = true },
-        textobjects = {
-          select = select_textobjects,
-          move = move_textobjects,
-          swap = swap_textobjects,
-        },
-      }
+      -- Selection keymaps
+      vim.keymap.set({ 'x', 'o' }, 'af', function()
+        ts_select.select_textobject('@function.outer', 'textobjects')
+      end, { desc = 'Select outer function' })
+      vim.keymap.set({ 'x', 'o' }, 'if', function()
+        ts_select.select_textobject('@function.inner', 'textobjects')
+      end, { desc = 'Select inner function' })
+      vim.keymap.set({ 'x', 'o' }, 'ac', function()
+        ts_select.select_textobject('@class.outer', 'textobjects')
+      end, { desc = 'Select outer class' })
+      vim.keymap.set({ 'x', 'o' }, 'ic', function()
+        ts_select.select_textobject('@class.inner', 'textobjects')
+      end, { desc = 'Select inner class' })
+      vim.keymap.set({ 'x', 'o' }, 'aB', function()
+        ts_select.select_textobject('@block.outer', 'textobjects')
+      end, { desc = 'Select outer block' })
+      vim.keymap.set({ 'x', 'o' }, 'iB', function()
+        ts_select.select_textobject('@block.inner', 'textobjects')
+      end, { desc = 'Select inner block' })
+      vim.keymap.set({ 'x', 'o' }, 'aP', function()
+        ts_select.select_textobject('@parameter.outer', 'textobjects')
+      end, { desc = 'Select outer parameter' })
+      vim.keymap.set({ 'x', 'o' }, 'iP', function()
+        ts_select.select_textobject('@parameter.inner', 'textobjects')
+      end, { desc = 'Select inner parameter' })
+
+      -- Movement keymaps
+      vim.keymap.set({ 'n', 'x', 'o' }, ']f', function()
+        ts_move.goto_next_start('@function.outer', 'textobjects')
+      end, { desc = 'Next function start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, ']]', function()
+        ts_move.goto_next_start('@class.outer', 'textobjects')
+      end, { desc = 'Next class start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, ']F', function()
+        ts_move.goto_next_end('@function.outer', 'textobjects')
+      end, { desc = 'Next function end' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '][', function()
+        ts_move.goto_next_end('@class.outer', 'textobjects')
+      end, { desc = 'Next class end' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[f', function()
+        ts_move.goto_previous_start('@function.outer', 'textobjects')
+      end, { desc = 'Previous function start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[[', function()
+        ts_move.goto_previous_start('@class.outer', 'textobjects')
+      end, { desc = 'Previous class start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[F', function()
+        ts_move.goto_previous_end('@function.outer', 'textobjects')
+      end, { desc = 'Previous function end' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[]', function()
+        ts_move.goto_previous_end('@class.outer', 'textobjects')
+      end, { desc = 'Previous class end' })
+
+      -- Swap keymaps
+      vim.keymap.set('n', '<leader>a', function()
+        ts_swap.swap_next('@parameter.inner', 'textobjects')
+      end, { desc = 'Swap with next parameter' })
+      vim.keymap.set('n', '<leader>A', function()
+        ts_swap.swap_previous('@parameter.inner', 'textobjects')
+      end, { desc = 'Swap with previous parameter' })
     end,
   },
 }
