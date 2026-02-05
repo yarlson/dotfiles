@@ -9,6 +9,9 @@
     "dock": "right",
   },
   "agent_servers": {
+    "opencode": {
+      "type": "registry"
+    },
     "claude": {
       "default_mode": "bypassPermissions",
     },
@@ -32,7 +35,7 @@
   "theme": {
     "mode": "dark",
     "light": "Vim Cursor Modes",
-    "dark": "JetBrains Dark",
+    "dark": "Fleet Dark",
   },
   "vim_mode": true,
   "vim": {
