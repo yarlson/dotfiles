@@ -58,7 +58,7 @@ return {
       }
 
       -- Create highlight groups for CMP with Fleet theme colors
-      local palette = require('fleet-theme.palette')
+      local palette = require 'fleet-theme.palette'
 
       -- Simple approach - match editor background
       vim.api.nvim_set_hl(0, 'Pmenu', { bg = palette.background, blend = 0 }) -- Match editor background
@@ -131,7 +131,7 @@ return {
       vim.api.nvim_create_user_command('CmponAll', function()
         toggle_completion(true, true)
       end, { desc = 'Enable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
-      
+
       -- Disable cmp for markdown files
       vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'markdown' },

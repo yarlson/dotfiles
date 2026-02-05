@@ -16,8 +16,8 @@ return {
       -- Setup the main telescope configuration
       telescope.setup {
         defaults = {
-          file_ignore_patterns = { 
-            '.git/', 
+          file_ignore_patterns = {
+            '.git/',
             '%.terraform/',
             'node_modules/',
             '%.terragrunt%-cache/',
@@ -87,8 +87,14 @@ return {
     config = function()
       require('project_nvim').setup {
         detection_methods = { 'pattern', 'lsp' },
-        patterns = { 
-          '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json',
+        patterns = {
+          '.git',
+          '_darcs',
+          '.hg',
+          '.bzr',
+          '.svn',
+          'Makefile',
+          'package.json',
         },
         show_hidden = true,
         silent_chdir = false,
