@@ -19,6 +19,7 @@ HOST_FILE="$HOME/.config/zsh/host/$(hostname -s).zsh"
 [[ -f "$HOST_FILE" ]] && source "$HOST_FILE"
 [[ -f "$HOME/.config/zsh/local.zsh" ]] && source "$HOME/.config/zsh/local.zsh"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export PATH="/Applications/GoLand.app/Contents/MacOS:$PATH"
 
 # Added by Antigravity
 export PATH="/Users/yaroslavk/.antigravity/antigravity/bin:$PATH"
@@ -33,4 +34,3 @@ export PATH="$HOME/.bun/bin:$PATH"
 # opencode
 export PATH=/Users/yar/.opencode/bin:$PATH
 alias no='curl -fsSL "https://raw.githubusercontent.com/hotheadhacker/no-as-a-service/refs/heads/main/reasons.json" | jq -r ".[]" | awk "BEGIN{srand()} {a[NR]=\$0} END{print a[1+int(rand()*NR)]}"'
-
