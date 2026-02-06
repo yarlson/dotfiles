@@ -17,11 +17,10 @@
 .config/wofi
 .config/yazi
 .config/zed
-.config/zsh/atuin.zsh
+.config/zsh/aliases.zsh
 .config/zsh/base.zsh
-.config/zsh/git.zsh
+.config/zsh/history.zsh
 .config/zsh/keybindings.zsh
-.config/zsh/zoxide.zsh
 .hushlogin
 .wezterm.lua
 .zshrc
