@@ -35,6 +35,7 @@ source "$ITEM_DIR/clock.sh"
 source "$ITEM_DIR/volume.sh"
 source "$ITEM_DIR/battery.sh"
 source "$ITEM_DIR/merge_queue.sh"
+source "$ITEM_DIR/weather.sh"
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

@@ -2,15 +2,49 @@
 
 source "$CONFIG_DIR/icons.sh"
 
-if [ "$SENDER" = "volume_change" ]; then
-  VOLUME="$INFO"
+IDLE_TIMEOUT=5
+STAMP_FILE="/tmp/sketchybar_volume_stamp"
 
-  case "$VOLUME" in
-    [6-9][0-9]|100) ICON="$ICON_VOLUME_HIGH" ;;
-    [3-5][0-9])     ICON="$ICON_VOLUME_MED" ;;
-    [1-9]|[1-2][0-9]) ICON="$ICON_VOLUME_LOW" ;;
-    *)              ICON="$ICON_VOLUME_MUTE" ;;
+volume_icon() {
+  local vol=$1
+  case "$vol" in
+    [6-9][0-9]|100) echo "$ICON_VOLUME_HIGH" ;;
+    [3-5][0-9])     echo "$ICON_VOLUME_MED" ;;
+    [1-9]|[1-2][0-9]) echo "$ICON_VOLUME_LOW" ;;
+    *)              echo "$ICON_VOLUME_MUTE" ;;
   esac
+}
 
-  sketchybar --set "$NAME" icon="$ICON" label="$VOLUME%"
-fi
+schedule_dismiss() {
+  local stamp=$EPOCHSECONDS
+  echo "$stamp" > "$STAMP_FILE"
+  (
+    sleep "$IDLE_TIMEOUT"
+    if [[ -f "$STAMP_FILE" && "$(cat "$STAMP_FILE")" == "$stamp" ]]; then
+      sketchybar --set volume popup.drawing=off
+    fi
+  ) &
+}
+
+case "$SENDER" in
+  "volume_change")
+    VOLUME="$INFO"
+    ICON=$(volume_icon "$VOLUME")
+    sketchybar --set volume icon="$ICON" \
+               --set volume_slider slider.percentage="$VOLUME"
+    schedule_dismiss
+    ;;
+
+  "mouse.scrolled")
+    CURRENT=$(osascript -e "output volume of (get volume settings)")
+    NEW=$((CURRENT + SCROLL_DELTA * 5))
+    if [ "$NEW" -gt 100 ]; then NEW=100; fi
+    if [ "$NEW" -lt 0 ]; then NEW=0; fi
+    osascript -e "set volume output volume $NEW"
+    schedule_dismiss
+    ;;
+
+  "mouse.exited.global")
+    sketchybar --set volume popup.drawing=off
+    ;;
+esac
