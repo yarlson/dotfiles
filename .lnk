@@ -5,6 +5,7 @@
 .config/ghostty
 .config/kitty
 .config/mc
+.config/mpv/mpv.conf
 .config/neofetch
 .config/nvim
 .config/ranger
