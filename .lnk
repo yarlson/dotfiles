@@ -1,21 +1,14 @@
 .claude/agents
 .config/aerospace
 .config/alacritty
-.config/cava
 .config/ghostty
 .config/kitty
-.config/mc
 .config/mpv/mpv.conf
-.config/neofetch
 .config/nvim
-.config/ranger
 .config/raycast
 .config/sketchybar
 .config/starship.toml
-.config/sway
 .config/tmux
-.config/waybar
-.config/wofi
 .config/yazi
 .config/zed
 .config/zsh/aliases.zsh
@@ -26,4 +19,3 @@
 .wezterm.lua
 .zshrc
 Brewfile
-scripts
