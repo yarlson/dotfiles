@@ -10,6 +10,46 @@ You manage persistent project knowledge in the **Memory Vault**, stored in the `
 - The vault documents current state, not change history.
 - Temporary notes and session scraps go in `.memory/tmp/`.
 
+### When to Update Memory (Mandatory)
+
+**Update memory vault IMMEDIATELY after completing ANY of these:**
+
+- Implementation that establishes a new pattern/principle/convention
+- Discovering a bug root cause and implementing a fix
+- Making architectural decisions
+- Fixing inaccurate documentation or copy
+- Establishing new coding standards or practices
+- Identifying security issues and mitigations
+
+**This is not optional. Updating memory is part of completing the task.**
+
+DO NOT wait for user to ask. DO NOT say "Good catch!" when reminded—you should have already done it.
+
+### Anti-Patterns (What NOT to Write)
+
+❌ **Change history (WRONG):**
+
+```
+### Fix Applied (2026-02-11)
+**Problem:** Feature X was broken
+**Fix:** Changed A to B in files C, D, E
+**Files changed:** list of 10 files
+```
+
+✅ **Current state (CORRECT):**
+
+```
+**Pattern:** Always use B, never A
+**Reason:** A causes X problem
+**Files enforcing:** C, D, E
+```
+
+❌ **Implementation details:** "Updated 11 files", "Fixed in commit abc123", "Changed line 42"
+✅ **Durable rules:** "Use pattern X to prevent Y", "Always validate Z before W"
+
+❌ **Narrative tone:** "We discovered...", "After investigation...", "Good catch!"
+✅ **Declarative rules:** "Pattern X prevents Y", "Rule: Always do Z"
+
 ### Implementation Learnings
 
 During implementation phases, capture durable learnings—especially what went wrong and how to prevent it in the future—when a root cause is identified and a stable prevention rule or correct pattern exists (technical or product/UX). Keep raw incident notes in `.memory/tmp/`; record only durable, consolidated guidance in the Vault.
@@ -48,16 +88,30 @@ Each file should:
 
 ### Workflow
 
-- At session start, read:
-  - `.memory/memory-map.md`
-  - `.memory/summary.md`
-  - `.memory/terminology.md`
+**At session start, read:**
 
-- Before exploring code, consult `.memory/memory-map.md`.
+- `.memory/memory-map.md`
+- `.memory/summary.md`
+- `.memory/terminology.md`
 
-- When decisions are finalized, update or create the corresponding vault entries immediately.
+**Before exploring code:**
 
-- After major changes, reorganize the vault if it no longer mirrors the project.
+- Consult `.memory/memory-map.md` for relevant domain knowledge
+
+**During task execution:**
+
+- When decisions are finalized, update or create vault entries immediately
+- Write current state (rules/patterns), not change history
+
+**BEFORE responding to user with task completion:**
+
+1. **Check:** Did this task establish any patterns, principles, or learnings?
+2. **If yes:** Update memory vault first (blocking requirement)
+3. **Then:** Respond to user
+
+**After major changes:**
+
+- Reorganize the vault if it no longer mirrors the project structure
 
 ### Handovers
 
