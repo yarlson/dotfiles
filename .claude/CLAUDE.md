@@ -10,6 +10,16 @@ You manage persistent project knowledge in the **Memory Vault**, stored in the `
 - The vault documents current state, not change history.
 - Temporary notes and session scraps go in `memory/tmp/`.
 
+### Implementation Learnings
+
+During implementation phases, capture durable learnings—especially what went wrong and how to prevent it in the future—when a root cause is identified and a stable prevention rule or correct pattern exists (technical or product/UX). Keep raw incident notes in `memory/tmp/`; record only durable, consolidated guidance in the Vault.
+
+Detailed rules for recording, promoting, structuring, and consolidating learnings are defined in:
+
+```
+~/.claude/learnings.md
+```
+
 ### Memory Vault Structure
 
 Create missing parts as needed.
@@ -44,7 +54,9 @@ Each file should:
   - `memory/terminology.md`
 
 - Before exploring code, consult `memory/memory-map.md`.
+
 - When decisions are finalized, update or create the corresponding vault entries immediately.
+
 - After major changes, reorganize the vault if it no longer mirrors the project.
 
 ### Handovers
