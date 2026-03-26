@@ -10,7 +10,7 @@ Follow these steps. Do NOT skip any step.
 1. Run `git log --oneline -5` to see recent commit message conventions in this repo
 2. Stage all changes: `git add -A`
 3. Create a commit with a descriptive message that follows the repo's existing commit message style
-3. Push to the current remote branch (use `git push` or `git push -u origin HEAD` if no upstream is set)
+4. Push to the current remote branch (use `git push` or `git push -u origin HEAD` if no upstream is set)
 
 ## Step 2: Wait for CI
 
@@ -21,9 +21,11 @@ Follow these steps. Do NOT skip any step.
 ## Step 3: Evaluate Results
 
 If CI is **green** (conclusion: "success"):
+
 - Report success and stop
 
 If CI is **red** (conclusion: "failure"):
+
 - Fetch the failed job logs: `gh run view <run-id> --log-failed`
 - Analyze the failure
 - Fix the code

@@ -48,9 +48,11 @@ Mark "Yes" if AI helped in any part of this work, for example: generating code, 
 ## Step 5: Evaluate Results
 
 If CI is **green** (conclusion: "success"):
+
 - Report success and stop
 
 If CI is **red** (conclusion: "failure"):
+
 - Fetch the failed job logs: `gh run view <run-id> --log-failed`
 - Analyze the failure
 - Fix the code
