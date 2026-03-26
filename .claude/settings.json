@@ -8,5 +8,10 @@
     "gopls-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+    "statusLine": {
+    "type": "command",
+    "command": "~/.claude/ccline/ccline",
+    "padding": 0
+  }
 }
