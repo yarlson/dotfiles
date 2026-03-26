@@ -13,8 +13,9 @@ Update `docs/context/` in the **project root** so it accurately reflects the cur
 
 ## Identify What Changed
 
-1. Run `git diff --name-only` to see changed files (prefer this when git is available)
-2. Otherwise accept the list of changed files from session context
+1. Run `git status --porcelain` to check for uncommitted changes
+2. **If the repo is clean** (no uncommitted changes): proceed to the **FULL SCAN Workflow** below
+3. **If there are uncommitted changes**: run `git diff --name-only` to see changed files and proceed to the **UPDATE Workflow** below
 
 ## Create `docs/context/` If Missing
 
@@ -51,7 +52,25 @@ Write durable rules and current behavior only.
 - Keep files ~250 lines max (split if larger)
 - Use relative links inside `docs/context/`
 
-## UPDATE Workflow
+## FULL SCAN Workflow (clean repo)
+
+When the repo has no uncommitted changes, scan the entire codebase to find stale or missing info in `docs/context/`:
+
+1. **Read all existing `docs/context/` files** to understand what is currently documented
+2. **Scan the codebase**: explore project structure, key source files, config files, package manifests, entry points, and domain directories
+3. **Compare codebase reality vs documented state**:
+   - Identify claims in `docs/context/` that no longer match the code (stale info)
+   - Identify codebase concepts, domains, or patterns not yet documented (missing info)
+   - Identify terminology that has drifted or is no longer used
+4. **Fix stale info**: update or remove outdated content so it matches current code
+5. **Fill gaps**: add missing domains, terms, patterns, and capabilities
+6. **Update summary.md** if architecture, tech stack, or core flow has changed
+7. **Update context-map.md** to reflect the current file set
+8. **Verify**: read back edited files, ensure no prohibited content
+
+Then proceed to the **Manual Lint Checklist**.
+
+## UPDATE Workflow (uncommitted changes)
 
 1. **Identify changes**: use `git diff --name-only` or session context
 2. **Map changes to context topics**:
