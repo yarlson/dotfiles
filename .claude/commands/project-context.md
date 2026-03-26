@@ -210,7 +210,9 @@ Read all existing `docs/context/` files first to understand current documented c
 
 ### 3. Scan the codebase
 
-Explore the repository structure and inspect relevant files such as:
+**Do NOT use background agents or Explore agents for discovery.** Read files directly using Read, Glob, and Grep tools. This avoids producing huge intermediate output that wastes context.
+
+Inspect relevant files directly such as:
 
 - package manifests
 - workspace config
@@ -223,6 +225,8 @@ Explore the repository structure and inspect relevant files such as:
 - runtime/deployment config
 - CI/build config
 - meaningful tests
+
+Keep reads focused — read only what you need to understand architecture and behavior. Do not dump entire large files.
 
 ### 4. Build a current-state architecture map
 
