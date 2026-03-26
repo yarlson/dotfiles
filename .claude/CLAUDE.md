@@ -7,7 +7,6 @@ You manage persistent project knowledge in the **Memory Vault** (`.memory/` dire
 - Store anything needed for future sessions
 - If vault content conflicts with codebase, treat code as truth and update vault
 - **Vault documents current state, not change history**
-- Temporary notes go in `.memory/tmp/`
 - Summarize vault contents in chat unless specific file requested
 
 ### When to Update Memory
@@ -68,8 +67,6 @@ Detailed rules: `~/.claude/learnings.md`
   terminology.md      # term — definition
   practices.md        # conventions and invariants
   memory-map.md       # index of all files
-  plans/              # roadmaps (NOT progress tracking)
-  tmp/                # git-ignored session notes
   [domain]/           # e.g. auth/, api/
     *.md
 ```
@@ -94,9 +91,6 @@ Detailed rules: `~/.claude/learnings.md`
 
 **After major changes:** Reorganize vault if it no longer mirrors project structure.
 
-### Handovers
-
-On request: `.memory/tmp/handover-YYYY-MM-DD.md` with session state, decisions, blockers, next steps.
 
 ### Missing Vault
 

@@ -3,8 +3,10 @@
     "commit": "",
     "pr": ""
   },
+  "model": "opus[1m]",
   "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "skipDangerousModePermissionPrompt": true
 }
