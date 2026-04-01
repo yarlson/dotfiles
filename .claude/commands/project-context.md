@@ -84,6 +84,24 @@ In a monorepo, context must document both:
 
 Do not mirror the source tree mechanically inside `docs/context/`.
 
+## Consumption Tiers
+
+Context docs are consumed at different bandwidth levels. Write each file for its tier:
+
+### Tier 1 — Always-load (`summary.md`, `context-map.md`)
+
+Read on every session start. Must be scannable in seconds. Keep each under 80 lines. Together these two files give a developer enough orientation to know where to look next.
+
+`summary.md` provides the "what and how" of the project. `context-map.md` is a pure index — pointers only, no content.
+
+### Tier 2 — On-demand (domain, flow, service, app, package files)
+
+Loaded when working in a specific area. Can be longer (up to 250 lines) and more detailed. Each file should be self-contained for its topic.
+
+### Tier 3 — Grep layer (raw codebase)
+
+The codebase itself. Never documented exhaustively in context docs. If a fact can be found with a targeted grep or read of source code, it belongs here, not in `docs/context/`.
+
 ## Create `docs/context/` If Missing
 
 If `docs/context/` does not exist, create it.
@@ -93,7 +111,11 @@ If `docs/context/` does not exist, create it.
 - `summary.md` — sections: What, Architecture, Core Flow, System State, Capabilities, Tech Stack
 - `terminology.md` — stable term definitions in `term — definition` format
 - `practices.md` — proven conventions and invariants
-- `context-map.md` — grouped index of all context files using relative links
+- `context-map.md` — pure index of all context files; one entry per line (~150 chars max), grouped by section, relative links only; cap at 60 lines
+
+### `context-map.md` format
+
+Each entry follows the pattern: `- [short-label](relative/path.md) — phrase` where the phrase is under 10 words. Group entries under headings that match the `docs/context/` folder structure. Never put topic content, summaries, or explanations into `context-map.md`.
 
 ### Structure for single-project repo
 
@@ -139,6 +161,10 @@ Priority order when resolving conflicts:
 
 Update context to match actual current behavior.
 
+### Consumption stance
+
+Context docs are working hypotheses about the codebase, not authoritative specs. When acting on a claim from a context file, verify it against source code before relying on it. If the code disagrees, the code is right and the context doc needs correction.
+
 ## Prohibited Content — NEVER write these into `docs/context/**`
 
 - Dates, timestamps, commit hashes
@@ -162,12 +188,23 @@ Write durable, present-tense, current-state documentation only.
 
 - One topic per file
 - Prefer concise, high-signal files
-- Keep files roughly under 250 lines; split when needed
+- Tier 1 files (`summary.md`, `context-map.md`) stay under 80 lines. Tier 2 files stay under 250 lines; split when needed
 - Use relative links inside `docs/context/`
 - Prefer bullets and short sections over long prose
 - Prefer naming that reflects meaning and responsibility, not folder names
 - Include examples or diagrams only when they clarify current implemented behavior
 - Do not document every tiny internal helper; focus on meaningful architecture, behavior, contracts, and invariants
+
+## Write Discipline
+
+When creating or updating context docs, always follow this order:
+
+1. Write or update the topic file first (the domain/flow/service/app/package file)
+2. Then update `context-map.md` to reflect the change
+
+Never write topic content into `context-map.md`. The index points to knowledge; it does not contain knowledge.
+
+If a topic file is deleted, remove its entry from `context-map.md` in the same pass.
 
 ## What to Record
 
@@ -194,6 +231,22 @@ The rationale must be written as a current rule, not as a historical story.
 - stale terminology no longer used by the codebase
 - implementation details with no architectural or behavioral significance
 - raw directory dumps masquerading as architecture docs
+
+### Derivable-from-code facts — never persist these
+
+The following can always be obtained by reading or grepping the codebase. Storing them creates staleness risk with zero information gain:
+
+- file trees or directory listings
+- import/dependency graphs
+- function or method signatures
+- class hierarchies or interface lists
+- git history, blame, or authorship
+- test names or test file inventories
+- line counts or file sizes
+- environment variable names (document their _purpose_ in `practices.md` if non-obvious, not the names themselves)
+- CI step lists (document the _model_ in platform docs, not the step-by-step)
+
+Rule: if `grep` or `git log` can answer it in under 10 seconds, it does not belong in context docs.
 
 ## FULL SCAN Workflow (clean repo)
 
@@ -283,7 +336,7 @@ Update only if monorepo-wide or project-wide truth has materially changed.
 
 ### 8. Update `context-map.md`
 
-Ensure it indexes the current file set and groups entries by section with relative links.
+Ensure it indexes the current file set. Maintain one-line-per-entry format; do not add summaries or topic content.
 
 ### 9. Verify
 
@@ -342,11 +395,54 @@ For each affected topic:
 - `terminology.md` for stable active terms
 - `practices.md` for durable enforced conventions or invariants
 - `summary.md` only if high-level What / Architecture / Core Flow / System State / Capabilities / Tech Stack materially changed
-- `context-map.md` to reflect the current file set
+- `context-map.md` to reflect the current file set; maintain one-line-per-entry format
 
 ### 7. Verify
 
 Read back all edited files and confirm they contain only present-tense current-state documentation.
+
+## CONSOLIDATE Workflow (periodic maintenance)
+
+Run when context docs need cleanup after many incremental updates, or when explicitly requested.
+
+### 1. Read all context files and `context-map.md`
+
+### 2. Detect problems
+
+- Overlapping files covering the same concept
+- Duplicated facts across multiple files
+- Claims that contradict current code
+- Stale references to removed or renamed code
+- Files that have grown beyond tier size limits
+- `context-map.md` entries that are missing, orphaned, or overly verbose
+
+### 3. Merge overlapping files
+
+Combine files that cover the same topic into one file. Prefer the file with the more accurate name.
+
+### 4. Deduplicate across files
+
+If the same fact appears in multiple files, keep it in the most specific file and remove from others.
+
+### 5. Verify claims against code
+
+For each non-obvious claim, grep or read source to confirm. Remove or correct claims that no longer hold.
+
+### 6. Prune aggressively
+
+Remove:
+
+- vague statements that add no actionable signal
+- derivable facts (see "Derivable-from-code facts")
+- files that document trivial or obsolete areas
+
+### 7. Re-index
+
+Rebuild `context-map.md` from the surviving file set. Maintain one-line-per-entry format.
+
+### 8. Verify
+
+Read all modified files. Confirm no prohibited content, no stale claims, correct tier sizing.
 
 ## Monorepo-Specific Guidance
 
@@ -446,11 +542,12 @@ Use for end-to-end behavior that crosses boundaries, such as:
 
 After updating, verify:
 
+- [ ] Tier 1 files (`summary.md`, `context-map.md`) are under 80 lines; Tier 2 files are under 250 lines
 - [ ] No dates, commits, status language, or progress language inside `docs/context/`
 - [ ] Files are present-tense and current-state only
 - [ ] One topic per file
 - [ ] Files are concise and split if too large
-- [ ] `context-map.md` indexes everything using relative links
+- [ ] `context-map.md` indexes everything using relative links with one-line-per-entry format, under 60 lines
 - [ ] `summary.md` contains required sections and matches reality
 - [ ] Monorepo docs are organized by meaning and responsibility, not by blindly mirroring the source tree
 - [ ] Apps/services/packages/platform/domains/flows are classified by role and evidence, not folder name alone

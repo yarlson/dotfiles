@@ -34,6 +34,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 ## Evaluate Across These Dimensions
 
 ### 1. Correctness
+
 - Logical bugs
 - Edge cases
 - Nil/null/empty-state issues
@@ -43,6 +44,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Schema, migration, or serialization issues
 
 ### 2. Security
+
 - Auth/authz mistakes
 - Secret leakage
 - Injection risks
@@ -52,6 +54,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Insecure defaults
 
 ### 3. Reliability
+
 - Failure handling
 - Retries and timeouts
 - Error propagation
@@ -61,6 +64,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Backward compatibility
 
 ### 4. Performance
+
 - Unnecessary allocations
 - N+1 queries
 - Blocking work
@@ -69,6 +73,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Redundant network or database calls
 
 ### 5. Maintainability
+
 - Clarity
 - Duplication
 - Cohesion
@@ -79,6 +84,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Violations of existing architecture or patterns
 
 ### 6. Tests
+
 - Missing happy-path coverage
 - Missing edge-case coverage
 - Fragile tests
@@ -86,6 +92,7 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 - Whether the implementation is under-tested for the risk level
 
 ### 7. Operability
+
 - Logging quality
 - Metrics and tracing
 - Debuggability
@@ -123,16 +130,20 @@ Determine whether this change is safe, correct, maintainable, and ready to commi
 ## Output Format
 
 ### Verdict
+
 Choose one:
+
 - Ready to commit
 - Ready with minor fixes
 - Needs changes
 - Cannot review confidently with current context
 
 ### Top Findings
+
 For each finding:
 
 #### [Severity] Short title
+
 - **Location**: file / function / line range
 - **Problem**: what is wrong
 - **Why it matters**: user/system impact
@@ -140,16 +151,20 @@ For each finding:
 - **Suggested fix**: specific change or direction
 
 ### Test Gaps
+
 - List missing or weak tests
 - Explain which risks are currently uncovered
 
 ### Risks to Validate Before Commit
+
 - Short checklist for the author to verify manually if needed
 
 ### Non-blocking Suggestions
+
 - Include only if genuinely useful
 
 ### What Could Not Be Verified
+
 - Assumptions
 - Missing context
 - Dependencies not shown
