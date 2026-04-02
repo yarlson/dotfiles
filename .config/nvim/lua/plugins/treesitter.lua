@@ -13,36 +13,21 @@ return {
       'vrischmann/tree-sitter-templ',
     },
     config = function()
-      -- Define parsers to install
-      local parsers = {
-        'css',
-        'dockerfile',
-        'go',
-        'html',
-        'javascript',
-        'json',
-        'lua',
-        'php',
-        'python',
-        'sql',
-        'templ',
-        'terraform',
-        'tsx',
-        'typescript',
-        'yaml',
-        'zig',
-        'bash',
-        'hcl',
-        'groovy',
-        'helm',
-        'toml',
-        'ini',
-        'gitcommit',
-        'git_rebase',
-        'git_config',
-      }
+      local yar_grammar_dir = '/Users/yaroslavk/git/yar-treesitter'
+      local yar_parser_lib = yar_grammar_dir .. '/parser.so'
 
-      require('nvim-treesitter').install(parsers)
+      local function register_yar_parser()
+        if vim.fn.isdirectory(yar_grammar_dir) ~= 1 then
+          return
+        end
+
+        vim.opt.runtimepath:append(yar_grammar_dir)
+        if vim.fn.filereadable(yar_parser_lib) == 1 then
+          vim.treesitter.language.add('yar', { path = yar_parser_lib })
+        end
+      end
+
+      register_yar_parser()
 
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)

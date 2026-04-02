@@ -83,7 +83,12 @@ create_augroups {
 }
 
 -- Set filetype for templ files
-vim.filetype.add { extension = { templ = 'templ' } }
+vim.filetype.add {
+  extension = {
+    templ = 'templ',
+    yar = 'yar',
+  },
+}
 
 -- Infra file type detection
 vim.filetype.add {
