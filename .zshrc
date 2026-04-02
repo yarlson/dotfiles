@@ -31,12 +31,6 @@ export PATH=/Users/yaroslavk/.opencode/bin:$PATH
 
 export PATH="$HOME/.bun/bin:$PATH"
 
-# Let Docker contexts control the socket selection.
-unset DOCKER_HOST
-if command -v docker >/dev/null 2>&1; then
-  docker context use colima-docker-half >/dev/null 2>&1
-fi
-
 # opencode
 export PATH=/Users/yar/.opencode/bin:$PATH
 alias no='curl -fsSL "https://raw.githubusercontent.com/hotheadhacker/no-as-a-service/refs/heads/main/reasons.json" | jq -r ".[]" | awk "BEGIN{srand()} {a[NR]=\$0} END{print a[1+int(rand()*NR)]}"'
