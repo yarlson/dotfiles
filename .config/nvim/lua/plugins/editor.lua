@@ -53,6 +53,18 @@ return {
       'MunifTanjim/nui.nvim',
     },
     cmd = 'Neotree',
+    keys = {
+      { '<leader>e', function() require('neo-tree.command').execute { toggle = true } end, desc = 'Toggle File Explorer (Neo-tree)' },
+      { '<C-w>e', function()
+        local current_buf = vim.api.nvim_get_current_buf()
+        local current_buf_ft = vim.api.nvim_buf_get_option(current_buf, 'filetype')
+        if current_buf_ft == 'neo-tree' then
+          vim.cmd 'wincmd p'
+        else
+          vim.cmd 'Neotree focus'
+        end
+      end, desc = 'Focus File Explorer (Neo-tree)' },
+    },
     config = function()
       require('neo-tree').setup {
         close_if_last_window = true,
@@ -85,20 +97,6 @@ return {
           },
         },
       }
-
-      vim.keymap.set('n', '<leader>e', function()
-        require('neo-tree.command').execute { toggle = true }
-      end, { desc = 'Toggle File Explorer (Neo-tree)' })
-
-      vim.keymap.set('n', '<C-w>e', function()
-        local current_buf = vim.api.nvim_get_current_buf()
-        local current_buf_ft = vim.api.nvim_buf_get_option(current_buf, 'filetype')
-        if current_buf_ft == 'neo-tree' then
-          vim.cmd 'wincmd p'
-        else
-          vim.cmd 'Neotree focus'
-        end
-      end, { desc = 'Focus File Explorer (Neo-tree)' })
     end,
   },
 

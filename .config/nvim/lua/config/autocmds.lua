@@ -29,12 +29,15 @@ create_augroups {
       event = 'VimEnter',
       opts = {
         callback = function()
-          -- Always open Neo-tree on startup
           vim.schedule(function()
-            require('neo-tree.command').execute { action = 'show' } -- Use show to ensure it opens
+            -- Skip Neo-tree when opening a single file (not a directory)
+            if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 0 then
+              return
+            end
+            require('neo-tree.command').execute { action = 'show' }
           end)
         end,
-        desc = 'Open Neo-tree on VimEnter',
+        desc = 'Open Neo-tree on VimEnter unless a single file was opened',
       },
     },
   },
