@@ -4,14 +4,14 @@
     "pr": ""
   },
   "model": "opus[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/ccline/ccline",
+    "padding": 0
+  },
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true,
-    "statusLine": {
-    "type": "command",
-    "command": "~/.claude/ccline/ccline",
-    "padding": 0
-  }
+  "skipDangerousModePermissionPrompt": true
 }

@@ -1,97 +1,25 @@
-## System Prompt — Memory Vault
+# CLAUDE.md
 
-You manage persistent project knowledge in the **Memory Vault** (`.memory/` directory). The vault is the project's long-term memory and must always reflect current system state.
+## Coding rules
 
-### Core Rules
+- Think before coding.
+- State assumptions explicitly.
+- If something is unclear, say so instead of guessing.
+- Prefer the simplest solution that fully solves the task.
+- Do not add extra features, abstractions, or configurability unless asked.
+- Make surgical changes only.
+- Do not refactor unrelated code.
+- Match the existing style of the codebase.
+- Clean up only unused code created by your own changes.
+- Every changed line should map directly to the request.
 
-- Store anything needed for future sessions
-- If vault content conflicts with codebase, treat code as truth and update vault
-- **Vault documents current state, not change history**
-- Summarize vault contents in chat unless specific file requested
+## Execution rules
 
-### When to Update Memory
+- Define clear success criteria before implementing.
+- For bug fixes, reproduce the bug first when practical.
+- For changes, verify with tests or another concrete check.
+- For multi-step work, make a short plan with a verification step for each part.
 
-**Update vault IMMEDIATELY after:**
+## Heuristic
 
-- Establishing patterns/principles/conventions
-- Discovering bug root causes and implementing fixes
-- Making architectural decisions
-- Establishing coding standards
-- Identifying security issues and mitigations
-
-**This is not optional. Updating memory is part of completing the task.**
-
-DO NOT wait for user to ask. DO NOT say "Good catch!" when reminded.
-
-### Prohibited Content
-
-**NEVER write these in vault files:**
-
-❌ Dates/timestamps, commit hashes, status tracking, progress updates
-❌ Timeline history, strikethrough edits, celebration emojis
-❌ "Recent completions", "Next steps", "Remaining work", "Blocker status"
-❌ Narrative tone: "We discovered...", "After investigation...", "Good catch!"
-❌ File change lists, line numbers, "Updated N files"
-
-**Example:**
-
-❌ WRONG:
-
-```
-## Status (2026-02-11)
-Recent: ✅ Feature X (committed: abc123)
-Timeline: ~~4 weeks~~ → **3 days** 🚀
-```
-
-✅ CORRECT:
-
-```
-**Feature X:** Operational (handles auth, enforces RBAC)
-**Implementation:** See auth.go, middleware.go
-```
-
-Write: "Always use pattern B" (rule)
-Not: "Changed from A to B on Jan 5" (history)
-
-### Implementation Learnings
-
-Capture durable learnings when root cause identified and prevention rule exists. Raw incidents → `.memory/tmp/errors/`. Durable rules → domain learnings files.
-
-Detailed rules: `~/.claude/learnings.md`
-
-### Vault Structure
-
-```
-.memory/
-  summary.md          # WHAT the project IS (not status/progress)
-  terminology.md      # term — definition
-  practices.md        # conventions and invariants
-  memory-map.md       # index of all files
-  [domain]/           # e.g. auth/, api/
-    *.md
-```
-
-**summary.md must describe:** What, Architecture, Core Flow, System State, Capabilities, Tech Stack
-**summary.md must NOT include:** Status, completions, timelines, dates, commits, emojis
-
-### File Standards
-
-- One topic per file
-- Examples and diagrams when useful
-- Relative links to related files
-- Under ~250 lines; split if larger
-
-### Workflow
-
-**Session start:** Read `.memory/memory-map.md`, `summary.md`, `terminology.md`
-
-**During execution:** Update vault when decisions finalized. Write current state, not change history.
-
-**Before responding to user:** Check if task established patterns/learnings → update vault first (blocking) → then respond.
-
-**After major changes:** Reorganize vault if it no longer mirrors project structure.
-
-
-### Missing Vault
-
-If `.memory/` doesn't exist, ask whether to create it.
+Ask: would a senior engineer call this overcomplicated? If yes, simplify.
