@@ -84,7 +84,14 @@ main() {
     setup_completions
     install_tmux_tpm
 
-    log_success "🎉 Plugin setup completed!"
+    # Apply macOS defaults
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [[ -x "$script_dir/defaults.sh" ]]; then
+        log_info "Applying macOS defaults..."
+        "$script_dir/defaults.sh"
+    fi
+
+    log_success "🎉 Setup completed!"
 }
 
 # Run main function
