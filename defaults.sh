@@ -168,6 +168,10 @@ set_screenshot_defaults() {
 set_system_ui_defaults() {
     log_info "Setting system UI defaults..."
 
+    # Always hide menu bar (both keys needed on Sonoma/Sequoia)
+    defaults write .GlobalPreferences _HIHideMenuBar -bool true
+    defaults write .GlobalPreferences AppleMenuBarVisibleInFullscreen -bool false
+
     # Expand save panel by default
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
     defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
