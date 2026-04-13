@@ -56,6 +56,9 @@ set_keyboard_defaults() {
     # Reduce input source switch delay
     defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceSwitchDelay -float 0
 
+    # Use Caps Lock to switch input source
+    defaults write NSGlobalDomain TISRomanSwitchState -int 1
+
     # Disable auto-correct and smart substitutions
     defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
     defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
