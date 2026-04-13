@@ -41,6 +41,21 @@ set_keyboard_defaults() {
     # Disable press-and-hold for keys (enables key repeat in all apps)
     defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
+    # Switch input source per application (each app remembers its own layout)
+    defaults write com.apple.HIToolbox AppleGlobalTextInputProperties -dict TextInputGlobalPropertyPerContextInput -bool true
+
+    # Disable text completion suggestions
+    defaults write NSGlobalDomain NSAutomaticTextCompletionEnabled -bool false
+
+    # Disable Dictation auto-enable (prevents accidental Fn/Globe double-press activation)
+    defaults write com.apple.HIToolbox AppleDictationAutoEnable -bool false
+
+    # Fn/Globe key acts as standard Fn modifier, not emoji picker
+    defaults write com.apple.HIToolbox AppleFnUsageType -int 0
+
+    # Reduce input source switch delay
+    defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceSwitchDelay -float 0
+
     # Disable auto-correct and smart substitutions
     defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
     defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
