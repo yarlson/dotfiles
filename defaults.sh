@@ -81,7 +81,7 @@ set_trackpad_defaults() {
     defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 
     # Increase tracking speed
-    defaults write NSGlobalDomain com.apple.trackpad.scaling -float 2.5
+    defaults write NSGlobalDomain com.apple.trackpad.scaling -float 1
 
     log_success "Trackpad defaults set"
 }

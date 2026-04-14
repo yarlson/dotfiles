@@ -35,5 +35,10 @@ export PATH="$HOME/.bun/bin:$PATH"
 export PATH=/Users/yar/.opencode/bin:$PATH
 alias no='curl -fsSL "https://raw.githubusercontent.com/hotheadhacker/no-as-a-service/refs/heads/main/reasons.json" | jq -r ".[]" | awk "BEGIN{srand()} {a[NR]=\$0} END{print a[1+int(rand()*NR)]}"'
 
+# Colima Docker — make it behave like Docker Desktop
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
+export TESTCONTAINERS_RYUK_DISABLED="false"
+
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"

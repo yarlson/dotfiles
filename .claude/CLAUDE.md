@@ -17,6 +17,7 @@
 
 - Define clear success criteria before implementing.
 - For bug fixes, reproduce the bug first when practical.
+- Revalidate version-sensitive or unfamiliar framework, language, and library assumptions: check the installed version, local config/docs, and official docs or changelog; state the source when it affects the implementation.
 - For changes, verify with tests or another concrete check.
 - For multi-step work, make a short plan with a verification step for each part.
 
