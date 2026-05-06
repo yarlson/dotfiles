@@ -231,6 +231,9 @@ set_misc_defaults() {
 restart_affected_apps() {
     log_info "Restarting affected applications..."
 
+    # Flush preferences cache so HIToolbox changes (input source switching) take effect
+    killall cfprefsd &>/dev/null || true
+
     local apps=(
         "Dock"
         "Finder"

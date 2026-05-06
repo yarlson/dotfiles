@@ -1,5 +1,4 @@
 {
-  "cli_default_open_behavior": "new_window",
   "project_panel": {
     "dock": "left"
   },
@@ -19,24 +18,20 @@
     "dock": "right",
   },
   "agent_servers": {
-    "claude-acp": {
-      "type": "registry",
-      "default_mode": "bypassPermissions"
-    },
     "opencode": {
       "type": "registry",
+    },
+    "claude": {
+      "default_mode": "bypassPermissions",
     },
   },
   "base_keymap": "JetBrains",
   "icon_theme": {
     "mode": "light",
-    "light": "JetBrains New UI Icons (Dark)",
+    "light": "Zed (Default)",
     "dark": "Zed (Default)",
   },
   "agent": {
-    "tool_permissions": {
-      "default": "allow"
-    },
     "dock": "right",
     "inline_assistant_model": {
       "provider": "copilot_chat",
@@ -47,10 +42,11 @@
       "model": "gpt-4o-mini",
     },
     "model_parameters": [],
+    "always_allow_tool_actions": true,
   },
   "ui_font_size": 16,
   "buffer_font_size": 16,
-  "theme": "Catppuccin Mocha",
+  "theme": "Fleet Dark",
   "vim_mode": false,
   "vim": {
     "default_mode": "normal",
