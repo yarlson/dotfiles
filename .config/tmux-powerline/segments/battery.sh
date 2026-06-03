@@ -5,7 +5,7 @@ BATTERY_MED="󱊢"
 BATTERY_EMPTY="󱊡"
 BATTERY_CHARGE="󰂄"
 
-COLOR_GREEN="#66800b"
+COLOR_FULL="${TMUX_POWERLINE_CUR_SEGMENT_FG:-#cecdc3}"
 COLOR_YELLOW="#ad8301"
 COLOR_RED="#af3029"
 
@@ -20,7 +20,7 @@ run_segment() {
 	[ -n "$percentage" ] || return 0
 
 	case "$battery_line" in
-	*charging* | *charged* | *AC\ Power*)
+	*"; charging;"* | *"; charged;"*)
 		icon="$BATTERY_CHARGE"
 		;;
 	*)
@@ -52,6 +52,6 @@ __battery_color() {
 	elif [ "$percentage" -lt 50 ]; then
 		printf '%s' "$COLOR_YELLOW"
 	else
-		printf '%s' "$COLOR_GREEN"
+		printf '%s' "$COLOR_FULL"
 	fi
 }
