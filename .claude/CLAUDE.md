@@ -61,6 +61,17 @@ When the task is about product shape, system design, architecture, error handlin
 - Clean up only unused code created by your own changes.
 - Every changed line should map directly to the request.
 
+## Comments
+
+Comments describe how the system works, not the change you just made.
+
+- Write for someone reading the code fresh, with no knowledge of this task or its diff.
+- Describe durable facts: behavior, contracts, invariants, and non-obvious reasons the code must be this way.
+- Explain why the code is the way it is — not why you changed it — and only when the code does not already make it obvious.
+- Never narrate the edit: no "changed", "now uses", "added to fix", "previously…". That belongs in the commit message and PR.
+- Keep them short. One precise line beats a paragraph. Delete comments that just restate the code.
+- If a comment will read as stale once merged, it is changelog, not a comment — cut it.
+
 ## Engineering quality rules
 
 When making changes, try to improve — or at least not degrade — these areas:

@@ -42,3 +42,6 @@ export TESTCONTAINERS_RYUK_DISABLED="false"
 
 export CMT_PROVIDER=codex
 
+
+# Claude Code dev sandbox — run in current dir, container named by path hash
+alias sandbox='docker run -it --rm --name "claude-sandbox-$(pwd -P | shasum | cut -c1-8)" -v "$(pwd -P)":"$(pwd -P)" -w "$(pwd -P)" -v claude-sandbox-mise:/mise -v claude-sandbox-home:/root/.claude claude-sandbox claude --dangerously-skip-permissions --append-system-prompt-file /etc/claude-sandbox/instructions.md'
