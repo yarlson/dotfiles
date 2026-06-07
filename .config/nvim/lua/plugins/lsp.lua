@@ -2,6 +2,9 @@ return {
   {
     'williamboman/mason.nvim',
     opts = {
+      npm = {
+        install_args = { '--min-release-age=0' },
+      },
       ensure_installed = {
         'debugpy', -- Python debugging
         'delve', -- Go debugging

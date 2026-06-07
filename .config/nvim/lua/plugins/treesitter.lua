@@ -14,20 +14,40 @@ return {
     },
     config = function()
       local yar_grammar_dir = '/Users/yaroslavk/git/yar-treesitter'
-      local yar_parser_lib = yar_grammar_dir .. '/parser.so'
+      local yar_parser_libs = {
+        vim.fn.stdpath 'data' .. '/site/parser/yar.so',
+        yar_grammar_dir .. '/parser.so',
+      }
 
-      local function register_yar_parser()
+      local function configure_yar_parser()
         if vim.fn.isdirectory(yar_grammar_dir) ~= 1 then
           return
         end
 
         vim.opt.runtimepath:append(yar_grammar_dir)
-        if vim.fn.filereadable(yar_parser_lib) == 1 then
-          vim.treesitter.language.add('yar', { path = yar_parser_lib })
+
+        local ok, parsers = pcall(require, 'nvim-treesitter.parsers')
+        if ok then
+          parsers.yar = {
+            install_info = {
+              path = yar_grammar_dir,
+              files = { 'src/parser.c' },
+              generate = false,
+              queries = 'queries/yar',
+            },
+            filetype = 'yar',
+          }
+        end
+
+        for _, parser_lib in ipairs(yar_parser_libs) do
+          if vim.fn.filereadable(parser_lib) == 1 then
+            vim.treesitter.language.add('yar', { path = parser_lib })
+            break
+          end
         end
       end
 
-      register_yar_parser()
+      configure_yar_parser()
 
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)

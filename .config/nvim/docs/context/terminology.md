@@ -12,3 +12,4 @@
 - **Neogit** -- magit-style git interface with diffview integration
 - **Bufferline** -- tab bar showing open buffers with ordinal numbers and LSP diagnostics
 - **yaml-companion** -- Telescope extension for switching YAML schemas (K8s, GitLab CI, GitHub Actions, Ansible, Docker Compose)
+- **Yar Tree-sitter** -- local Yar grammar checkout at `/Users/yaroslavk/git/yar-treesitter`; provides `.yar` filetype runtime files, parser metadata, and queries

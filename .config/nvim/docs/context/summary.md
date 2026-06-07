@@ -28,11 +28,12 @@ A Neovim configuration optimized for DevOps, infrastructure, and backend develop
 - Format-on-save active for all supported filetypes
 - Neo-tree auto-opens on startup (left panel, 30px wide)
 - Completion toggle commands: `:Cmpoff`, `:Cmpon`, `:CmpoffAll`, `:CmponAll`
+- Mason npm installs bypass npm's release-age guard inside Neovim only
 
 ## Capabilities
 
 - **Infrastructure**: Terraform/Terragrunt LSP + formatting, Ansible LSP + linting, Docker LSP + hadolint, Kubernetes/Helm YAML schemas, shell scripting (shellcheck, shfmt)
-- **Languages**: Go, Python, Zig, Lua, JS/TS, PHP, SQL, Bash
+- **Languages**: Go, Python, Zig, Lua, JS/TS, PHP, SQL, Bash, Yar
 - **Debugging**: DAP with UI for Go (Delve), Python (debugpy), Zig (LLDB)
 - **Testing**: Neotest for Go and Python with DAP integration
 - **Git**: Gitsigns (hunk ops), Neogit (magit-like UI), git-conflict (merge resolution)
@@ -48,3 +49,9 @@ A Neovim configuration optimized for DevOps, infrastructure, and backend develop
 - nvim-cmp + LuaSnip for completion
 - Treesitter for syntax and text objects
 - Lua (LuaJIT runtime)
+
+## Yar Tree-sitter
+
+- `.yar` files use the `yar` filetype
+- `lua/plugins/treesitter.lua` adds `/Users/yaroslavk/git/yar-treesitter` to runtimepath for Yar queries and ftplugin files
+- Neovim loads Yar from the standard parser path first, then falls back to `/Users/yaroslavk/git/yar-treesitter/parser.so`

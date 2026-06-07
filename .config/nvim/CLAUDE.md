@@ -9,15 +9,18 @@ This is a Neovim configuration focused on DevOps and infrastructure development.
 ## Development Commands
 
 ### Neovim Configuration Management
+
 - `./clenup.sh` - Clean Neovim cache and data directories for fresh start
 - No build/test commands - configuration is loaded directly by Neovim
 
 ### Configuration Testing
+
 - Test configuration by running `nvim` and checking for errors
 - Plugin sync: `:Lazy sync` to update/install plugins
 - Health check: `:checkhealth` to verify configuration
 
 ### Claude Code Commands
+
 - `:ClaudeCode` - Toggle Claude Code terminal window
 - `:ClaudeCodeContinue` - Resume most recent conversation
 - `:ClaudeCodeResume` - Interactive conversation picker
@@ -26,6 +29,7 @@ This is a Neovim configuration focused on DevOps and infrastructure development.
 ## Architecture
 
 ### Core Structure
+
 The configuration follows a clean separation of concerns:
 
 - `init.lua` - Bootstrap Lazy.nvim and load core configurations
@@ -33,6 +37,7 @@ The configuration follows a clean separation of concerns:
 - `lua/plugins/` - Plugin configurations organized by functionality
 
 ### Plugin Architecture
+
 Plugin configurations are modular and organized by purpose:
 
 - `completion.lua` - nvim-cmp with Supermaven AI completion
@@ -46,9 +51,11 @@ Plugin configurations are modular and organized by purpose:
 - `ui.lua` - Interface plugins (Bufferline, Lualine, theme)
 
 ### Language Support Focus
+
 The configuration is optimized for:
 
 **Infrastructure/DevOps:**
+
 - Terraform/Terragrunt with specialized formatting and LSP
 - Ansible with YAML schema support
 - Docker with linting (hadolint)
@@ -57,6 +64,7 @@ The configuration is optimized for:
 - Shell scripting with shellcheck and shfmt
 
 **Programming Languages:**
+
 - Go with debugging (delve) and testing
 - Python with debugging (debugpy) and testing
 - Zig with LSP and debugging (LLDB)
@@ -75,13 +83,16 @@ The configuration is optimized for:
 8. **Testing**: Neotest integration for Go and Python
 
 ### File Type Detection
+
 Extensive custom file type detection for infrastructure files:
+
 - `.tf`, `.hcl`, `.tfvars` → Terraform
-- `terragrunt.hcl` → Terragrunt  
+- `terragrunt.hcl` → Terragrunt
 - `Jenkinsfile` → Groovy
 - Various YAML patterns → Specific YAML schemas (GitLab CI, GitHub Actions, Kubernetes, Helm, etc.)
 
 ### Autocommands
+
 - **Format on Save**: Automatic formatting for all supported file types
 - **Neo-tree Auto-open**: File explorer opens on startup
 - **Language-specific Settings**: Automatic indentation and comment settings per file type
@@ -89,27 +100,34 @@ Extensive custom file type detection for infrastructure files:
 ## Key Features
 
 ### Completion System
+
 - AI-powered completion via Supermaven
 - LSP-based completion for all supported languages
 - Snippet support with LuaSnip
 - Automatic completion disabled for markdown files
 
 ### Debugging Setup
+
 Full debugging support with visual interface:
+
 - Go: Delve debugger integration
-- Python: debugpy with virtual environment support  
+- Python: debugpy with virtual environment support
 - Zig: LLDB integration
 
 ### Testing Integration
+
 - Neotest framework for running tests
 - Go and Python test adapters
 - Test output and summary windows
 
 ### REST Client
+
 Built-in HTTP client for API testing and development.
 
 ### Claude Code Integration
+
 Direct integration with Claude Code AI assistant:
+
 - Toggle Claude Code terminal with `<leader>cc`
 - Continue previous conversations with `<leader>cC`
 - Verbose mode with `<leader>cV`
@@ -117,7 +135,9 @@ Direct integration with Claude Code AI assistant:
 - Uses git root as working directory when available
 
 ### Git Workflow
+
 Complete git integration:
+
 - Visual git status and diff indicators
 - Hunk-level staging and operations
 - Conflict resolution helpers

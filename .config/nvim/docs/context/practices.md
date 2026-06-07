@@ -12,6 +12,7 @@
 - All LSP servers are configured through a single `server_configs` table in `lsp.lua`
 - Uses Neovim 0.11+ native `vim.lsp.config[name]` and `vim.lsp.enable()` instead of lspconfig's `setup()` loop
 - Mason ensures tools are installed; mason-lspconfig bridges Mason names to lspconfig names
+- Mason npm package installs pass `--min-release-age=0` so registry-pinned server versions are not blocked by the user's global npm release-age guard
 - ESLint is explicitly excluded from document formatting capability
 
 ## Formatting
@@ -26,6 +27,8 @@
 - Terraform/HCL extensions map to `terraform` filetype
 - YAML files are subtyped by filename and path patterns (e.g., `yaml.gitlab`, `yaml.kubernetes`, `yaml.helm`)
 - Custom filetype `templ` and `yar` registered via `vim.filetype.add`
+- Yar Tree-sitter queries and ftplugin files come from `/Users/yaroslavk/git/yar-treesitter` on runtimepath
+- Yar parser loading prefers `stdpath('data')/site/parser/yar.so` and falls back to the local grammar checkout's `parser.so`
 
 ## Completion
 
