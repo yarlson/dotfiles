@@ -13,6 +13,7 @@
 .config/sketchybar
 .config/starship.toml
 .config/tmux
+.config/vindu/vindu.conf
 .config/yazi
 .config/zed
 .config/zsh/aliases.zsh
