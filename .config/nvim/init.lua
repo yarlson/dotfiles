@@ -16,6 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 require 'config.options'
 require 'config.keymaps'
 require 'config.autocmds'
+require 'config.compat'
 
 -- Disable netrw
 vim.g.loaded_netrw = 1

@@ -7,14 +7,14 @@ A Neovim configuration optimized for DevOps, infrastructure, and backend develop
 ## Architecture
 
 - `init.lua` bootstraps Lazy.nvim, loads core config, disables netrw, then calls `lazy.setup('plugins')`
-- `lua/config/` holds three core modules: options, keymaps, autocmds
+- `lua/config/` holds core modules for options, keymaps, autocmds, and compatibility shims
 - `lua/plugins/` holds nine plugin modules, each responsible for one functional area
 - LSP uses Neovim 0.11+ native API (`vim.lsp.config` / `vim.lsp.enable`) with Mason for tool installation
 
 ## Core Flow
 
 1. `init.lua` bootstraps Lazy.nvim from GitHub if missing, prepends it to runtimepath
-2. Core config loads: editor options, keymaps, autocommands + filetype detection
+2. Core config loads: editor options, keymaps, autocommands + filetype detection, compatibility shims
 3. `lazy.setup('plugins')` auto-discovers and lazy-loads all `lua/plugins/*.lua` modules
 4. On buffer open: LSP attaches, Treesitter highlights, Gitsigns activates
 5. On save: Conform formats the buffer (1s timeout, LSP fallback)
