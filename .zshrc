@@ -46,3 +46,24 @@ export CMT_PROVIDER=codex
 # Claude Code dev sandbox — run in current dir, container named by path hash
 alias sandbox='docker run -it --rm --name "claude-sandbox-$(pwd -P | shasum | cut -c1-8)" -v "$(pwd -P)":"$(pwd -P)" -w "$(pwd -P)" -v claude-sandbox-mise:/mise -v claude-sandbox-home:/root/.claude claude-sandbox claude --dangerously-skip-permissions --append-system-prompt-file /etc/claude-sandbox/instructions.md'
 export PATH="$(brew --prefix libpq)/bin:$PATH"
+
+ratchet-spec() {
+  local f
+  f=$(mktemp) || return
+
+  ${EDITOR:-nvim} "$f" || {
+    rm -f "$f"
+    return 1
+  }
+
+  [[ -s "$f" ]] || {
+    echo "empty spec; aborted" >&2
+    rm -f "$f"
+    return 1
+  }
+
+  go run ./cmd/ratchet run .ratchet/build.json --spec "$(<"$f")"
+  local code=$?
+  rm -f "$f"
+  return $code
+}
