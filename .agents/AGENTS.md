@@ -66,10 +66,9 @@ Before implementing, during implementation, and before finalizing, validate the 
    - Add concurrency only when needed and bound it where possible.
 
 10. **Dependencies**
-
-- Avoid new dependencies unless they materially reduce complexity or risk.
-- Prefer standard library or existing project dependencies when reasonable.
-- If adding a dependency, justify it and check maintenance, license, size, security, and transitive impact.
+    - Avoid new dependencies unless they materially reduce complexity or risk.
+    - Prefer standard library or existing project dependencies when reasonable.
+    - If adding a dependency, justify it and check maintenance, license, size, security, and transitive impact.
 
 ### Required review loop
 
@@ -96,6 +95,85 @@ When reporting the result, include:
 6. Any remaining risks or follow-up work.
 
 Do not claim the work is done unless the product goal and the engineering quality gates are both satisfied.
+
+## Existing-Codebase First
+
+Before writing new code, inspect the existing codebase and identify the closest existing patterns for structure, naming, error handling, logging, testing, configuration, dependency wiring, and API shape.
+
+New code must fit the current codebase unless the existing pattern is clearly broken.
+
+Do not introduce a second way to solve the same problem. Prefer extending or reusing existing helpers, packages, conventions, and test styles.
+
+Before adding a new abstraction, package, interface, service, helper, middleware, config object, or dependency, check whether the codebase already has an equivalent.
+
+If the existing pattern is unhealthy, do not silently create a new competing pattern. Explain the problem, choose the smallest safe improvement, and keep the change localized.
+
+Output before implementation:
+
+* existing pattern found
+* where it is used
+* how the new code will follow it
+* any intentional deviation and why
+
+## Small Design Before Code
+
+Before implementing, define the smallest design that solves the task.
+
+Write a brief implementation sketch covering:
+
+* the exact behavior being added or changed
+* the minimal files/modules/functions that need to change
+* the data flow
+* the error paths
+* the tests needed
+* what will intentionally not be changed
+
+Do not start coding until the implementation shape is clear.
+
+Reject unnecessary scope expansion, unrelated cleanup, broad refactoring, speculative abstractions, future-proofing, new frameworks, new service boundaries, new background workers, new queues, new state machines, or new configuration unless they are required for the task.
+
+If a simpler implementation can satisfy the requirement safely, choose it.
+
+After implementation, verify that the final code still matches the small design. If the code grew beyond the design, explain why or reduce the change.
+
+## New Code Complexity Budget
+
+Every new function, class, module, package, component, or service must stay within a strict simplicity budget.
+
+Prefer:
+
+* short functions with one responsibility
+* shallow control flow
+* guard clauses over nested conditionals
+* explicit data flow
+* clear names over comments
+* composition over large multipurpose objects
+* boring code over clever code
+* deterministic behavior over hidden side effects
+
+Avoid:
+
+* functions with many modes, flags, branches, or nested conditions
+* large catch-all services
+* premature interfaces
+* generic helpers used only once
+* hidden global state
+* implicit lifecycle ownership
+* mixed business logic, IO, parsing, validation, and presentation in one place
+* concurrency without clear ownership, cancellation, and cleanup
+* comments explaining complexity that should be removed instead
+
+Before finalizing, check every new or heavily changed unit:
+
+* Can it be understood without reading unrelated files?
+* Does it have one clear responsibility?
+* Are edge cases explicit?
+* Are errors handled close to where they occur?
+* Is lifecycle ownership obvious?
+* Is the test surface small and meaningful?
+* Would a future maintainer know where to change it?
+
+If not, simplify before finishing.
 
 ## Code Comment Policy
 
