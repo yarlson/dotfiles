@@ -23,7 +23,6 @@ trap cleanup EXIT
   printf '\n'
   cat "$SCRIPT_DIR/CODE_COMMENT_POLICY.md"
 } > "$COMBINED_FILE"
-chmod 0644 "$COMBINED_FILE"
 
 destinations=(
   "$HOME_DIR/.claude/CLAUDE.md"
@@ -33,5 +32,12 @@ destinations=(
 
 for destination in "${destinations[@]}"; do
   mkdir -p -- "$(dirname -- "$destination")"
-  cp "$COMBINED_FILE" "$destination"
+  if [[ -e "$destination" ]]; then
+    cp "$COMBINED_FILE" "$destination"
+  elif [[ -L "$destination" ]]; then
+    cp "$COMBINED_FILE" "$destination"
+    chmod 0644 "$destination"
+  else
+    install -m 0644 "$COMBINED_FILE" "$destination"
+  fi
 done
