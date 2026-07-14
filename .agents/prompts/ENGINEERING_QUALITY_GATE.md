@@ -66,10 +66,9 @@ Before implementing, during implementation, and before finalizing, validate the 
    - Add concurrency only when needed and bound it where possible.
 
 10. **Dependencies**
-
-- Avoid new dependencies unless they materially reduce complexity or risk.
-- Prefer standard library or existing project dependencies when reasonable.
-- If adding a dependency, justify it and check maintenance, license, size, security, and transitive impact.
+    - Avoid new dependencies unless they materially reduce complexity or risk.
+    - Prefer standard library or existing project dependencies when reasonable.
+    - If adding a dependency, justify it and check maintenance, license, size, security, and transitive impact.
 
 ### Required review loop
 
