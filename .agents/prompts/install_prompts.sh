@@ -15,6 +15,12 @@ trap cleanup EXIT
 {
   cat "$SCRIPT_DIR/ENGINEERING_QUALITY_GATE.md"
   printf '\n'
+  cat "$SCRIPT_DIR/EXISTING_CODEBASE_FIRST.md"
+  printf '\n'
+  cat "$SCRIPT_DIR/SMALL_DESIGN_BEFORE_CODE.md"
+  printf '\n'
+  cat "$SCRIPT_DIR/NEW_CODE_COMPLEXITY_BUDGET.md"
+  printf '\n'
   cat "$SCRIPT_DIR/CODE_COMMENT_POLICY.md"
 } > "$COMBINED_FILE"
 
