@@ -21,6 +21,8 @@ trap cleanup EXIT
   printf '\n'
   cat "$SCRIPT_DIR/NEW_CODE_COMPLEXITY_BUDGET.md"
   printf '\n'
+  cat "$SCRIPT_DIR/TEST_QUALITY.md"
+  printf '\n'
   cat "$SCRIPT_DIR/CODE_COMMENT_POLICY.md"
   printf '\n'
   cat "$SCRIPT_DIR/IMPLEMENTATION_CHANGE_REPORT.md"
