@@ -244,6 +244,18 @@ Assert prerequisites separately from independent outcomes so setup failures do n
 
 Prefer deterministic tests. Avoid real external services, arbitrary sleeps, timing assumptions, shared global state, and brittle snapshots unless the behavior specifically requires them. Use the smallest realistic substitute at the system boundary, and do not mock internal details merely to increase isolation.
 
+### Prompt and policy text
+
+Do not treat the presence of a sentence or substring in a prompt, policy, template, or configuration file as proof that the system follows it. A contradictory prompt can contain the expected words, while harmless rewording or formatting can break a string assertion without changing behavior.
+
+Test the actual contract:
+
+* if the contract is that text loads or is assembled correctly, test loading or assembly
+* if exact wording is intentionally an external contract, assert the text directly and make that constraint explicit
+* if the contract is agent behavior, observe the resulting tool calls, outputs, state changes, or safety boundary through an integration test or evaluation
+
+Do not add substring assertions as a proxy when the real behavior cannot be tested cheaply. State the untested risk instead of creating false confidence.
+
 ### Review checklist
 
 Before finalizing tests, check:
@@ -255,6 +267,7 @@ Before finalizing tests, check:
 5. Are success, failure, and cleanup contracts clear?
 6. Would an implementation refactor that preserves behavior leave the tests valid?
 7. Are the tests deterministic and independent?
+8. Do prompt or policy tests verify the real contract rather than merely checking for expected words?
 
 If not, simplify the tests before finishing.
 
