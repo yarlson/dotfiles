@@ -1,97 +1,40 @@
 ## Engineering Quality Gate
 
-In addition to solving the product/task goal, treat codebase quality as a first-class requirement.
+Solve the requested task while preserving or improving maintainability, correctness, simplicity, testability, and long-term engineering health.
 
-Do not optimize only for visible product behavior. The implementation must also preserve or improve maintainability, correctness, simplicity, testability, and long-term engineering health.
+### Core rules
 
-### Hard constraints
+- **Keep the change small.** Modify only what the task requires. Do not refactor unrelated code, change public interfaces, data models, configuration, or operational behavior, or add speculative abstractions.
+- **Preserve correctness.** Handle normal, boundary, and failure paths. Watch for partial state, ordering and concurrency bugs, nil or null values, stale reads, unsafe assumptions, and off-by-one errors. Make invalid states hard to represent where practical.
+- **Keep responsibilities clear.** Avoid cleverness, hidden coupling, unnecessary indirection, and mixed concerns. Keep code boring and easy to modify.
+- **Fit the codebase.** Follow existing conventions for structure, naming, errors, logging, testing, configuration, dependency wiring, and API shape. Do not introduce a second pattern without a clear reason.
+- **Control complexity.** Prefer short units, shallow control flow, guard clauses, and explicit data flow. Add concurrency or complex runtime patterns only when a simpler design is insufficient.
+- **Test the contract.** Add or update deterministic tests for changed behavior, important boundaries, failure paths, and cleanup. Do not weaken existing tests without a clear justification.
+- **Surface failures.** Return, wrap, log, or expose errors according to project conventions. Add logs, metrics, traces, or health signals only when useful. Keep failures diagnosable without leaking secrets or sensitive data.
+- **Protect trust boundaries.** Validate untrusted input and preserve authentication, authorization, tenant isolation, and permissions. Avoid injection, unsafe paths or deserialization, SSRF, secret exposure, insecure defaults, and unnecessary privilege or access.
+- **Own resources.** Avoid inefficient work on hot paths and unbounded memory growth. Close, cancel, clean up, or release files, connections, timers, tasks, threads, and goroutines in the correct order. Bound concurrent or background work.
+- **Avoid needless dependencies.** Prefer the standard library and existing dependencies. Add a dependency only when it materially reduces complexity or risk, and consider its maintenance, license, size, security, and transitive cost.
 
-Before implementing, during implementation, and before finalizing, validate the work against these gates:
+### Before finalizing
 
-1. **Smallest safe change surface**
-   - Prefer localized changes.
-   - Do not rewrite, reorganize, or refactor unrelated code.
-   - Do not introduce broad abstractions unless they are clearly needed now.
-   - Do not change public behavior, APIs, data models, config, or operational behavior unless required by the task.
+Review every changed file and confirm:
 
-2. **Correctness**
-   - Handle normal, edge, and failure paths.
-   - Preserve existing behavior unless explicitly changing it.
-   - Avoid partial-state bugs, ordering bugs, race conditions, nil/null handling issues, off-by-one errors, stale reads, and unsafe assumptions.
-   - Make invalid states hard or impossible to represent where practical.
+1. Every change is required for the task.
+2. Complexity did not grow unnecessarily.
+3. Changed units remain small, readable, and focused.
+4. Errors, edge cases, cleanup, and cancellation are handled.
+5. Tests cover the meaningful behavior.
+6. The implementation follows existing conventions.
 
-3. **Maintainability**
-   - Keep code readable, boring, and easy to modify.
-   - Prefer clear names and straightforward control flow.
-   - Avoid cleverness, hidden coupling, unnecessary indirection, and “magic.”
-   - Keep responsibilities separated.
-   - Do not mix unrelated concerns in the same function, class, module, or commit.
+Fix any failed gate before claiming the work is complete.
 
-4. **Complexity budget**
-   - Keep cyclomatic and cognitive complexity low.
-   - Split functions that have too many branches, nested conditions, modes, or responsibilities.
-   - Prefer simple guard clauses over deep nesting.
-   - Avoid adding state machines, reconciliation loops, event-driven flows, background workers, queues, plugin systems, generic frameworks, or broad dependency injection unless the simpler approach is insufficient.
-   - If a complex pattern is necessary, explicitly justify why.
+### Report the result
 
-5. **Codebase consistency**
-   - Follow existing project conventions for structure, naming, errors, logging, testing, configuration, dependency injection, and API shape.
-   - Reuse existing helpers and patterns where they are healthy.
-   - Do not introduce a second way to solve the same problem without a strong reason.
+Include:
 
-6. **Testing**
-   - Add or update tests for the changed behavior.
-   - Cover important edge cases and failure paths.
-   - Prefer deterministic tests over sleeps, timing assumptions, external services, or brittle snapshots.
-   - Do not weaken, delete, or skip existing tests unless clearly justified.
-   - If a change is hard to test, explain why and add the best practical verification.
-
-7. **Error handling and observability**
-   - Do not swallow errors.
-   - Return, wrap, log, or surface errors according to project conventions.
-   - Ensure failures are diagnosable.
-   - Add logs, metrics, traces, or health signals only where useful and consistent with the codebase.
-   - Do not leak secrets or sensitive data in logs or telemetry.
-
-8. **Security and safety**
-   - Validate inputs at trust boundaries.
-   - Preserve authorization, authentication, tenant isolation, and permission checks.
-   - Avoid injection risks, unsafe file paths, SSRF, secret exposure, unsafe deserialization, and insecure defaults.
-   - Do not broaden privileges or network/file access unless required.
-
-9. **Performance and resource lifecycle**
-   - Avoid obvious inefficient algorithms on hot paths.
-   - Do not introduce unbounded memory growth, goroutine/task/thread leaks, connection leaks, file descriptor leaks, timer leaks, or runaway background work.
-   - Ensure resources are closed, canceled, cleaned up, or released in the correct order.
-   - Add concurrency only when needed and bound it where possible.
-
-10. **Dependencies**
-    - Avoid new dependencies unless they materially reduce complexity or risk.
-    - Prefer standard library or existing project dependencies when reasonable.
-    - If adding a dependency, justify it and check maintenance, license, size, security, and transitive impact.
-
-### Required review loop
-
-After implementing, perform a self-review before finalizing:
-
-1. List the files changed and why each change was necessary.
-2. Check whether any change is unrelated to the task.
-3. Check whether complexity increased unnecessarily.
-4. Check whether any function/class/module became too large or too branchy.
-5. Check whether errors, edge cases, cleanup, and cancellation are handled.
-6. Check whether tests cover the meaningful behavior.
-7. Check whether the implementation follows existing codebase conventions.
-8. If any gate fails, fix it before finishing.
-
-### Output expectations
-
-When reporting the result, include:
-
-1. What was implemented.
-2. Why this is the smallest safe approach.
-3. Codebase-quality risks considered.
-4. Tests or checks run.
-5. Any intentionally deferred cleanup or refactoring.
-6. Any remaining risks or follow-up work.
-
-Do not claim the work is done unless the product goal and the engineering quality gates are both satisfied.
+- what was implemented
+- why this is the smallest safe approach
+- quality risks considered
+- tests and checks run
+- intentionally deferred cleanup
+- remaining risks or follow-up work

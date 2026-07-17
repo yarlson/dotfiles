@@ -1,42 +1,19 @@
 ## Code Comment Policy
 
-Use comments only when they clarify the current code state.
+Use comments only to clarify the current code: invariants, constraints, non-obvious behavior, edge cases, safety or protocol rules, ownership, lifecycle, concurrency, ordering, or reasons an obvious approach is unsafe.
 
-Comments must describe what is true now: invariants, constraints, non-obvious behavior, edge cases, safety requirements, protocol rules, ownership rules, or reasons the code would be easy to misuse.
+Prefer clear names and simple control flow over comments. Do not use comments as:
 
-Do not write comments as:
+- decision logs or implementation history
+- change summaries, PR explanations, or prose narratives
+- apologies or commentary about removed code
+- restatements of syntax or function names
+- product commentary or future speculation
+- TODOs without an owner or concrete completion condition
+- “temporary” notes without a clear removal condition
 
-- decision logs
-- implementation history
-- change summaries
-- PR explanations
-- prose narratives
-- apologies
-- TODOs without an owner or concrete condition
-- explanations of obvious syntax
-- restatements of function names
-- speculation about future changes
-- product or business commentary
-- notes about what was removed or replaced
-- “temporary” comments unless there is a clear removal condition
+A useful comment should explain what must remain true, what external contract forces the behavior, what edge case is intentional, or what would break if the code changed.
 
-Prefer self-explanatory code over comments. Rename variables, split functions, or simplify control flow before adding a comment.
+Before finalizing, review every touched comment. Remove stale, historical, obvious, or duplicated text; update comments that no longer match the code; and add a comment only when simplification cannot make the behavior clear.
 
-Good comments should answer one of these:
-
-- What invariant must hold here?
-- What external contract forces this behavior?
-- What edge case is intentionally handled?
-- What would break if this changed?
-- Why is the obvious simpler approach unsafe here?
-- What ownership, lifecycle, concurrency, or ordering rule matters?
-
-Before finalizing, review all comments touched by the change:
-
-1. Remove stale comments.
-2. Remove comments that only describe old decisions.
-3. Remove comments that duplicate the code.
-4. Update comments so they match the current implementation exactly.
-5. Add comments only where the code remains non-obvious after simplification.
-
-Final rule: comments must document the present system, not the journey that produced it.
+Comments document the present system, not the journey that produced it.
