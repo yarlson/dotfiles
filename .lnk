@@ -1,5 +1,4 @@
 .agents/prompts
-.claude/agents
 .claude/commands
 .claude/learnings.md
 .codex/AGENTS.md
