@@ -1,5 +1,4 @@
 .agents/prompts
-.claude/commands
 .claude/learnings.md
 .codex/AGENTS.md
 .config/aerospace
