@@ -9,6 +9,7 @@ export GOPATH="$HOME/go"
 # --- Tool initialization ---
 eval "$(atuin init zsh)"
 eval "$(zoxide init zsh)"
+eval "$(mise activate zsh)"
 
 # --- FZF / completion setup ---
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
