@@ -1,12 +1,30 @@
 # shellcheck shell=bash disable=SC1090
 # --- PATH setup ---
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$HOME/.local/bin:$HOME/go/bin:/usr/local/bin:$PATH"
+typeset -U path PATH
+path=(
+	/opt/homebrew/opt/libpq/bin
+	"$HOME/.opencode/bin"
+	"$HOME/.bun/bin"
+	"$HOME/.local/bin"
+	/Applications/GoLand.app/Contents/MacOS
+	/opt/homebrew/opt/llvm/bin
+	/opt/homebrew/bin
+	/opt/homebrew/sbin
+	"$HOME/go/bin"
+	/usr/local/bin
+	$path
+)
+export PATH
 
 # --- Go ---
 export GOROOT="/opt/homebrew/opt/go/libexec"
 export GOPATH="$HOME/go"
 
+# --- Tool defaults ---
+export CMT_PROVIDER=codex
+
 # --- Tool initialization ---
+eval "$(mise activate zsh)"
 eval "$(atuin init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(mise activate zsh)"
