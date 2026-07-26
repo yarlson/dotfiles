@@ -16,6 +16,7 @@
 .config/zsh/docker.zsh
 .config/zsh/history.zsh
 .config/zsh/keybindings.zsh
+.config/zsh/tmux-layout.zsh
 .hushlogin
 .wezterm.lua
 .zshrc
