@@ -17,6 +17,7 @@
 .config/zsh/history.zsh
 .config/zsh/keybindings.zsh
 .config/zsh/tmux-layout.zsh
+.config/zsh/worktrees.zsh
 .hushlogin
 .wezterm.lua
 .zshrc
