@@ -13,11 +13,8 @@
 .config/zed
 .config/zsh/aliases.zsh
 .config/zsh/base.zsh
-.config/zsh/docker.zsh
 .config/zsh/history.zsh
 .config/zsh/keybindings.zsh
-.config/zsh/tmux-layout.zsh
-.config/zsh/worktrees.zsh
 .hushlogin
 .wezterm.lua
 .zshrc
