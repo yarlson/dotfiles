@@ -39,3 +39,33 @@ __ide_tmux_layout() {
 }
 
 alias ide='__ide_tmux_layout'
+
+tn() {
+	if (( $# != 1 )) || [[ -z ${1:-} ]]; then
+		printf 'Usage: tn <name>\n' >&2
+		return 2
+	fi
+
+	local session_name=$1
+	if [[ -n ${TMUX:-} ]]; then
+		tmux new-session -d -s "$session_name" || return
+		tmux switch-client -t "$session_name"
+		return
+	fi
+
+	tmux new-session -s "$session_name"
+}
+
+trn() {
+	if (( $# != 1 )) || [[ -z ${1:-} ]]; then
+		printf 'Usage: trn <name>\n' >&2
+		return 2
+	fi
+
+	if [[ -z ${TMUX:-} ]]; then
+		printf 'trn: not inside tmux\n' >&2
+		return 1
+	fi
+
+	tmux rename-session "$1"
+}
