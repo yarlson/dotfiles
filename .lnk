@@ -8,7 +8,6 @@
 .config/sketchybar
 .config/starship.toml
 .config/tmux
-.config/vindu/vindu.conf
 .config/vindu/vindu.toml
 .config/yazi
 .config/zed
