@@ -27,9 +27,9 @@ enabled = true
 [ui.focus_border]
 width = 1
 fallback_corner_radius = 10
-active_colors = ["#33ccffee", "#00ff99ee"]
+active_colors = ["#c792ea", "#8be9fd"]
 active_angle = 45
-mode_colors = ["#ff5555ee"]
+mode_colors = ["#ff5555"]
 
 [ui.bar]
 enabled = true
@@ -40,10 +40,10 @@ center = []
 right = ["weather", "network", "battery", "keyboard", "volume", "date"]
 
 [ui.bar.colors]
-background = "#111111cc"
-foreground = "#eeeeeeff"
-inactive = "#8a8a8aff"
-active = "#33ccffee"
+background = "#212121"
+foreground = "#f8f8f2"
+inactive = "#545454"
+active = "#82aaff"
 
 [ui.bar.weather]
 latitude = 56.9496
@@ -52,7 +52,7 @@ refresh_minutes = 15
 
 [keyboard]
 bindings = [
-  { chord = "option+return", run = ["/usr/bin/open", "-a", "Terminal"] },
+  { chord = "option+return", run = ["/usr/bin/open", "-a", "Ghostty"] },
   { chord = "option+e", run = ["/usr/bin/open", "-a", "Finder"] },
   { chord = "option+shift+q", close = true },
   { chord = "option+shift+m", quit = true },
@@ -115,5 +115,16 @@ rules = [
   { match = { app_name = "^(System Settings)$" }, floating = true },
   { match = { app_name = "^(Calculator)$" }, floating = true },
   { match = { app_name = "^(Finder)$", title = "^(Copy|Move|Info)" }, floating = true },
-  { match = { app_name = "^(Slack)$" }, workspace = 9 },
+  { match = { bundle_id = "com.tinyspeck.slackmacgap" }, workspace = 9 },
+  { match = { bundle_id = "ru.keepcoder.Telegram" }, workspace = 7 },
+  { match = { bundle_id = "us.zoom.xos" }, workspace = 8 },
+  { match = { bundle_id = "com.jetbrains.goland" }, workspace = 3 },
+  { match = { bundle_id = "com.jetbrains.PhpStorm" }, workspace = 3 },
+  { match = { bundle_id = "com.jetbrains.pycharm.ce" }, workspace = 3 },
+  { match = { bundle_id = "com.apple.Safari" }, workspace = 2 },
+  { match = { bundle_id = "org.mozilla.firefox" }, workspace = 2 },
+  { match = { bundle_id = "com.brave.Browser" }, workspace = 2 },
+  { match = { bundle_id = "com.mitchellh.ghostty" }, workspace = 1 },
+  { match = { bundle_id = "dev.zed.Zed" }, workspace = 3 },
+  { match = { bundle_id = "com.anthropic.claudefordesktop" }, workspace = 3 },
 ]
