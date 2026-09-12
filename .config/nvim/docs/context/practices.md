@@ -11,7 +11,7 @@
 
 - All LSP servers are configured through a single `server_configs` table in `lsp.lua`
 - Uses Neovim 0.11+ native `vim.lsp.config[name]` and `vim.lsp.enable()` instead of lspconfig's `setup()` loop
-- Mason ensures tools are installed; mason-lspconfig bridges Mason names to lspconfig names
+- Mason installs and enables configured language servers; its bin directory is first in Neovim's PATH
 - Mason npm package installs pass `--min-release-age=0` so registry-pinned server versions are not blocked by the user's global npm release-age guard
 - ESLint is explicitly excluded from document formatting capability
 

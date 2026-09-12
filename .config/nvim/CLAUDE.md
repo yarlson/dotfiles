@@ -75,7 +75,7 @@ The configuration is optimized for:
 
 1. **Leader Key**: Space (`<Space>`) for consistency and accessibility
 2. **Plugin Manager**: Lazy.nvim for performance and lazy loading
-3. **LSP Management**: Mason for automatic tool installation
+3. **LSP Management**: Mason for automatic language server installation
 4. **Formatting**: Conform.nvim with format-on-save for all file types
 5. **File Tree**: Neo-tree opens automatically on startup
 6. **Git Integration**: Multiple tools for comprehensive git workflow

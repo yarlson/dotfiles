@@ -288,7 +288,7 @@ Markdown buffers automatically disable nvim-cmp. This does not disable Supermave
 - **YAML**: LSP (yamlls), multiple schema support, formatting
 - **Bash/Shell**: LSP (bashls), formatting (shfmt)
 
-`hadolint`, `shellcheck`, and other tools appear in Mason's options, but that list alone does not establish an active linting integration. Formatters and debuggers also need their executables available.
+Mason installs and enables the configured language servers. Formatters, linters, and debuggers still need their executables available.
 
 ### File Type Detection
 

@@ -2,29 +2,9 @@ return {
   {
     'williamboman/mason.nvim',
     opts = {
+      PATH = 'prepend',
       npm = {
         install_args = { '--min-release-age=0' },
-      },
-      ensure_installed = {
-        'debugpy', -- Python debugging
-        'delve', -- Go debugging
-        'gofmt', -- Go formatting
-        'prettier', -- Code formatting
-        'pyright', -- Python LSP
-        'sql-formatter',
-        'zls', -- Zig LSP
-        'intelephense', -- PHP LSP
-        'stylua', -- Lua formatting
-        'lua-language-server', -- Lua LSP
-        'luacheck', -- Lua static analyzer
-        'ansible-lint', -- Ansible linting
-        'terraform-ls', -- Terraform LSP
-        'tflint', -- Terraform linting
-        'yamllint', -- YAML linting
-        'yaml-language-server', -- YAML LSP
-        'hadolint', -- Dockerfile linting
-        'shellcheck', -- Shell script linting
-        'shfmt', -- Shell formatting
       },
     },
   },
@@ -46,27 +26,6 @@ return {
   {
     'williamboman/mason-lspconfig.nvim',
     dependencies = { 'williamboman/mason.nvim' },
-    opts = {
-      ensure_installed = {
-        'dockerls',
-        'eslint',
-        'gopls',
-        'jsonls',
-        'pyright',
-        'sqlls',
-        'tailwindcss',
-        'templ',
-        'terraformls',
-        'ts_ls',
-        'yamlls',
-        'zls',
-        'intelephense',
-        'lua_ls', -- Lua language server
-        'ansiblels', -- Ansible LSP
-        'bashls', -- Bash LSP
-        'helm_ls', -- Helm LSP
-      },
-    },
   },
   {
     'neovim/nvim-lspconfig',
@@ -263,8 +222,9 @@ return {
         vim.lsp.config[server_name] = config
       end
 
-      -- Enable all configured servers
-      vim.lsp.enable(vim.tbl_keys(server_configs))
+      require('mason-lspconfig').setup {
+        ensure_installed = vim.tbl_keys(server_configs),
+      }
     end,
   },
   -- Inline function signatures
