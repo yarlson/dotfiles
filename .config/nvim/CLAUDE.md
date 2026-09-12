@@ -10,7 +10,7 @@ This is a Neovim configuration focused on DevOps and infrastructure development.
 
 ### Neovim Configuration Management
 
-- `./clenup.sh` - Clean Neovim cache and data directories for fresh start
+- `./cleanup.sh` - Clean Neovim cache and data directories for fresh start
 - No build/test commands - configuration is loaded directly by Neovim
 
 ### Configuration Testing
