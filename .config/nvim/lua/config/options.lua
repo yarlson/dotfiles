@@ -24,6 +24,8 @@ local editor_opts = {
   undodir = vim.fn.stdpath 'cache' .. '/undo',
   undolevels = 1000,
   updatetime = 300,
+  -- Inside tmux, <Esc> arrives as a bare \x1b and Nvim waits this long for more bytes (default 50).
+  ttimeoutlen = 10,
 }
 
 -- Apply editor settings

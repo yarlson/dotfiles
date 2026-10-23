@@ -40,7 +40,7 @@ The configuration follows a clean separation of concerns:
 
 Plugin configurations are modular and organized by purpose:
 
-- `completion.lua` - nvim-cmp with Supermaven AI completion
+- `completion.lua` - nvim-cmp with LSP, snippet, buffer, and path sources
 - `debug.lua` - DAP debugging for Go, Python, Zig
 - `editor.lua` - Core editing plugins (Neo-tree, Harpoon, Trouble)
 - `formatting.lua` - Conform.nvim with language-specific formatters
@@ -86,7 +86,8 @@ The configuration is optimized for:
 
 Extensive custom file type detection for infrastructure files:
 
-- `.tf`, `.hcl`, `.tfvars` → Terraform
+- `.tf`, `.hcl` → Terraform
+- `.tfvars` → Terraform variables (`terraform-vars`)
 - `terragrunt.hcl` → Terragrunt
 - `Jenkinsfile` → Groovy
 - Various YAML patterns → Specific YAML schemas (GitLab CI, GitHub Actions, Kubernetes, Helm, etc.)
@@ -101,7 +102,6 @@ Extensive custom file type detection for infrastructure files:
 
 ### Completion System
 
-- AI-powered completion via Supermaven
 - LSP-based completion for all supported languages
 - Snippet support with LuaSnip
 - Automatic completion disabled for markdown files

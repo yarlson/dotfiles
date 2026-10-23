@@ -3,6 +3,15 @@ return {
     'felipeagc/fleet-theme-nvim',
     priority = 1000,
     config = function()
+      -- No background, so the tmux active/inactive pane background shows through
+      require('fleet-theme').setup {
+        overrides = {
+          Normal = { bg = 'NONE' },
+          VertSplit = { bg = 'NONE' },
+          WinSeparator = { bg = 'NONE' },
+          SignColumn = { bg = 'NONE' },
+        },
+      }
       vim.cmd 'colorscheme fleet'
     end,
   },

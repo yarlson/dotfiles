@@ -235,7 +235,7 @@ Selections work in Visual and Operator-pending modes. Movement also works in Nor
 | `<leader>a` | Swap Next Parameter     | Swap with next parameter     |
 | `<leader>A` | Swap Previous Parameter | Swap with previous parameter |
 
-## Completion (nvim-cmp + Supermaven)
+## Completion (nvim-cmp)
 
 The following nvim-cmp mappings apply in Insert mode:
 
@@ -248,18 +248,16 @@ The following nvim-cmp mappings apply in Insert mode:
 | `<C-b>`/`<C-f>` | Scroll Docs        | Scroll completion documentation                                 |
 | `<Esc>`         | Abort              | Close completion menu                                           |
 
-Supermaven also enables its default Insert-mode keys: `<Tab>` accepts an inline suggestion, `<C-j>` accepts its next word, and `<C-]>` clears it. Both plugins assign `<Tab>`, so it is not a dedicated “next completion item” key. See the locked [Supermaven defaults](https://github.com/supermaven-inc/supermaven-nvim/blob/07d20fce48a5629686aefb0a7cd4b25e33947d50/lua/supermaven-nvim/config.lua).
-
 ### Completion Commands
 
-| Command      | Description                                   |
-| ------------ | --------------------------------------------- |
-| `:Cmpoff`    | Disable nvim-cmp for the current buffer       |
-| `:Cmpon`     | Enable nvim-cmp for the current buffer        |
-| `:CmpoffAll` | Disable nvim-cmp globally and stop Supermaven |
-| `:CmponAll`  | Enable nvim-cmp globally and start Supermaven |
+| Command      | Description                             |
+| ------------ | --------------------------------------- |
+| `:Cmpoff`    | Disable nvim-cmp for the current buffer |
+| `:Cmpon`     | Enable nvim-cmp for the current buffer  |
+| `:CmpoffAll` | Disable nvim-cmp globally               |
+| `:CmponAll`  | Enable nvim-cmp globally                |
 
-Markdown buffers automatically disable nvim-cmp. This does not disable Supermaven. Buffer-local nvim-cmp settings can override the global setting; use `:Cmpon` to re-enable nvim-cmp in a Markdown buffer.
+Markdown buffers automatically disable nvim-cmp. Buffer-local nvim-cmp settings can override the global setting; use `:Cmpon` to re-enable nvim-cmp in a Markdown buffer.
 
 ## Configured Languages & Tools
 
@@ -294,7 +292,8 @@ Mason installs and enables the configured language servers. Formatters, linters,
 
 Custom filetype rules include:
 
-- `.tf`, `.hcl`, `.tfvars` → Terraform
+- `.tf`, `.hcl` → Terraform
+- `.tfvars` → Terraform variables (`terraform-vars`)
 - `terragrunt.hcl` → Terragrunt
 - `.tfstate` → JSON
 - `Jenkinsfile` → Groovy
@@ -339,7 +338,7 @@ Conform runs before saving, using the configured formatters available for the bu
 - **Format on Save**: Automatically formats files using Conform
 - **Neo-tree Auto-open**: Opens on startup unless exactly one file was opened
 - **File Type Settings**: Applies language-specific indentation and settings
-- **Completion Control**: Disables nvim-cmp for Markdown buffers; Supermaven remains enabled
+- **Completion Control**: Disables nvim-cmp for Markdown buffers
 
 ## Tips
 

@@ -43,6 +43,7 @@ return {
         markdown = { 'prettier' },
         python = { 'black' },
         terraform = { 'terraform_fmt' },
+        ['terraform-vars'] = { 'terraform_fmt' },
         dockerfile = { 'prettier', 'dockerfile_lint' },
         hcl = { 'terraform_fmt' },
         zig = { 'zigfmt' },

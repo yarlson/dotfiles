@@ -45,7 +45,7 @@ create_augroups {
     {
       event = 'FileType',
       opts = {
-        pattern = { 'terraform', 'terragrunt', 'hcl' },
+        pattern = { 'terraform', 'terraform-vars', 'terragrunt', 'hcl' },
         callback = function()
           vim.opt_local.commentstring = '# %s'
           vim.opt_local.tabstop = 2
@@ -98,7 +98,7 @@ vim.filetype.add {
   extension = {
     hcl = 'terraform',
     tf = 'terraform',
-    tfvars = 'terraform',
+    tfvars = 'terraform-vars',
     tfstate = 'json',
   },
   filename = {

@@ -7,7 +7,6 @@ return {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
-      'supermaven-inc/supermaven-nvim',
     },
     config = function()
       local cmp = require 'cmp'
@@ -26,7 +25,6 @@ return {
 
       -- Define completion sources in priority order
       local cmp_sources = {
-        { name = 'supermaven' },
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
         { name = 'buffer' },
@@ -82,36 +80,7 @@ return {
         end
       end
 
-      local function toggle_supermaven(enable)
-        -- Use the official supermaven API
-        local api = require 'supermaven-nvim.api'
-
-        if enable then
-          -- Start supermaven if it's not already running
-          if not api.is_running() then
-            api.start()
-          end
-        else
-          -- Stop supermaven if it's running
-          if api.is_running() then
-            api.stop()
-          end
-        end
-      end
-
-      local function toggle_completion(enable, is_global)
-        -- Handle supermaven (globally only, as it doesn't support per-buffer control)
-        toggle_supermaven(enable)
-
-        -- Handle cmp (globally or per-buffer)
-        toggle_cmp(enable, is_global)
-
-        local scope = is_global and 'globally for all buffers' or 'for this buffer'
-        local state = enable and 'enabled' or 'disabled'
-        vim.notify('Completion (cmp and supermaven) ' .. state .. ' ' .. scope .. '.', vim.log.levels.INFO)
-      end
-
-      -- Custom commands to toggle cmp and supermaven completion
+      -- Custom commands to toggle cmp completion
       vim.api.nvim_create_user_command('Cmpoff', function()
         -- Disable cmp for this buffer only
         toggle_cmp(false, false)
@@ -125,12 +94,14 @@ return {
       end, { desc = 'Enable nvim-cmp completion for the current buffer', nargs = 0 })
 
       vim.api.nvim_create_user_command('CmpoffAll', function()
-        toggle_completion(false, true)
-      end, { desc = 'Disable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
+        toggle_cmp(false, true)
+        vim.notify('nvim-cmp completion disabled globally for all buffers.', vim.log.levels.INFO)
+      end, { desc = 'Disable nvim-cmp completion globally for all buffers', nargs = 0 })
 
       vim.api.nvim_create_user_command('CmponAll', function()
-        toggle_completion(true, true)
-      end, { desc = 'Enable completion (cmp and supermaven) globally for all buffers', nargs = 0 })
+        toggle_cmp(true, true)
+        vim.notify('nvim-cmp completion enabled globally for all buffers.', vim.log.levels.INFO)
+      end, { desc = 'Enable nvim-cmp completion globally for all buffers', nargs = 0 })
 
       -- Disable cmp for markdown files
       vim.api.nvim_create_autocmd('FileType', {
@@ -148,15 +119,6 @@ return {
     config = function()
       require('luasnip').setup {}
       require('luasnip.loaders.from_vscode').lazy_load()
-    end,
-  },
-  {
-    'supermaven-inc/supermaven-nvim',
-    dependencies = { 'hrsh7th/nvim-cmp' },
-    config = function()
-      require('supermaven-nvim').setup {
-        disable_inline_completion = false,
-      }
     end,
   },
 }

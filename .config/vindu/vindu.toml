@@ -117,6 +117,7 @@ rules = [
   { match = { app_name = "^(Finder)$", title = "^(Copy|Move|Info)" }, floating = true },
   { match = { bundle_id = "com.tinyspeck.slackmacgap" }, workspace = 9 },
   { match = { bundle_id = "ru.keepcoder.Telegram" }, workspace = 7 },
+  { match = { bundle_id = "com.epicgames.UnrealEditor" }, workspace = 7 },
   { match = { bundle_id = "us.zoom.xos" }, workspace = 8 },
   { match = { bundle_id = "com.jetbrains.goland" }, workspace = 3 },
   { match = { bundle_id = "com.jetbrains.PhpStorm" }, workspace = 3 },

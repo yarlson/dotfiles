@@ -32,7 +32,7 @@
 
 ## Completion
 
-- Source priority: Supermaven > LSP > LuaSnip > Buffer > Path
+- Source priority: LSP > LuaSnip > Buffer > Path
 - Ghost text enabled for inline preview
 - Completion auto-disabled for markdown filetypes
 - CMP highlights are manually set to match Fleet theme palette

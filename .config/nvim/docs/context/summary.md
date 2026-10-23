@@ -24,7 +24,7 @@ A Neovim configuration optimized for DevOps, infrastructure, and backend develop
 
 - Leader key: Space
 - Theme: Fleet (fleet-theme-nvim)
-- AI completion: Supermaven integrated into nvim-cmp (disabled for markdown)
+- Completion: nvim-cmp (disabled for markdown)
 - Format-on-save active for all supported filetypes
 - Neo-tree auto-opens on startup (left panel, 30px wide)
 - Completion toggle commands: `:Cmpoff`, `:Cmpon`, `:CmpoffAll`, `:CmponAll`
@@ -38,7 +38,7 @@ A Neovim configuration optimized for DevOps, infrastructure, and backend develop
 - **Testing**: Neotest for Go and Python with DAP integration
 - **Git**: Gitsigns (hunk ops), Neogit (magit-like UI), git-conflict (merge resolution)
 - **Navigation**: Telescope (fuzzy finder + project picker), Harpoon (file marks), Neo-tree (explorer)
-- **AI**: Claude Code terminal integration, Supermaven inline completion
+- **AI**: Claude Code terminal integration
 
 ## Tech Stack
 
