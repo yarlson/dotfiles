@@ -1,6 +1,7 @@
 .config/aerospace
 .config/alacritty
 .config/ghostty
+.config/karabiner
 .config/kitty
 .config/mpv/mpv.conf
 .config/nvim
